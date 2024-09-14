@@ -11,14 +11,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { request } from '@/lib/api';
 import { Layout } from '@/components/Layout';
 import CreateCategoryModal from '@/components/category/create';
+import { useRouter } from 'next/router';
+import { ICategory } from '@/lib/types';
 // import { CheckedState } from '@radix-ui/react-checkbox'; // Commented out
 
-interface ICategory {
-    id: number;
-    name_uz: string;
-    name_ru: string;
-    products_count: number;
-}
+
 
 const fetchCategories = async (): Promise<ICategory[]> => {
     const { data } = await request.get('categories');
@@ -26,6 +23,8 @@ const fetchCategories = async (): Promise<ICategory[]> => {
 }
 
 export function Categories() {
+
+    const router = useRouter();
 
 
     const { data: categories = [], isLoading } = useQuery({
@@ -51,8 +50,17 @@ export function Categories() {
     const handleRowClick = useCallback((category: ICategory, event: React.MouseEvent) => {
         if (window?.getSelection()?.toString()) return;
         if (event.target instanceof HTMLButtonElement || event.target instanceof HTMLInputElement) return;
-        console.log('Row clicked:', category);
-    }, []);
+        // console.log('Row clicked:', category);
+
+        // push(`/categories?id=${category.id}`);
+
+        router.push({
+            pathname: '/categories/info',
+            query: {
+                ...router.query, id: category.id
+            },
+        }, undefined, { shallow: true });
+    }, [router]);
 
 
     return (
