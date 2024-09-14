@@ -11,7 +11,7 @@ export function Layout({ children, page }: { children: React.ReactNode, page: st
         <div className="flex h-screen overflow-hidden">
             <Sidebar
                 collapsed={sidebarCollapsed}
-                setCollapsed={setSidebarCollapsed}
+                // setCollapsed={setSidebarCollapsed}
                 page={page}
             />
             <div className="flex-1 flex flex-col overflow-hidden">
