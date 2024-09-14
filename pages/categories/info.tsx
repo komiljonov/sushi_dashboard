@@ -1,27 +1,29 @@
 import { Layout } from "@/components/Layout";
 import { useEffect, useState } from "react";
 
-import {
-    Bar,
-    Pie
-} from 'react-chartjs-2';
+import { Bar, Pie } from 'react-chartjs-2';
 
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import { Button } from "@/components/ui/Button";
-import {
-    ShoppingCart,
-    Users,
-    TrendingUp
-} from 'lucide-react';
+import { ShoppingCart, Users, TrendingUp } from 'lucide-react';
 
 import { request } from '@/lib/api';
-import { ICategoryWithStats } from "@/lib/types";
-import { useQuery } from "@tanstack/react-query";
+import { ICategory, ICategoryWithStats } from "@/lib/types";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
+import { queryClient } from "@/lib/query";
+import { useToast } from "@/hooks/use-toast";
+
+// import { setSourceMapsEnabled } from "process";
+
+
+function getRandomNumber(start: number, end: number): number {
+    return Math.floor(Math.random() * (end - start + 1)) + start;
+}
 
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title)
@@ -44,16 +46,25 @@ const fetchCategoryData = async (id: string): Promise<ICategoryWithStats> => {
 }
 
 
+
+const editCategory = async (id: string, edit_data: ICategory): Promise<ICategory> => {
+    const { data } = await request.patch(`categories/${id}`, edit_data);
+
+    return data;
+}
+
 function CategoryInfo() {
 
+    const { toast } = useToast();
+
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [categoryId, setcategoryId] = useState(getCategoryIdFromUrl);
+    const [categoryId] = useState(getCategoryIdFromUrl);
 
-    const { register, reset } = useForm<ICategoryWithStats>();
+    const { register, reset, handleSubmit } = useForm<ICategory>();
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { data: category, isLoading, isSuccess } = useQuery({
+    const { data: category, isSuccess } = useQuery({
         queryKey: ['category', categoryId],
         queryFn: () => {
             if (categoryId !== null) {
@@ -63,7 +74,6 @@ function CategoryInfo() {
             return Promise.reject(new Error('Category ID is null'));
         },
         enabled: categoryId !== null,
-
     });
 
 
@@ -79,15 +89,29 @@ function CategoryInfo() {
 
 
 
+    const mutation = useMutation({
+        mutationFn: (data: ICategory) => {
+            if (categoryId !== null) {
+                return editCategory(categoryId, data)
+            }
+            return Promise.reject(new Error('Category ID is null'));
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['category', categoryId] });
+            reset();
+            toast({
+                title: 'Saqlandi'
+            })
+            
+        },
+        onError: (error) => {
+            console.log('Error creating category:', error);
+        }
+    });
 
-    // Mock data for analytics
-    // const topProducts = [
-    //     { name: 'Product 1', sales: 30, image: '/placeholder.svg?height=50&width=50', price: 99.99 },
-    //     { name: 'Product 2', sales: 25, image: '/placeholder.svg?height=50&width=50', price: 149.99 },
-    //     { name: 'Product 3', sales: 20, image: '/placeholder.svg?height=50&width=50', price: 79.99 },
-    //     { name: 'Product 4', sales: 15, image: '/placeholder.svg?height=50&width=50', price: 199.99 },
-    //     { name: 'Product 5', sales: 10, image: '/placeholder.svg?height=50&width=50', price: 59.99 },
-    // ]
+    const handleSave = (data: ICategory) => {
+        mutation.mutate(data);
+    }
 
     const visitCounts = 15000
     const visitFrequency = [
@@ -102,7 +126,7 @@ function CategoryInfo() {
         labels: category?.most_sold_products?.map(product => product.name_uz),
         datasets: [
             {
-                data: category?.most_sold_products?.map(product => product.id),
+                data: category?.most_sold_products?.map(() => getRandomNumber(100, 200)),
                 backgroundColor: [
                     '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
                     '#FF9F40', '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'
@@ -136,7 +160,7 @@ function CategoryInfo() {
         <div className="container mx-auto p-4">
             <h1 className="text-2xl font-bold mb-4">Category Info</h1>
 
-            <form className="mb-8">
+            <form className="mb-8" onSubmit={handleSubmit(handleSave)}>
                 <div className="grid gap-4">
                     <div>
                         <Label htmlFor="name_uz">Name (Uzbek)</Label>
