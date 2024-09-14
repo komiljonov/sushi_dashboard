@@ -18,10 +18,11 @@ export interface IProduct {
     caption_uz: string;
     caption_ru: string;
 
+    category: string;
+
 
     image: string;
     price: number;
-    category: number;
 }
 
 

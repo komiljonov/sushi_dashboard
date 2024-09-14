@@ -102,7 +102,7 @@ function CategoryInfo() {
             toast({
                 title: 'Saqlandi'
             })
-            
+
         },
         onError: (error) => {
             console.log('Error creating category:', error);

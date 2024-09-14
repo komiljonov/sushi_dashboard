@@ -1,3 +1,6 @@
+'use client';
+
+
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -7,46 +10,62 @@ import { Table, TableHeader, TableBody, TableCell, TableRow, TableHead } from '@
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { request } from '@/lib/api';
 import { Layout } from '@/components/Layout';
-import CreateCategoryModal from '@/components/category/create';
-import { ICategory } from '@/lib/types';
-import CategoryInfo from '@/components/category/row';
+import { IProduct } from '@/lib/types';
+import ProductInfo from '@/components/product/row';
 
 
-function sleep(ms: number): Promise<unknown> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+
+const getCategoryIdFromUrl = (): string | null => {
+    if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href)
+        const queryParams = new URLSearchParams(url.search)
+        const id = queryParams.get('category')
+        return id
+    }
+    return null
 }
 
 
-const fetchCategories = async (): Promise<ICategory[]> => {
 
-    await sleep(2000);
 
-    const { data } = await request.get('categories');
-    return data;
+const fetchProducts = async (categoryId: string): Promise<IProduct[]> => {
+    const { data } = await request.get(`categories/${categoryId}/stats`);
+
+    console.log(data);
+
+    return data.products;
 }
 
 
 
-export function Categories() {
+
+function Products() {
 
 
-    const { data: categories = [], isLoading } = useQuery({
-        queryKey: ['categories'],
-        queryFn: fetchCategories,
+    const [categoryId] = useState(getCategoryIdFromUrl);
+
+
+
+    const { data: products = [], isLoading } = useQuery({
+        queryKey: ["products", categoryId],
+        queryFn: () => {
+            if (categoryId !== null) {
+                return fetchProducts(categoryId);
+            }
+            return Promise.reject(new Error("Category ID is null"));
+        },
+        enabled: categoryId !== null
     });
-
-
-
 
 
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
-    const totalPages = Math.ceil(categories.length / itemsPerPage);
+    const totalPages = Math.ceil(products.length / itemsPerPage);
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentCategories = categories.slice(indexOfFirstItem, indexOfLastItem);
+    const currentCategories = products.slice(indexOfFirstItem, indexOfLastItem);
 
     const nextPage = () => setCurrentPage(prev => Math.min(prev + 1, totalPages));
     const prevPage = () => setCurrentPage(prev => Math.max(prev - 1, 1));
@@ -64,12 +83,12 @@ export function Categories() {
     return (
         <div className="container mx-auto py-10">
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold">Categories</h1>
-                <CreateCategoryModal>
-                    <Button >
-                        <Plus className="mr-2 h-4 w-4" /> Create
-                    </Button>
-                </CreateCategoryModal>
+                <h1 className="text-2xl font-bold">Mahsulotlar</h1>
+                {/* <CreateProductModal> */}
+                <Button >
+                    <Plus className="mr-2 h-4 w-4" /> Mahsulot qo&apos;shish
+                </Button>
+                {/* </CreateProductModal> */}
 
             </div>
 
@@ -78,14 +97,14 @@ export function Categories() {
                     <SkeletonTable />
                 ) : (
                     <CategoryTable
-                        categories={currentCategories}
+                        products={currentCategories}
                     />
                 )}
             </div>
 
             <div className="flex items-center justify-between space-x-2 py-4">
                 <div className="text-sm text-muted-foreground">
-                    Showing {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, categories.length)} of {categories.length}
+                    Showing {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, products.length)} of {products.length}
                 </div>
                 <div className="space-x-2">
                     <Button
@@ -112,11 +131,14 @@ export function Categories() {
     );
 }
 
-interface CategoryTableProps {
-    categories: ICategory[];
+
+
+
+interface ProductsTableProps {
+    products: IProduct[];
 }
 
-function CategoryTable({ categories }: CategoryTableProps) {
+function CategoryTable({ products }: ProductsTableProps) {
 
 
     return (
@@ -125,13 +147,14 @@ function CategoryTable({ categories }: CategoryTableProps) {
                 <TableRow>
                     <TableHead>O&apos;zbekcha tilidagi nomi</TableHead>
                     <TableHead>Rus tilidagi nomi</TableHead>
-                    <TableHead>Mahsulotlar soni</TableHead>
+                    <TableHead>Narxi</TableHead>
                     <TableHead className="w-12"></TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {categories.map(category => (
-                    <CategoryInfo key={category.id} category={category} />
+                {products.map(product => (
+                    // product.name_uz
+                    <ProductInfo key={product.id} product={product} />
                 ))}
             </TableBody>
         </Table>
@@ -183,8 +206,14 @@ function SkeletonTable() {
     );
 }
 
+
+
+
+
 export default function Page() {
-    return <Layout page='categories'>
-        <Categories />
-    </Layout>
+    return (
+        <Layout page='categories'>
+            <Products />
+        </Layout>
+    )
 }
