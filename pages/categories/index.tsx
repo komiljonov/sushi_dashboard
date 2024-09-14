@@ -18,7 +18,7 @@ function sleep(ms: number): Promise<unknown> {
 
 
 const fetchCategories = async (): Promise<ICategory[]> => {
-    
+
     await sleep(2000);
 
     const { data } = await request.get('categories');
@@ -112,7 +112,6 @@ export function Categories() {
     );
 }
 
-// Separated Table component
 interface CategoryTableProps {
     categories: ICategory[];
 }
@@ -126,7 +125,6 @@ function CategoryTable({ categories }: CategoryTableProps) {
                 <TableRow>
                     <TableHead>O&apos;zbekcha tilidagi nomi</TableHead>
                     <TableHead>Rus tilidagi nomi</TableHead>
-                    {/* <TableHead>Ingliz tilidagi nomi</TableHead> */}
                     <TableHead>Mahsulotlar soni</TableHead>
                     <TableHead className="w-12"></TableHead>
                 </TableRow>
@@ -140,7 +138,6 @@ function CategoryTable({ categories }: CategoryTableProps) {
     );
 }
 
-// Skeleton component for loading state
 function SkeletonTable() {
     return (
         <Table>
