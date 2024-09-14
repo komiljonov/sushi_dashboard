@@ -5,7 +5,7 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 const request = axios.create({
   baseURL: apiUrl,
-  timeout: 1000, // Optional: configure timeout
+  // timeout: 1000, // Optional: configure timeout
 });
 
 
@@ -25,4 +25,4 @@ axios.interceptors.request.use(
   }
 );
 
-export {request};
+export { request };

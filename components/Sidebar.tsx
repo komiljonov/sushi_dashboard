@@ -40,9 +40,9 @@ export function Sidebar({ collapsed, setCollapsed, page }: SidebarProps) {
         </div>
         <nav className="flex flex-col gap-2 p-2">
 
-          <NavItem href="/users" icon={<Home className="h-4 w-4" />} label="Foydalanuvchilar" collapsed={collapsed} isSelected={page == 'home'} />
+          <NavItem href="/" icon={<Home className="h-4 w-4" />} label="Bosh menu" collapsed={collapsed} isSelected={page == 'home'} />
           <NavItem href="/users" icon={<Users className="h-4 w-4" />} label="Foydalanuvchilar" collapsed={collapsed} isSelected={page == 'users'} />
-          <NavItem href="/categories" icon={<Box className="h-4 w-4" />} label="Mahsulotlar" collapsed={collapsed} isSelected={page == 'categories'} />
+          <NavItem href="/categories" icon={<Box className="h-4 w-4" />} label="kategoriyalar" collapsed={collapsed} isSelected={page == 'categories'} />
 
         </nav>
         {/* </ScrollArea> */}
