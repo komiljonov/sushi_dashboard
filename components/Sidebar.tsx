@@ -6,11 +6,10 @@ import { Users, LogOut, Box, Home } from "lucide-react"
 
 interface SidebarProps {
   collapsed: boolean;
-  setCollapsed: (collapsed: boolean) => void;
   page: string;
 }
 
-export function Sidebar({ collapsed, setCollapsed, page }: SidebarProps) {
+export function Sidebar({ collapsed,  page }: SidebarProps) {
   const handleLogout = () => {
     // Implement logout logic here
     console.log('Logout clicked')

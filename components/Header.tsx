@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/Button"
-import { Bell, User, ChevronRight, ChevronLeft, Menu } from "lucide-react"
+import { Bell, User, ChevronRight, ChevronLeft } from "lucide-react"
 
 interface HeaderProps {
   collapsed: boolean;

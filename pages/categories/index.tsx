@@ -10,7 +10,6 @@ import { ChevronLeft, ChevronRight, MoreVertical, Plus } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { request } from '@/lib/api';
 import { Layout } from '@/components/Layout';
-import { useRouter } from 'next/router';
 import CreateCategoryModal from '@/components/category/create';
 // import { CheckedState } from '@radix-ui/react-checkbox'; // Commented out
 
@@ -29,7 +28,7 @@ const fetchCategories = async (): Promise<ICategory[]> => {
 export function Categories() {
 
 
-    const { data: categories = [],  isLoading } = useQuery({
+    const { data: categories = [], isLoading } = useQuery({
         queryKey: ['categories'],
         queryFn: fetchCategories,
     });
@@ -135,7 +134,7 @@ function CategoryTable({ categories, handleRowClick }: CategoryTableProps) { // 
                     {/*         onCheckedChange={onSelectAllChange} */}
                     {/*     /> */}
                     {/* </TableHead> */}
-                    <TableHead>O'zbekcha tilidagi nomi</TableHead>
+                    <TableHead>O&apos;zbekcha tilidagi nomi</TableHead>
                     <TableHead>Rus tilidagi nomi</TableHead>
                     {/* <TableHead>Ingliz tilidagi nomi</TableHead> */}
                     <TableHead>Mahsulotlar soni</TableHead>

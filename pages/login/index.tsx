@@ -32,7 +32,7 @@ const LoginPage: React.FC & { authRequired?: boolean } = () => {
 
         }
 
-    }, [isAuthenticated]);
+    }, [isAuthenticated, push]);
 
 
 

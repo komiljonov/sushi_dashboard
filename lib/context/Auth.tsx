@@ -3,7 +3,7 @@
 // lib/context/Auth.js
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -32,6 +32,7 @@ interface IAuthenticateResponse {
 }
 
 
+
 export const AuthContext = createContext<IAuthProvider>({
     accessToken: null,
     refreshToken: null,
@@ -40,6 +41,7 @@ export const AuthContext = createContext<IAuthProvider>({
 
     setAccessToken: () => { },
     setRefreshToken: () => { },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     authenticate: async (username, password) => false
 });
 
@@ -56,7 +58,7 @@ interface IUserInfo {
 
 interface IDecodedToken {
     exp: number;
-    [key: string]: any;
+    [key: string]: string | number;
 }
 
 export const AuthProvider = ({ children }: IAuthProviderProps) => {
@@ -85,7 +87,7 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
                     setIsAuthenticated(true);
                     // Optionally, you can set user info based on the token payload
                     setUserInfo({
-                        name: decodedToken.name || 'Unknown',
+                        name: decodedToken.name as string || 'Unknown',
                         status: 'Active' // You can adjust this based on your token's payload
                     });
                 } else {
