@@ -1,0 +1,96 @@
+import Image from 'next/image'
+import Link from 'next/link'
+import { Button } from "@/components/ui/Button"
+import { cn } from "@/lib/utils"
+import { Users, LogOut, Box, Home } from "lucide-react"
+
+interface SidebarProps {
+  collapsed: boolean;
+  setCollapsed: (collapsed: boolean) => void;
+  page: string;
+}
+
+export function Sidebar({ collapsed, setCollapsed, page }: SidebarProps) {
+  const handleLogout = () => {
+    // Implement logout logic here
+    console.log('Logout clicked')
+  }
+
+  return (
+    <aside className={cn(
+      "bg-background border-r transition-all duration-300 ease-in-out",
+      collapsed ? "w-16" : "w-64"
+    )}>
+      <div className="flex flex-col h-full">
+        <div className="flex items-center justify-between p-4">
+          <div className={cn(
+            "flex items-center",
+            collapsed ? "justify-center w-full" : "justify-start"
+          )}>
+            <Image
+              src="/images/logo.webp"
+              alt="Company Logo"
+              width={collapsed ? 32 : 40}
+              height={collapsed ? 32 : 40}
+              className="rounded-full"
+            />
+            {!collapsed && <h2 className="text-lg font-semibold ml-2 overflow-clip">Sushi Yummy</h2>}
+          </div>
+
+        </div>
+        <nav className="flex flex-col gap-2 p-2">
+
+          <NavItem href="/users" icon={<Home className="h-4 w-4" />} label="Foydalanuvchilar" collapsed={collapsed} isSelected={page == 'home'} />
+          <NavItem href="/users" icon={<Users className="h-4 w-4" />} label="Foydalanuvchilar" collapsed={collapsed} isSelected={page == 'users'} />
+          <NavItem href="/categories" icon={<Box className="h-4 w-4" />} label="Mahsulotlar" collapsed={collapsed} isSelected={page == 'categories'} />
+
+        </nav>
+        {/* </ScrollArea> */}
+        <div className="p-2 mt-auto">
+          <Button
+            variant="ghost"
+            className={cn(
+              "w-full justify-start",
+              collapsed ? "px-2" : "px-4"
+            )}
+            onClick={handleLogout}
+          >
+            <LogOut className="h-4 w-4" />
+            {!collapsed && <span className="ml-2">Logout</span>}
+          </Button>
+        </div>
+      </div>
+    </aside>
+  )
+}
+
+interface NavItemProps {
+  href: string;
+  icon: React.ReactNode;
+  label: string;
+  collapsed: boolean;
+  isSelected: boolean;
+}
+
+export function NavItem({ href, icon, label, collapsed, isSelected }: NavItemProps) {
+  return (
+    <Link href={href} passHref>
+      <Button
+        variant={isSelected ? "secondary" : "ghost"}
+        className={cn(
+          "w-full justify-start",
+          collapsed ? "px-2" : "px-4",
+          isSelected && "bg-secondary"
+        )}
+      >
+        <span className={cn(
+          "flex items-center",
+          isSelected && "text-secondary-foreground"
+        )}>
+          {icon}
+          {!collapsed && <span className="ml-2">{label}</span>}
+        </span>
+      </Button>
+    </Link>
+  )
+}
