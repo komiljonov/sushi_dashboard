@@ -22,6 +22,7 @@ interface IAuthProvider {
     setAccessToken: React.Dispatch<React.SetStateAction<string | null>>;
     setRefreshToken: React.Dispatch<React.SetStateAction<string | null>>;
     authenticate: ((username: string, password: string) => Promise<boolean>);
+    logout: () => void;
 }
 
 
@@ -42,7 +43,8 @@ export const AuthContext = createContext<IAuthProvider>({
     setAccessToken: () => { },
     setRefreshToken: () => { },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    authenticate: async (username, password) => false
+    authenticate: async (username, password) => false,
+    logout: () => { }
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -147,8 +149,15 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
 
     }
 
+
+    const logout = () => {
+        localStorage.clear();
+        setAccessToken(null);
+        setRefreshToken(null);
+    }
+
     return (
-        <AuthContext.Provider value={{ accessToken, setAccessToken, refreshToken, setRefreshToken, isAuthenticated, userInfo, authenticate }}>
+        <AuthContext.Provider value={{ accessToken, setAccessToken, refreshToken, setRefreshToken, isAuthenticated, userInfo, authenticate, logout }}>
             {children}
         </AuthContext.Provider>
     );

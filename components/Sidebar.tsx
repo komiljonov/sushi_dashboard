@@ -3,16 +3,23 @@ import Link from 'next/link'
 import { Button } from "@/components/ui/Button"
 import { cn } from "@/lib/utils"
 import { Users, LogOut, Box, Home } from "lucide-react"
+import { useAuth } from '@/lib/context/Auth'
+import { useRouter } from 'next/router'
 
 interface SidebarProps {
   collapsed: boolean;
   page: string;
 }
 
-export function Sidebar({ collapsed,  page }: SidebarProps) {
+export function Sidebar({ collapsed, page }: SidebarProps) {
+  const { push } = useRouter();
+  const { logout } = useAuth();
+
   const handleLogout = () => {
     // Implement logout logic here
-    console.log('Logout clicked')
+    console.log('Logout clicked');
+    logout();
+    push('/login');
   }
 
   return (
