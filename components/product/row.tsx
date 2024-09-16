@@ -93,18 +93,14 @@ export default function ProductInfo({ product }: { product: IProduct }) {
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuLabel>Harakatlar</DropdownMenuLabel>
 
                         <DropdownMenuItem onClick={event => handleRowClick(event)} >
-                            <span>Edit</span>
+                            <span>O&apos;zgartirish</span>
                         </DropdownMenuItem>
 
-                        {/* <DropdownMenuItem>
-                            <span>Duplicate</span>
-                        </DropdownMenuItem> */}
-
                         <DropdownMenuItem onClick={event => handleRowClick(event, true)}>
-                            <span>Open in New Tab</span>
+                            <span>Yangi oynada ochish</span>
                         </DropdownMenuItem>
 
                         <DropdownMenuSeparator />
@@ -112,7 +108,7 @@ export default function ProductInfo({ product }: { product: IProduct }) {
 
 
                         <DropdownMenuItem className="text-red-600" onClick={() => { setOpen(true) }} >
-                            <span>Delete</span>
+                            <span>O&apos;chirish</span>
                         </DropdownMenuItem>
 
 

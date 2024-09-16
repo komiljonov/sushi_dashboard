@@ -72,7 +72,7 @@ function Products() {
         }
     }, [productId, setValue]);
 
-    const { data: product, isSuccess, status, fetchStatus, isLoading, isStale } = useQuery({
+    const { data: product, isSuccess } = useQuery({
         queryKey: ["product", productId],
         queryFn: () => {
             if (productId != null) {
