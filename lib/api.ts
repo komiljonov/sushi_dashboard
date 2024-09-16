@@ -5,13 +5,12 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 const request = axios.create({
   baseURL: apiUrl,
-  // timeout: 1000, // Optional: configure timeout
 });
 
 
 
 
-axios.interceptors.request.use(
+request.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('access_token');
     // Modify the request config before sending it

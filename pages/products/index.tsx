@@ -13,6 +13,8 @@ import { Layout } from '@/components/Layout';
 import { IProduct } from '@/lib/types';
 import ProductInfo from '@/components/product/row';
 
+import Link from "next/link"
+
 
 
 const getCategoryIdFromUrl = (): string | null => {
@@ -40,6 +42,8 @@ const fetchProducts = async (categoryId: string): Promise<IProduct[]> => {
 
 
 function Products() {
+
+    // const { push } = useRouter();
 
 
     const [categoryId] = useState(getCategoryIdFromUrl);
@@ -85,9 +89,12 @@ function Products() {
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold">Mahsulotlar</h1>
                 {/* <CreateProductModal> */}
-                <Button >
-                    <Plus className="mr-2 h-4 w-4" /> Mahsulot qo&apos;shish
-                </Button>
+                <Link href={`/products/create?category=${categoryId}`} >
+                    <Button  >
+                        <Plus className="mr-2 h-4 w-4" /> Mahsulot qo&apos;shish
+                    </Button>
+                </Link>
+
                 {/* </CreateProductModal> */}
 
             </div>
