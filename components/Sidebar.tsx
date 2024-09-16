@@ -33,13 +33,13 @@ export function Sidebar({ collapsed, page }: SidebarProps) {
             "flex items-center",
             collapsed ? "justify-center w-full" : "justify-start"
           )}>
-            <Image
+            <Link href={"/"}><Image
               src="/images/logo.webp"
               alt="Company Logo"
               width={collapsed ? 32 : 40}
               height={collapsed ? 32 : 40}
               className="rounded-full"
-            />
+            /></Link>
             {!collapsed && <h2 className="text-lg font-semibold ml-2 overflow-clip">Sushi Yummy</h2>}
           </div>
 
