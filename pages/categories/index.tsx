@@ -64,10 +64,10 @@ export function Categories() {
     return (
         <div className="container mx-auto py-10">
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold">Categories</h1>
+                <h1 className="text-2xl font-bold">Kategoriyalar</h1>
                 <CreateCategoryModal>
                     <Button >
-                        <Plus className="mr-2 h-4 w-4" /> Create
+                        <Plus className="mr-2 h-4 w-4" /> Kategoriya qo&apos;shish
                     </Button>
                 </CreateCategoryModal>
 
@@ -85,7 +85,7 @@ export function Categories() {
 
             <div className="flex items-center justify-between space-x-2 py-4">
                 <div className="text-sm text-muted-foreground">
-                    Showing {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, categories.length)} of {categories.length}
+                    Kategoriyalar  {categories.length} dan {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, categories.length)}
                 </div>
                 <div className="space-x-2">
                     <Button
@@ -95,7 +95,7 @@ export function Categories() {
                         disabled={currentPage === 1}
                     >
                         <ChevronLeft className="h-4 w-4" />
-                        <span className="sr-only">Previous</span>
+                        <span className="sr-only">Oldingi</span>
                     </Button>
                     <Button
                         variant="outline"
@@ -104,7 +104,7 @@ export function Categories() {
                         disabled={currentPage === totalPages}
                     >
                         <ChevronRight className="h-4 w-4" />
-                        <span className="sr-only">Next</span>
+                        <span className="sr-only">Keyingo</span>
                     </Button>
                 </div>
             </div>

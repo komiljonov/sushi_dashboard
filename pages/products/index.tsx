@@ -111,7 +111,7 @@ function Products() {
 
             <div className="flex items-center justify-between space-x-2 py-4">
                 <div className="text-sm text-muted-foreground">
-                    Showing {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, products.length)} of {products.length}
+                    Mahsulotlar {products.length} dan {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, products.length)}
                 </div>
                 <div className="space-x-2">
                     <Button

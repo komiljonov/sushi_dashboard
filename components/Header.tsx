@@ -31,7 +31,7 @@ export function Header({ collapsed, setCollapsed }: HeaderProps) {
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
   const [passwordError, setPasswordError] = useState("");
 
-  const { userInfo } = useAuth();
+  const { userInfo, logout } = useAuth();
   const { toast } = useToast();
 
   const changePasswordMutation = useMutation({
@@ -70,6 +70,7 @@ export function Header({ collapsed, setCollapsed }: HeaderProps) {
 
   const handleLogout = () => {
     console.log("Logging out...")
+    logout();
     // Implement logout logic here
   }
 
@@ -85,7 +86,7 @@ export function Header({ collapsed, setCollapsed }: HeaderProps) {
         >
           {collapsed ? <ChevronRight /> : <ChevronLeft />}
         </Button>
-        <h1 className="text-xl font-semibold">Dashboard</h1>
+        <h1 className="text-xl font-semibold">Boshqaruv</h1>
       </div>
       <div className="flex items-center space-x-4">
         <Button variant="ghost" size="icon" aria-label="Notifications">
@@ -102,42 +103,42 @@ export function Header({ collapsed, setCollapsed }: HeaderProps) {
               <p className="font-semibold">{userInfo?.name}</p>
               <Dialog open={isChangePasswordOpen} onOpenChange={setIsChangePasswordOpen}>
                 <DialogTrigger asChild>
-                  <Button variant="outline" className="w-full">Change Password</Button>
+                  <Button variant="outline" className="w-full">Parolni almashtirish</Button>
                 </DialogTrigger>
                 <DialogContent className="bg-white">
                   <DialogHeader>
-                    <DialogTitle>Change Password</DialogTitle>
+                    <DialogTitle>Parolni almashtirish</DialogTitle>
                   </DialogHeader>
                   <form onSubmit={handleChangePassword} className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="oldPassword">Current Password</Label>
+                      <Label htmlFor="oldPassword">Hozirgi parol</Label>
                       <Input id="oldPassword" name="oldPassword" type="password" required />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="newPassword">New Password</Label>
+                      <Label htmlFor="newPassword">Yangi parol</Label>
                       <Input id="newPassword" name="newPassword" type="password" required />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="repeatNewPassword">Repeat New Password</Label>
+                      <Label htmlFor="repeatNewPassword">yangi parolni takrorlang</Label>
                       <Input id="repeatNewPassword" name="repeatNewPassword" type="password" required />
                     </div>
                     {passwordError && (
                       <p className="text-red-600 text-sm">{passwordError}</p>
                     )}
                     <Button type="submit" disabled={changePasswordMutation.isPending}>
-                      {changePasswordMutation.isPending ? "Changing..." : "Change Password"}
+                      {changePasswordMutation.isPending ? "Kuting..." : "O'zgartirish"}
                     </Button>
                   </form>
                   {changePasswordMutation.isSuccess && (
-                    <p className="text-green-600">Password changed successfully!</p>
+                    <p className="text-green-600">Parol yangilandi.</p>
                   )}
                   {changePasswordMutation.isError && (
-                    <p className="text-red-600">Failed to change password. Please try again.</p>
+                    <p className="text-red-600">Parolni o&apos;zgartirishda hatolik. Iltimos qaytadan urinib ko&apos;ring.</p>
                   )}
                 </DialogContent>
               </Dialog>
               <Button variant="outline" className="w-full" onClick={handleLogout}>
-                Logout
+                Chiqish
               </Button>
             </div>
           </PopoverContent>

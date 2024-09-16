@@ -50,14 +50,14 @@ export default function ProductInfo({ product }: { product: IProduct }) {
 
         if (!new_tab) {
             router.push({
-                pathname: '/categories/info',
+                pathname: '/products/info',
                 query: {
                     ...router.query, id: product.id
                 },
             }, undefined, { shallow: true });
         }
         else {
-            window.open(`/categories/info?id=${product.id}`)
+            window.open(`/products/info?id=${product.id}`)
         }
 
     }, [product, router]);

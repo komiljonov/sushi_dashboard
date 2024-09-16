@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/Label"
 import { Button } from "@/components/ui/Button"
 import { ShoppingCart, Users, TrendingUp, Package } from 'lucide-react'
 import { request } from '@/lib/api'
-import { ICategory, ICategoryWithStats } from "@/lib/types"
+import { ICategory, ICategoryWithStats, IFile } from "@/lib/types"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 import Image from "next/image"
@@ -102,10 +102,10 @@ function CategoryInfo() {
   ]
 
   const pieChartData = {
-    labels: category?.most_sold_products?.map(product => product.name_uz),
+    labels: category?.products?.map(product => product.name_uz),
     datasets: [
       {
-        data: category?.most_sold_products?.map(() => getRandomNumber(100, 200)),
+        data: category?.products?.map(() => getRandomNumber(100, 200)),
         backgroundColor: [
           '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
           '#FF9F40', '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'
@@ -158,7 +158,7 @@ function CategoryInfo() {
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Category Info</h1>
+        <h1 className="text-2xl font-bold">Kategoriya ma&apos;lumotlari</h1>
         <Link href={`/products?category=${categoryId}`}>
           <Button>
             <Package className="mr-2 h-4 w-4" />
@@ -212,10 +212,12 @@ function CategoryInfo() {
               <Pie data={pieChartData} />
             </div>
             <ul className="mt-4">
-              {category?.most_sold_products?.map((product, index) => (
+              {category?.products?.map((product, index) => (
                 <li key={index} className="flex items-center justify-between py-2">
                   <div className="flex items-center">
-                    <Image src={product.image} alt={product.name_uz} width={50} height={50} className="w-8 h-8 mr-2" />
+
+                    {product.image && <Image src={(product.image as IFile)?.file} alt={product.name_uz} width={50} height={50} className="w-8 h-8 mr-2" />}
+
                     <span>{product.name_uz}</span>
                   </div>
                   <span>${product.price.toFixed(2)}</span>

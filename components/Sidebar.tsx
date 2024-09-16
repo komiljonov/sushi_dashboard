@@ -62,7 +62,7 @@ export function Sidebar({ collapsed, page }: SidebarProps) {
             onClick={handleLogout}
           >
             <LogOut className="h-4 w-4" />
-            {!collapsed && <span className="ml-2">Logout</span>}
+            {!collapsed && <span className="ml-2">Chiqish</span>}
           </Button>
         </div>
       </div>

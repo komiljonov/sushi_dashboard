@@ -9,19 +9,27 @@ export interface ICategory {
     products_count: number;
 }
 
-
+export interface IFile {
+    id: string;
+    file: string;
+    filename: string;
+    created_at: string;
+    updated_at: string;
+}
 
 export interface IProduct {
     id: number;
+
     name_uz: string;
     name_ru: string;
+
     caption_uz: string;
     caption_ru: string;
 
     category: string;
 
+    image: IFile | string;
 
-    image: string;
     price: number;
 }
 
@@ -32,5 +40,5 @@ export interface ICategoryWithStats {
     name_ru: string;
     products_count: number;
 
-    most_sold_products: IProduct[]
+    products: IProduct[]
 }

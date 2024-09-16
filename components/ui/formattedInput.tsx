@@ -1,13 +1,13 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react'
-import { Button } from "@/components/ui/Button"
-import { Label } from "@/components/ui/Label"
-import { Bold, Italic, Underline, Link } from 'lucide-react'
-import { useFormContext } from 'react-hook-form'
+import React, { useState, useEffect, useRef } from 'react';
+import { Button } from "@/components/ui/Button";
+import { Label } from "@/components/ui/Label";
+import { Bold, Italic, Underline, Link } from 'lucide-react';
+import { useFormContext } from 'react-hook-form';
 
 // Add this constant to disable the focus-only preview feature
-const ALWAYS_SHOW_PREVIEW = false
+const ALWAYS_SHOW_PREVIEW = false;
 
 interface FormattedInputProps {
     id: string;
@@ -25,12 +25,12 @@ export function FormattedInput({ id, label, placeholder }: FormattedInputProps) 
 
     const { ref: registerRef, ...rest } = register(id, {
         required: true,
-        maxLength: 1023,
-        validate: (value) => value.length <= 1023 || "Maximum length exceeded!",
+        maxLength: 950,
+        validate: (value) => value.length <= 950 || "Maximum length exceeded!",
         onBlur: () => setIsFocused(false),
     });
 
-    const value = watch(id);
+    const value: string = watch(id);
 
     useEffect(() => {
         const isValid = isValidHTMLString(value || '');
@@ -44,29 +44,29 @@ export function FormattedInput({ id, label, placeholder }: FormattedInputProps) 
 
         const start = textarea.selectionStart;
         const end = textarea.selectionEnd;
-        const selectedText = value.substring(start, end)
-        const beforeText = value.substring(0, start)
-        const afterText = value.substring(end, value.length)
+        const selectedText = value.substring(start, end);
+        const beforeText = value.substring(0, start);
+        const afterText = value.substring(end, value.length);
 
-        let formattedText = ''
+        let formattedText = '';
         if (tag === 'a') {
-            const url = prompt('Enter URL:', 'http://')
+            const url = prompt('Enter URL:', 'http://');
             if (url) {
-                formattedText = `<a href="${url}">${selectedText}</a>`
+                formattedText = `<a href="${url}">${selectedText}</a>`;
             } else {
-                return
+                return;
             }
         } else {
-            formattedText = `<${tag}>${selectedText}</${tag}>`
+            formattedText = `<${tag}>${selectedText}</${tag}>`;
         }
 
         const newValue = beforeText + formattedText + afterText;
-        if (newValue.length <= 1023) {
+        if (newValue.length <= 950) {
             setValue(id, newValue, { shouldValidate: true });
         } else {
             alert("Maximum length exceeded!");
         }
-        textarea.focus()
+        textarea.focus();
     }
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -122,12 +122,12 @@ export function FormattedInput({ id, label, placeholder }: FormattedInputProps) 
                 placeholder={placeholder}
                 onFocus={() => setIsFocused(true)}
                 // onBlur={() => setIsFocused(false)}
-
+                maxLength={950}
                 onKeyDown={handleKeyDown}
                 {...rest}
                 ref={(e) => {
                     registerRef(e);
-                    
+
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-expect-error
                     textareaRef.current = e;
@@ -136,11 +136,11 @@ export function FormattedInput({ id, label, placeholder }: FormattedInputProps) 
             {(ALWAYS_SHOW_PREVIEW || isFocused) && (
                 <div className={`mt-2 p-2 border rounded-md bg-muted ${isValidHTML ? '' : 'border-red-500'}`}>
                     <p className="text-sm font-medium">Preview:</p>
-                    <div className="mt-1 text-sm" dangerouslySetInnerHTML={{ __html: value || '' }} />
+                    <div className="mt-1 text-sm" dangerouslySetInnerHTML={{ __html: value?.replace(/\n/g, "<br>") || '' }} />
                 </div>
             )}
             <p className="text-sm text-muted-foreground">
-                Characters: {value ? value.length : 0} / 1023
+                Characters: {value ? value.length : 0} / 950
             </p>
         </div>
     )

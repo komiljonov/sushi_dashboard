@@ -3,19 +3,20 @@ import { Input } from "@/components/ui/Input"
 import { Label } from "@/components/ui/Label"
 import { Loader2 } from "lucide-react"
 import Image from 'next/image'
+import { IFile } from '@/lib/types'
 
 interface UploadFieldProps {
-    onFileUpload: (fileId: string) => void // Modify this to handle API response
+    onFileUpload: (file: IFile) => void // Modify this to handle API response
     setFileUploading: React.Dispatch<React.SetStateAction<boolean>>;
+    preview?: string;
 }
 
-export function UploadField({ onFileUpload, setFileUploading }: UploadFieldProps) {
+export function UploadField({ onFileUpload, setFileUploading, preview }: UploadFieldProps) {
     const [fileName, setFileName] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-    const [preview, setPreview] = useState<string | null>(null);
 
 
-    
+
 
     const handleFileChange = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -27,7 +28,7 @@ export function UploadField({ onFileUpload, setFileUploading }: UploadFieldProps
             setLoading(true);
             setFileUploading(true);
 
-            await new Promise(resolve => setTimeout(resolve, 2000))
+            // await new Promise(resolve => setTimeout(resolve, 2000))
 
 
             try {
@@ -38,8 +39,7 @@ export function UploadField({ onFileUpload, setFileUploading }: UploadFieldProps
 
                 if (response.ok) {
                     const data = await response.json();
-                    onFileUpload(data.id);
-                    setPreview(data.file);
+                    onFileUpload(data);
                     setFileName(data.filename);
                 } else {
                     console.error("Failed to upload file");
@@ -66,7 +66,7 @@ export function UploadField({ onFileUpload, setFileUploading }: UploadFieldProps
             {fileName && <p className="text-sm text-gray-500">File: {fileName}</p>}
             {preview && (
                 <div className="mt-2">
-                    <Image src={preview} alt="File preview" width={300} height={300} className="max-w-full h-auto rounded-md" />
+                    <Image src={preview || ''} alt="File preview" width={150} height={150} className="max-w-full h-auto rounded-md" />
                 </div>
             )}
         </div>

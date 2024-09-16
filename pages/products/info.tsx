@@ -11,80 +11,116 @@ import { Label } from '@/components/ui/Label';
 import { Input } from '@/components/ui/Input';
 import { UploadField } from '@/components/ui/file_upload';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useMutation } from '@tanstack/react-query';
-import { useRouter } from 'next/router';
+// import { useMutation, useQuery } from '@tanstack/react-query';
+// import { useRouter } from 'next/router';
 import { FormattedInput } from '@/components/ui/formattedInput';
-import { IFile } from '@/lib/types';
+import { IFile, IProduct } from '@/lib/types';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 
 
 
-const getCategoryIdFromUrl = (): string | null => {
+const getProductIdFromUrl = (): string | null => {
     if (typeof window !== 'undefined') {
         const url = new URL(window.location.href)
         const queryParams = new URLSearchParams(url.search)
-        const id = queryParams.get('category')
+        const id = queryParams.get('id')
         return id
     }
     return null
 }
 
-
-
-interface IFormInput {
-    name_uz: string;
-    name_ru: string;
-    price: number;
-    image: string;
-    category: string;
-}
-
-
-
-const createProduct = async (create_data: IFormInput) => {
-    const { data } = await request.post('products', create_data);
-
+const fetchProductData = async (id: string): Promise<IProduct> => {
+    const { data } = await request.get(`products/${id}`)
     return data;
 }
 
 
+
+const editProduct = async (new_data: IProduct) => {
+    const { data } = await request.patch(`products/${new_data.id}`, {
+        name_uz: new_data.name_uz,
+        name_ru: new_data.name_ru,
+        caption_uz: new_data.caption_uz,
+        caption_ru: new_data.caption_ru,
+        price: new_data.price,
+        image: new_data.image
+    })
+    return data;
+}
+
+
+
+
+
+
+
 function Products() {
 
-    const { push } = useRouter();
 
-    const methods = useForm<IFormInput>();
-    const { register, handleSubmit, setValue } = methods;
+    const methods = useForm<IProduct>();
+    const { register, handleSubmit, setValue, reset } = methods;
     const [fileUploading, setFileUploading] = useState<boolean>(false);
-    const [categoryId] = useState(getCategoryIdFromUrl);
+    const [productId] = useState(getProductIdFromUrl);
+
+    const [image, setImage] = useState<string | null>();
 
 
     useEffect(() => {
-        if (categoryId) {
-            setValue('category', categoryId);
+        if (productId) {
+            setValue('category', productId);
         }
-    }, [categoryId, setValue]);
+    }, [productId, setValue]);
+
+    const { data: product, isSuccess, status, fetchStatus, isLoading, isStale } = useQuery({
+        queryKey: ["product", productId],
+        queryFn: () => {
+            if (productId != null) {
+                return fetchProductData(productId);
+            }
+            return Promise.reject(new Error("Product ID is null"));
+        },
+        enabled: productId !== null
+    });
 
 
-    const onFileUpload = (file: IFile) => {
-        setValue('image', file.id);
-    }
 
     const mutation = useMutation({
-        mutationFn: createProduct,
-        onSuccess: () => {
-            // Invalidate and refetch the 'categories' query
-            push(`/products?category=${categoryId}`);
-        },
-        onError: (error) => {
-            // Handle error (optional)
-            console.error('Error creating category:', error);
+        mutationFn: (data: IProduct) => {
+            if (productId !== null) {
+                return editProduct(data);
+            }
+            return Promise.reject(new Error('Category ID is null'));
         }
     });
 
 
-    const handleCreateProduct = (data: IFormInput) => {
-        mutation.mutate(data);
+
+    useEffect(() => {
+        if (isSuccess) {
+            reset({
+                id: product.id,
+                name_uz: product.name_uz,
+                name_ru: product.name_ru,
+                caption_uz: product.caption_uz,
+                caption_ru: product.caption_ru,
+                price: product.price,
+                image: (product.image as IFile).id
+            });
+            setImage((product.image as IFile).file);
+        }
+    }, [isSuccess, reset, product]);
+
+
+    const handleCreateProduct = (product_data: IProduct) => {
+        mutation.mutate(product_data);
     }
+
+    const onFileUpload = (file: IFile) => {
+        setValue('image', file.id);
+        setImage(file.file);
+    }
+
 
 
     return (
@@ -128,7 +164,8 @@ function Products() {
                 </FormProvider>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <UploadField onFileUpload={onFileUpload} setFileUploading={setFileUploading} />
+
+                    <UploadField onFileUpload={onFileUpload} setFileUploading={setFileUploading} preview={image || ''} />
                     <div>
                         <Label htmlFor="price">Price</Label>
                         <Input
@@ -139,14 +176,10 @@ function Products() {
                         />
                     </div>
 
-
                 </div>
 
 
-
-
-
-                <Button type="submit" disabled={fileUploading} >Submit</Button>
+                <Button type="submit" disabled={fileUploading || mutation.status == 'pending'} >Submit</Button>
             </form>
         </div>
     );
