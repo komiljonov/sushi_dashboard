@@ -3,12 +3,12 @@
 
 // import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 
 import { request } from '@/lib/api';
 import { Layout } from '@/components/Layout';
-import { Label } from '@/components/ui/Label';
-import { Input } from '@/components/ui/Input';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import { UploadField } from '@/components/ui/file_upload';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
