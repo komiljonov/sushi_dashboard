@@ -9,7 +9,7 @@ import { request } from '@/lib/api';
 import { Layout } from '@/components/Layout';
 import { Label } from '@/components/ui/Label';
 import { Input } from '@/components/ui/Input';
-import { UploadField } from '@/components/ui/File_upload';
+import { UploadField } from '@/components/ui/file_upload';
 import { FormProvider, useForm } from 'react-hook-form';
 // import { useMutation, useQuery } from '@tanstack/react-query';
 // import { useRouter } from 'next/router';

@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/Button';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { MoreVertical } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/Dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 import { ICategory } from "@/lib/types"
 import { useRouter } from 'next/router';
