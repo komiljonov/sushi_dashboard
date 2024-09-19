@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/Label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { IPromocode } from "@/lib/types"
 import * as Slider from '@radix-ui/react-slider'
-import { Checkbox } from "../ui/Checkbox"
+import { Checkbox } from "../ui/checkbox"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { cn } from "@/lib/utils"
 import { CalendarIcon } from "lucide-react"
