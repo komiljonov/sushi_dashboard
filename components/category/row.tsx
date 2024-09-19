@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/Button';
-import { TableCell, TableRow } from '@/components/ui/Table';
+import { TableCell, TableRow } from '@/components/ui/table';
 import { MoreVertical } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/Dropdown-menu';
 
