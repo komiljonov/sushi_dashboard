@@ -112,7 +112,7 @@ export function Promocodes() {
             </DialogHeader>
             <PromocodeForm
               onSubmit={handleCreatePromocode}
-              defaultValues={{ name: "", code: "", measurement: "ABSOLUTE", amount: 0, count: 0, end_date: null, min_amount: 0, max_amount: 0 }}
+              defaultValues={{ name: "", code: "", measurement: "ABSOLUTE", amount: 0, count: 0, end_date: null, min_amount: 0, max_amount: 0, is_limited: false, is_max_limited: false }}
             />
           </DialogContent>
         </Dialog>
