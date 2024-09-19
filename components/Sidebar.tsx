@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/Button"
 import { cn } from "@/lib/utils"
 import { Users, LogOut, Box, Home, Ticket } from "lucide-react"
 import { useAuth } from '@/lib/context/Auth'

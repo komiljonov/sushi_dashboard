@@ -4,7 +4,7 @@ import { Layout } from '@/components/Layout'
 import type { NextPage } from 'next'
 import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"

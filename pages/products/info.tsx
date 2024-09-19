@@ -3,7 +3,7 @@
 
 // import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 
 import { request } from '@/lib/api';
 import { Layout } from '@/components/Layout';

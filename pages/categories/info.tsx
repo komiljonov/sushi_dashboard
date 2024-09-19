@@ -7,7 +7,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearSca
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/Button"
 import { ShoppingCart, Users, TrendingUp, Package } from 'lucide-react'
 import { request } from '@/lib/api'
 import { ICategory, ICategoryWithStats, IFile } from "@/lib/types"
