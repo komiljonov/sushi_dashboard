@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/Dialog";
+} from "@/components/ui/dialog";
 import { Bell, User, ChevronRight, ChevronLeft } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/lib/context/Auth";

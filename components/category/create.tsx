@@ -11,7 +11,7 @@ import {
     DialogTitle,
     DialogTrigger,
     DialogDescription
-} from "@/components/ui/Dialog"
+} from "@/components/ui/dialog"
 import { useForm } from "react-hook-form"
 import { useMutation } from "@tanstack/react-query"
 // import { createCategory } from "./api/category" // Update the import path accordingly
