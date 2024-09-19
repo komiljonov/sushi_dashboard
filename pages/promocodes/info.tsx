@@ -8,7 +8,7 @@ import { request } from '@/lib/api'
 import { IPromocode } from "@/lib/types"
 import Link from "next/link"
 import { CalendarIcon, CreditCardIcon, UserIcon } from "lucide-react"
-import { Badge } from "@/components/ui/Badge"
+import { Badge } from "@/components/ui/badge"
 import { Layout } from "@/components/Layout"
 import { PromocodeForm, PromocodeFormOnSubmitProps } from "@/components/promocode/Form"
 
