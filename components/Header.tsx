@@ -22,6 +22,7 @@ import { useAuth } from "@/lib/context/Auth";
 import { request } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 
+
 interface HeaderProps {
   collapsed: boolean;
   setCollapsed: (collapsed: boolean) => void;
