@@ -30,8 +30,23 @@ const fetchPromocodeInfo = async (id: string): Promise<IPromocode> => {
 }
 
 const updatePromocode = async (promocode: IPromocode) => {
-    const { data } = await request.put(`promocodes/${promocode.id}/`, promocode)
-    return data
+    const { end_date } = promocode;
+
+    // Format end_date if it's a Date object, otherwise keep it as-is
+    const formattedEndDate = end_date instanceof Date
+        ? `${end_date.getFullYear()}-${String(end_date.getMonth() + 1).padStart(2, '0')}-${String(end_date.getDate()).padStart(2, '0')}`
+        : undefined;
+
+    // Construct request payload conditionally
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const payload: any = { ...promocode };
+    if (formattedEndDate !== undefined) {
+        payload.end_date = formattedEndDate;
+    }
+
+    const { data } = await request.put(`promocodes/${promocode.id}/`, payload);
+
+    return data;
 }
 
 const users = [
@@ -76,9 +91,11 @@ function EditPromocode() {
         if (promocodeId) {
 
 
+
+
             mutation.mutate({
                 ...data,
-                id: promocodeId
+                id: promocodeId,
             });
         }
     }

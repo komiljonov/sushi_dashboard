@@ -23,14 +23,21 @@ interface PromocodeFormProps {
 }
 
 export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) => {
-    const { register, handleSubmit, watch, formState: { errors }, control } = useForm<Omit<IPromocode & { isLimited: boolean; isMaxLimited: boolean }, "id">>({
+    const { register, handleSubmit, watch, formState: { errors }, control } = useForm<Omit<IPromocode, "id">>({
         defaultValues,
     })
 
 
+
+
     const measurement = watch('measurement');
-    const isLimited = watch('isLimited');
-    const isMaxLimited = watch('isMaxLimited');
+
+
+    const is_limited = watch('is_limited');
+
+    const is_max_limited = watch('is_max_limited');
+
+
 
     return (
 
@@ -130,65 +137,72 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                     )}
                 </div>
                 <div className="space-y-2">
-                    <Label htmlFor="endDate">End Date</Label>
+                    <Label htmlFor="end_date">End Date</Label>
+                    <br />
+
                     <Controller
-                        name="endDate"
+                        name="end_date"
                         control={control}
                         rules={{ required: "End date is required" }}
                         render={({ field }) => (
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <Button
-                                        variant={"outline"}
-                                        className={cn(
-                                            "w-full justify-start text-left font-normal",
-                                            !field.value && "text-muted-foreground"
-                                        )}
-                                    >
-                                        <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
-                                    <Calendar
-                                        mode="single"
-                                        selected={field.value || undefined}
-                                        onSelect={field.onChange}
-                                        initialFocus
-                                    />
-                                </PopoverContent>
-                            </Popover>
+                            <>
+                                {String(field.value)}<br />
+                                <Popover>
+                                    <PopoverTrigger asChild>
+
+                                        <Button
+                                            variant={"outline"}
+                                            className={cn(
+                                                "w-full justify-start text-left font-normal",
+                                                !field.value && "text-muted-foreground"
+                                            )}
+                                        >
+                                            <CalendarIcon className="mr-2 h-4 w-4" />
+
+                                            {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                        <Calendar
+                                            mode="single"
+                                            selected={field.value || undefined}
+                                            onSelect={field.onChange}
+                                            initialFocus
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                            </>
                         )}
                     />
-                    {errors.endDate && (
+                    {errors.end_date && (
                         <p className="text-red-500 text-sm" id="endDate-error">
-                            {errors.endDate.message}
+                            {errors.end_date.message}
                         </p>
                     )}
                 </div>
             </div>
             <div className="flex items-center space-x-2">
                 <Controller
-                    name="isLimited"
+                    name="is_limited"
                     control={control}
                     render={({ field }) => (
                         <Checkbox
-                            id="isLimited"
+                            id="is_limited"
                             checked={field.value}
                             onCheckedChange={field.onChange}
                         />
                     )}
                 />
-                <Label htmlFor="isLimited">Limit promocode to specific amount range</Label>
+                <Label htmlFor="is_limited">Limit promocode to specific amount range</Label>
             </div>
-            {isLimited && (
+            {is_limited && (
                 <div className="flex items-center space-x-2">
                     <Controller
-                        name="isMaxLimited"
+                        name="is_max_limited"
                         control={control}
                         render={({ field }) => (
                             <Checkbox
-                                id="isMaxLimited"
+                                id="is_max_limited"
                                 checked={field.value}
                                 onCheckedChange={field.onChange}
                             />
@@ -198,24 +212,24 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                 </div>
             )}
 
-            {isLimited && (
+            {is_limited && (
                 <div className="space-y-2">
                     <Label htmlFor="amount-range">Amount Range</Label>
                     <Controller
-                        name="minAmount"
+                        name="min_amount"
                         control={control}
                         rules={{ required: "Minimum amount is required" }}
                         render={({ field: { onChange, value } }) => (
                             <Controller
-                                name="maxAmount"
+                                name="max_amount"
                                 control={control}
                                 rules={{ required: "Maximum amount is required" }}
                                 render={({ field: { onChange: onChangeMax, value: valueMax } }) => (
                                     <Slider.Root
                                         className="relative flex items-center select-none touch-none w-full h-5"
-                                        value={!isMaxLimited ? [value] : [value, valueMax]}
+                                        value={!is_max_limited ? [value] : [value, valueMax]}
                                         onValueChange={(newValues) => {
-                                            if (!isMaxLimited) {
+                                            if (!is_max_limited) {
                                                 onChange(newValues[0]);
                                             } else {
                                                 onChange(newValues[0]);
@@ -240,7 +254,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
 
 
 
-                                        {isMaxLimited && <Slider.Thumb
+                                        {is_max_limited && <Slider.Thumb
 
                                             className="block w-5 h-5 bg-primary shadow-md rounded-full hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary"
                                             aria-label="Maximum amount"
@@ -252,14 +266,14 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                         )}
                     />
                     <div className="flex justify-between text-sm text-gray-500">
-                        <span>Min: {watch('minAmount')}</span>
+                        <span>Min: {watch('min_amount')}</span>
 
-                        {isMaxLimited && <span>Max: {watch('maxAmount')}</span>}
+                        {is_max_limited && <span>Max: {watch('max_amount')}</span>}
                     </div>
 
-                    {(errors.minAmount || errors.maxAmount) && (
+                    {(errors.min_amount || errors.max_amount) && (
                         <p className="text-red-500 text-sm" id="amount-range-error">
-                            {errors.minAmount?.message || errors.maxAmount?.message}
+                            {errors.min_amount?.message || errors.max_amount?.message}
                         </p>
                     )}
                 </div>

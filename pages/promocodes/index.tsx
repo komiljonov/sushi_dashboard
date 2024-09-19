@@ -16,9 +16,48 @@ const fetchPromocodes = async (): Promise<IPromocode[]> => {
   return data;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
 const createPromocode = async (promocode: Omit<IPromocode, "id">) => {
-  await request.post('promocodes/', promocode);
+
+
+  const { end_date } = promocode;
+
+  // Format end_date if it's a Date object, otherwise keep it as-is
+  const formattedEndDate = end_date instanceof Date
+    ? `${end_date.getFullYear()}-${String(end_date.getMonth() + 1).padStart(2, '0')}-${String(end_date.getDate()).padStart(2, '0')}`
+    : undefined;
+
+  // Construct request payload conditionally
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const payload: any = { ...promocode };
+  if (formattedEndDate !== undefined) {
+    payload.end_date = formattedEndDate;
+  }
+
+
+  await request.post('promocodes/', payload);
+
 }
+
+
+
+
+
+
+
+
+
 
 const deletePromocode = async (id: string) => {
   await request.delete(`promocodes/${id}/`);
@@ -73,7 +112,7 @@ export function Promocodes() {
             </DialogHeader>
             <PromocodeForm
               onSubmit={handleCreatePromocode}
-              defaultValues={{ name: "", code: "", measurement: "ABSOLUTE", amount: 0, count: 0, endDate: null, minAmount: 0, maxAmount: 0 }}
+              defaultValues={{ name: "", code: "", measurement: "ABSOLUTE", amount: 0, count: 0, end_date: null, min_amount: 0, max_amount: 0 }}
             />
           </DialogContent>
         </Dialog>

@@ -63,7 +63,10 @@ export interface IPromocode {
     measurement: "ABSOLUTE" | "PERCENT"
     amount: number
     count: number
-    endDate: Date | null
-    minAmount: number
-    maxAmount: number
+    end_date: Date | null
+    min_amount: number
+    max_amount: number
+
+    is_limited: boolean;
+    is_max_limited: boolean
 }
