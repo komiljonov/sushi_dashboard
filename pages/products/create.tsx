@@ -39,14 +39,10 @@ interface IFormInput {
     category: string;
 }
 
-
-
 const createProduct = async (create_data: IFormInput) => {
     const { data } = await request.post('products', create_data);
-
     return data;
 }
-
 
 function Products() {
 
@@ -56,7 +52,6 @@ function Products() {
     const { register, handleSubmit, setValue } = methods;
     const [fileUploading, setFileUploading] = useState<boolean>(false);
     const [categoryId] = useState(getCategoryIdFromUrl);
-
 
     useEffect(() => {
         if (categoryId) {
@@ -72,20 +67,16 @@ function Products() {
     const mutation = useMutation({
         mutationFn: createProduct,
         onSuccess: () => {
-            // Invalidate and refetch the 'categories' query
             push(`/products?category=${categoryId}`);
         },
         onError: (error) => {
-            // Handle error (optional)
             console.error('Error creating category:', error);
         }
     });
 
-
     const handleCreateProduct = (data: IFormInput) => {
         mutation.mutate(data);
     }
-
 
     return (
         <div className="w-full max-w-4xl p-6">
@@ -109,7 +100,6 @@ function Products() {
                             placeholder="Enter product name in Russian"
                         />
                     </div>
-
                 </div>
 
                 <FormProvider {...methods}>
@@ -139,12 +129,7 @@ function Products() {
                         />
                     </div>
 
-
                 </div>
-
-
-
-
 
                 <Button type="submit" disabled={fileUploading} >Submit</Button>
             </form>

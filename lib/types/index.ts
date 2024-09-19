@@ -54,3 +54,16 @@ export interface IUser {
     is_staff: boolean;
 }
 
+
+
+export interface IPromocode {
+    id: string
+    name: string
+    code: string
+    measurement: "ABSOLUTE" | "PERCENT"
+    amount: number
+    count: number
+    endDate: Date | null
+    minAmount: number
+    maxAmount: number
+}
