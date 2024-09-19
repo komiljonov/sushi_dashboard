@@ -47,8 +47,10 @@ export interface ICategoryWithStats {
 
 export interface IUser {
     id: number;
-    name: string;
-    email: string;
-    active: boolean;
+    first_name: string;
+    last_name: string;
+    username: string;
+    fullname: string;
+    is_staff: boolean;
 }
 

@@ -12,14 +12,9 @@ import { ICategory } from '@/lib/types';
 import CategoryInfo from '@/components/category/row';
 
 
-// function sleep(ms: number): Promise<unknown> {
-//     return new Promise((resolve) => setTimeout(resolve, ms));
-// }
-
 
 const fetchCategories = async (): Promise<ICategory[]> => {
 
-    // await sleep(2000);
 
     const { data } = await request.get('categories');
     return data;
