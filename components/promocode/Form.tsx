@@ -4,7 +4,7 @@ import { Controller, useForm } from "react-hook-form"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { Label } from "@/components/ui/Label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { IPromocode } from "@/lib/types"
 import * as Slider from '@radix-ui/react-slider'
 import { Checkbox } from "../ui/Checkbox"
@@ -12,7 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { cn } from "@/lib/utils"
 import { CalendarIcon } from "lucide-react"
 import { format } from "date-fns/format"
-import { Calendar } from "../ui/Calendar"
+import { Calendar } from "../ui/calendar"
 
 
 export type PromocodeFormOnSubmitProps = Omit<IPromocode, "id">;
