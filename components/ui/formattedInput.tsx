@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/Button";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/components/ui/Label";
 import { Bold, Italic, Underline, Link } from 'lucide-react';
 import { useFormContext } from 'react-hook-form';
 

@@ -3,9 +3,9 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { Button } from '@/components/ui/Button';
-import { Table, TableHeader, TableBody, TableCell, TableRow, TableHead } from '@/components/ui/table';
+import { Table, TableHeader, TableBody, TableCell, TableRow, TableHead } from '@/components/ui/Table';
 
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { request } from '@/lib/api';

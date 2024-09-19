@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react'
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/Input"
+import { Label } from "@/components/ui/Label"
 import { Loader2 } from "lucide-react"
 import Image from 'next/image'
 import { IFile } from '@/lib/types'

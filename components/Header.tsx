@@ -2,20 +2,20 @@
 
 import { useState } from "react";
 import { Button } from "./ui/Button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
+import { Input } from "./ui/Input";
+import { Label } from "./ui/Label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/components/ui/Popover";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/Dialog";
 import { Bell, User, ChevronRight, ChevronLeft } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/lib/context/Auth";

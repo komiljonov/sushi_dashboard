@@ -2,7 +2,7 @@ import type { AppProps } from 'next/app';
 import '@/styles/globals.css';
 import { AuthProvider, useAuth } from '@/lib/context/Auth';
 import { LoadingProvider } from '@/lib/context/Loading';
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/Toaster";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { queryClient } from '@/lib/query';

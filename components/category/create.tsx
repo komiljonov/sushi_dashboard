@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/Button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/Input"
+import { Label } from "@/components/ui/Label"
 import {
     Dialog,
     DialogContent,
@@ -11,7 +11,7 @@ import {
     DialogTitle,
     DialogTrigger,
     DialogDescription
-} from "@/components/ui/dialog"
+} from "@/components/ui/Dialog"
 import { useForm } from "react-hook-form"
 import { useMutation } from "@tanstack/react-query"
 // import { createCategory } from "./api/category" // Update the import path accordingly

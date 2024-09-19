@@ -2,13 +2,13 @@
 
 import { useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { request } from '@/lib/api'
 import { IPromocode } from "@/lib/types"
 import Link from "next/link"
 import { CalendarIcon, CreditCardIcon, UserIcon } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/Badge"
 import { Layout } from "@/components/Layout"
 import { PromocodeForm, PromocodeFormOnSubmitProps } from "@/components/promocode/Form"
 

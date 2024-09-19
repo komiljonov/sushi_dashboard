@@ -7,13 +7,13 @@ import { Button } from '@/components/ui/Button';
 
 import { request } from '@/lib/api';
 import { Layout } from '@/components/Layout';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { UploadField } from '@/components/ui/file_upload';
+import { Label } from '@/components/ui/Label';
+import { Input } from '@/components/ui/Input';
+import { UploadField } from '@/components/ui/File_upload';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
-import { FormattedInput } from '@/components/ui/formattedInput';
+import { FormattedInput } from '@/components/ui/FormattedInput';
 import { IFile } from '@/lib/types';
 
 

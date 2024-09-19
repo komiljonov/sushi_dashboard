@@ -4,9 +4,9 @@ import { Layout } from "@/components/Layout"
 import { useEffect, useState } from "react"
 import { Bar, Pie } from 'react-chartjs-2'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
+import { Input } from "@/components/ui/Input"
+import { Label } from "@/components/ui/Label"
 import { Button } from "@/components/ui/Button"
 import { ShoppingCart, Users, TrendingUp, Package } from 'lucide-react'
 import { request } from '@/lib/api'
