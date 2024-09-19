@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { IPromocode } from "@/lib/types"
 import * as Slider from '@radix-ui/react-slider'
 import { Checkbox } from "../ui/Checkbox"
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover"
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { cn } from "@/lib/utils"
 import { CalendarIcon } from "lucide-react"
 import { format } from "date-fns/format"
