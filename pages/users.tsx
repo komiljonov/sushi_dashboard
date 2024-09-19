@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { IUser } from '@/lib/types'
 import { request } from '@/lib/api'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Skeleton } from "@/components/ui/Skeleton"
+import { Skeleton } from "@/components/ui/skeleton"
 import { MoreVertical } from 'lucide-react'
 
 interface CreateUserData {
