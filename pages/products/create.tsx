@@ -13,7 +13,7 @@ import { UploadField } from '@/components/ui/file_upload';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
-import { FormattedInput } from '@/components/ui/FormattedInput';
+import { FormattedInput } from '@/components/ui/formattedInput';
 import { IFile } from '@/lib/types';
 
 
