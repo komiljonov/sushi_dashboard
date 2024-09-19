@@ -42,3 +42,13 @@ export interface ICategoryWithStats {
 
     products: IProduct[]
 }
+
+
+
+export interface IUser {
+    id: number;
+    name: string;
+    email: string;
+    active: boolean;
+}
+
