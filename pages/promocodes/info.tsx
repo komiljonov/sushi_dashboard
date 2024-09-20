@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { request } from '@/lib/api'
-import { IPromocode } from "@/lib/types"
 import Link from "next/link"
-import { CalendarIcon, CreditCardIcon, UserIcon } from "lucide-react"
+import { CalendarIcon, CreditCardIcon, ListOrdered, UserIcon } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Layout } from "@/components/Layout"
 import { PromocodeForm, PromocodeFormOnSubmitProps } from "@/components/promocode/Form"
+import { IPromocode } from "@/lib/types"
 
 import PromocodeFormSkeleton from "@/components/promocode/Skeleton"
 
@@ -49,11 +49,11 @@ const updatePromocode = async (promocode: IPromocode) => {
     return data;
 }
 
-const users = [
-    { id: 1, name: "Alice Johnson", avatar: "/placeholder.svg?height=40&width=40" },
-    { id: 2, name: "Bob Smith", avatar: "/placeholder.svg?height=40&width=40" },
-    { id: 3, name: "Carol Williams", avatar: "/placeholder.svg?height=40&width=40" },
-]
+// const users = [
+//     { id: 1, name: "Alice Johnson", avatar: "/placeholder.svg?height=40&width=40" },
+//     { id: 2, name: "Bob Smith", avatar: "/placeholder.svg?height=40&width=40" },
+//     { id: 3, name: "Carol Williams", avatar: "/placeholder.svg?height=40&width=40" },
+// ]
 
 function EditPromocode() {
     const router = useRouter();
@@ -100,7 +100,7 @@ function EditPromocode() {
         }
     }
 
-    const memoizedUsers = useMemo(() => users, []);
+    // const memoizedUsers = useMemo(() => users, []);
 
     if (!promocodeId) {
         return <div>Loading...</div>
@@ -131,22 +131,22 @@ function EditPromocode() {
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-6">
-                            {memoizedUsers.map((user) => (
-                                <div key={user.id} className="flex items-center space-x-4 p-4 rounded-lg border bg-card text-card-foreground shadow-sm">
+                            {promocode?.orders.map((order) => (
+                                <div key={order.order_id} className="flex items-center space-x-4 p-4 rounded-lg border bg-card text-card-foreground shadow-sm">
                                     <div className="flex-1 space-y-1">
-                                        <Link href={`/users/${user.id}`} className="font-semibold hover:underline">
-                                            {user.name}
+                                        <Link href={`/users/info?id=${order.id}`} className="font-semibold hover:underline">
+                                            {order.user.name || order.user.tg_name}
                                         </Link>
                                         <div className="flex items-center text-sm text-muted-foreground">
                                             <UserIcon className="mr-1 h-4 w-4" />
-                                            <span>User {user.id}</span>
+                                            <span>{order.user.name || order.user.tg_name}</span>
                                         </div>
                                         <div className="flex items-center space-x-2">
                                             <Badge variant="secondary" className="text-green-600 bg-green-100">
-                                                ${(Math.random() * 50 + 50).toFixed(2)}
+                                                {order.discount_price} so&apos;m
                                             </Badge>
                                             <span className="text-sm text-muted-foreground line-through">
-                                                ${(Math.random() * 100 + 100).toFixed(2)}
+                                                ${order.price} so&apos;m
                                             </span>
                                         </div>
                                     </div>
@@ -155,9 +155,9 @@ function EditPromocode() {
                                             <CalendarIcon className="mr-1 h-4 w-4" />
                                             <span>{new Date().toLocaleDateString()}</span>
                                         </div>
-                                        <Link href={`/orders/${user.id * 1000}`} className="flex items-center text-primary hover:underline">
+                                        <Link href={`/orders/info?id=${order.id}`} className="flex items-center text-primary hover:underline">
                                             <CreditCardIcon className="mr-1 h-4 w-4" />
-                                            <span>Order #{user.id * 1000}</span>
+                                            <span>Order #{order.order_id}</span>
                                         </Link>
                                     </div>
                                 </div>
@@ -174,7 +174,7 @@ function EditPromocode() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="border p-4 rounded-lg">
                             <h3 className="font-bold mb-2">Total Uses</h3>
-                            <p className="text-4xl font-bold">1,234</p>
+                            <p className="text-4xl font-bold">{promocode?.orders?.length}</p>
                         </div>
                         <div className="border p-4 rounded-lg">
                             <h3 className="font-bold mb-2">Total Savings</h3>

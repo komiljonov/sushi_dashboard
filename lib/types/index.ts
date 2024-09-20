@@ -1,3 +1,4 @@
+import { IOrder } from "./order";
 
 
 
@@ -69,6 +70,9 @@ export interface IPromocode {
 
     is_limited: boolean;
     is_max_limited: boolean
+
+
+    orders: IOrder[];
 }
 
 

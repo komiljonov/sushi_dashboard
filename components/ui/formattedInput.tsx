@@ -7,15 +7,16 @@ import { Bold, Italic, Underline, Link } from 'lucide-react';
 import { useFormContext } from 'react-hook-form';
 
 // Add this constant to disable the focus-only preview feature
-const ALWAYS_SHOW_PREVIEW = false;
+
 
 interface FormattedInputProps {
     id: string;
     label: string;
     placeholder: string;
+    always_show_preview?: boolean
 }
 
-export function FormattedInput({ id, label, placeholder }: FormattedInputProps) {
+export function FormattedInput({ id, label, placeholder, always_show_preview = false }: FormattedInputProps) {
     const { register, setValue, getValues, watch } = useFormContext();
     const [isFocused, setIsFocused] = useState(false);
     const [isValidHTML, setIsValidHTML] = useState(true);
@@ -133,7 +134,7 @@ export function FormattedInput({ id, label, placeholder }: FormattedInputProps) 
                     textareaRef.current = e;
                 }}
             />
-            {(ALWAYS_SHOW_PREVIEW || isFocused) && (
+            {(always_show_preview || isFocused) && (
                 <div className={`mt-2 p-2 border rounded-md bg-muted ${isValidHTML ? '' : 'border-red-500'}`}>
                     <p className="text-sm font-medium">Preview:</p>
                     <div className="mt-1 text-sm" dangerouslySetInnerHTML={{ __html: value?.replace(/\n/g, "<br>") || '' }} />
