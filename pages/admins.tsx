@@ -9,13 +9,13 @@ import { Input } from "@/components/ui/Input"
 import { Label } from "@/components/ui/Label"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { IUser } from '@/lib/types'
+import { IAdmin  } from '@/lib/types'
 import { request } from '@/lib/api'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Skeleton } from "@/components/ui/skeleton"
 import { MoreVertical } from 'lucide-react'
 
-interface CreateUserData {
+interface CreateAdminData {
     first_name: string;
     last_name: string;
     username: string;
@@ -23,12 +23,12 @@ interface CreateUserData {
     password_repeat: string;
 }
 
-const fetchUsers = async (): Promise<IUser[]> => {
-    const { data } = await request.get('users/');
+const fetchAdmins = async (): Promise<IAdmin[]> => {
+    const { data } = await request.get('admins/');
     return data;
 }
 
-const UserTable = ({ users }: { users: IUser[] }) => (
+const AdminsTable = ({ admins }: { admins: IAdmin[] }) => (
     <Table>
         <TableHeader>
             <TableRow>
@@ -39,14 +39,14 @@ const UserTable = ({ users }: { users: IUser[] }) => (
             </TableRow>
         </TableHeader>
         <TableBody>
-            {users.map((user) => (
-                <TableRow key={user.id}>
-                    <TableCell>{user.first_name}</TableCell>
-                    <TableCell>{user.last_name}</TableCell>
-                    <TableCell>{user.username}</TableCell>
+            {admins.map((admin) => (
+                <TableRow key={admin.id}>
+                    <TableCell>{admin.first_name}</TableCell>
+                    <TableCell>{admin.last_name}</TableCell>
+                    <TableCell>{admin.username}</TableCell>
 
                     <TableCell>
-                        <UpdateUserDialog user={user} />
+                        <UpdateAdminDialog admin={admin} />
                     </TableCell>
                 </TableRow>
             ))}
@@ -54,16 +54,16 @@ const UserTable = ({ users }: { users: IUser[] }) => (
     </Table>
 )
 
-const CreateUserDialog = () => {
+const CreateAdminDialog = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const { register, handleSubmit, reset, formState: { errors }, watch } = useForm<CreateUserData>();
+    const { register, handleSubmit, reset, formState: { errors }, watch } = useForm<CreateAdminData>();
     const queryClient = useQueryClient();
 
-    const onSubmit = async (data: CreateUserData) => {
+    const onSubmit = async (data: CreateAdminData) => {
         try {
-            await request.post('users/', data);
+            await request.post('admins/', data);
             queryClient.invalidateQueries({
-                queryKey: ['users']
+                queryKey: ['admins']
             });
             setIsOpen(false);
             reset();
@@ -159,23 +159,23 @@ const DeleteConfirmationDialog = ({ onConfirm, isOpen, setIsOpen }: { onConfirm:
     </Dialog>
 )
 
-const UpdateUserDialog = ({ user }: { user: IUser }) => {
+const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-    const { register, handleSubmit, reset, formState: { errors }, watch } = useForm<CreateUserData>({
+    const { register, handleSubmit, reset, formState: { errors }, watch } = useForm<CreateAdminData>({
         defaultValues: {
-            first_name: user.first_name,
-            last_name: user.last_name,
-            username: user.username
+            first_name: admin.first_name,
+            last_name: admin.last_name,
+            username: admin.username
         }
     });
     const queryClient = useQueryClient();
 
-    const onSubmit = async (data: CreateUserData) => {
+    const onSubmit = async (data: CreateAdminData) => {
         try {
-            await request.put(`users/${user.id}/`, data);
+            await request.put(`admins/${admin.id}/`, data);
             queryClient.invalidateQueries({
-                queryKey: ['users']
+                queryKey: ['admins']
             });
             setIsOpen(false);
             reset();
@@ -186,9 +186,9 @@ const UpdateUserDialog = ({ user }: { user: IUser }) => {
 
     const onDelete = async () => {
         try {
-            await request.delete(`users/${user.id}/`);
+            await request.delete(`admins/${admin.id}/`);
             queryClient.invalidateQueries({
-                queryKey: ['users']
+                queryKey: ['admins']
             });
             setIsOpen(false);
         } catch (error) {
@@ -273,10 +273,10 @@ const UpdateUserDialog = ({ user }: { user: IUser }) => {
     )
 }
 
-const Users: NextPage = () => {
-    const { data: users = [], isLoading } = useQuery({
-        queryKey: ["users"],
-        queryFn: fetchUsers,
+const Admins: NextPage = () => {
+    const { data: admins = [], isLoading } = useQuery({
+        queryKey: ["admins"],
+        queryFn: fetchAdmins,
     });
 
     if (isLoading) {
@@ -287,9 +287,9 @@ const Users: NextPage = () => {
         <div className="container mx-auto py-10">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold">Foydalanuvchilar</h1>
-                <CreateUserDialog />
+                <CreateAdminDialog />
             </div>
-            <UserTable users={users} />
+            <AdminsTable admins={admins} />
         </div>
     );
 }
@@ -312,8 +312,8 @@ const LoadingSkeleton = () => (
 );
 
 const Page = () => {
-    return <Layout page={'users'}>
-        <Users />
+    return <Layout page={'admins'}>
+        <Admins />
     </Layout>;
 }
 

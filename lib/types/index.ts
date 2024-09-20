@@ -45,7 +45,7 @@ export interface ICategoryWithStats {
 
 
 
-export interface IUser {
+export interface IAdmin {
     id: number;
     first_name: string;
     last_name: string;
@@ -69,4 +69,56 @@ export interface IPromocode {
 
     is_limited: boolean;
     is_max_limited: boolean
+}
+
+
+
+export interface ILocation {
+    id: string;
+    latitude: number;
+    longitude: number;
+    address: null
+}
+
+
+
+export interface IPayment {
+    id: string;
+    amount: string;
+    provider: string;
+    status: string;
+    data: unknown;
+    user: IUser;
+
+}
+
+export interface ICart {
+    id: string;
+    location: ILocation;
+
+    created_at: Date;
+    phone_number: string;
+    comment: string;
+    status: string;
+    delivery: string;
+    time: Date;
+    payment: IPayment;
+    
+}
+
+
+
+export interface IUser {
+    id: string;
+    carts?: ICart[];
+    chat_id: number;
+    name: string;
+    number: string;
+    tg_name: string;
+    username: string;
+    lang: string;
+    has_order: boolean;
+
+
+    current_order?: ICart;
 }

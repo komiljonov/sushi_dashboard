@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from "@/components/ui/Button"
 import { cn } from "@/lib/utils"
-import { Users, LogOut, Box, Home, Ticket } from "lucide-react"
+import { Users, LogOut, Box, Home, Ticket,FingerprintIcon } from "lucide-react"
 import { useAuth } from '@/lib/context/Auth'
 import { useRouter } from 'next/router'
 
@@ -10,6 +10,8 @@ interface SidebarProps {
     collapsed: boolean;
     page: string;
 }
+
+
 
 export function Sidebar({ collapsed, page }: SidebarProps) {
     const { push } = useRouter();
@@ -48,9 +50,10 @@ export function Sidebar({ collapsed, page }: SidebarProps) {
                 <nav className="flex flex-col gap-2 p-2">
 
                     <NavItem href="/" icon={<Home className="h-4 w-4" />} label="Bosh menu" collapsed={collapsed} isSelected={page == 'home'} />
-                    <NavItem href="/users" icon={<Users className="h-4 w-4" />} label="Foydalanuvchilar" collapsed={collapsed} isSelected={page == 'users'} />
+                    <NavItem href="/admins" icon={<FingerprintIcon className="h-4 w-4" />} label="Adminlar" collapsed={collapsed} isSelected={page == 'admins'} />
                     <NavItem href="/categories" icon={<Box className="h-4 w-4" />} label="Kategoriyalar" collapsed={collapsed} isSelected={page == 'categories'} />
                     <NavItem href="/promocodes" icon={<Ticket className="h-4 w-4" />} label="Promocodelar" collapsed={collapsed} isSelected={page == 'promocodes'} />
+                    <NavItem href="/users" icon={<Users className="h-4 w-4" />} label="Foydalanuvchilar" collapsed={collapsed} isSelected={page == 'users'} />
 
                 </nav>
                 {/* </ScrollArea> */}
