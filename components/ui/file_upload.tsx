@@ -4,60 +4,61 @@ import { Label } from "@/components/ui/Label"
 import { Loader2 } from "lucide-react"
 import Image from 'next/image'
 import { IFile } from '@/lib/types'
+import { useMutation } from '@tanstack/react-query';  // useMutation for handling side-effects
+import { request } from "@/lib/api";  // Axios instance
 
 interface UploadFieldProps {
-    onFileUpload: (file: IFile) => void // Modify this to handle API response
+    onFileUpload: (file: IFile) => void; // Handle API response
     setFileUploading: React.Dispatch<React.SetStateAction<boolean>>;
     preview?: string;
 }
 
 export function UploadField({ onFileUpload, setFileUploading, preview }: UploadFieldProps) {
     const [fileName, setFileName] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
+
+    // useMutation to handle the file upload
+    const mutation = useMutation(
+        {
+            mutationFn: async (file: File) => {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                return request.post('/files/upload', formData);  // Axios POST request with form data
+            },
+            onMutate: () => {
+                setFileUploading(true);  // Set file uploading state when mutation starts
+            },
+            onSuccess: (response) => {
+                const data = response.data;  // Axios response structure
+                setFileUploading(false);
+                onFileUpload(data);
+                setFileName(data.filename);
+            },
+            onError: (error) => {
+                console.error("Error uploading file:", error);
+                setFileUploading(false);
+            },
+            onSettled: () => {
+                setFileUploading(false);  // Reset file uploading state when mutation is settled
+            },
+        }
+    );
 
 
 
 
-    const handleFileChange = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
-
-            const formData = new FormData();
-            formData.append('file', file);
-
-            setLoading(true);
-            setFileUploading(true);
-
-            // await new Promise(resolve => setTimeout(resolve, 2000))
-
-
-            try {
-                const response = await fetch('http://127.0.0.1:8000/api/files/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    onFileUpload(data);
-                    setFileName(data.filename);
-                } else {
-                    console.error("Failed to upload file");
-                }
-            } catch (error) {
-                console.error("Error uploading file:", error);
-            } finally {
-                setLoading(false);
-                setFileUploading(false);
-            }
+            mutation.mutate(file);  // Trigger mutation with the selected file
         }
-    }, [onFileUpload, setFileUploading]);
+    }, [mutation]);
 
     return (
-        <div className="grid w-full  items-center gap-1.5">
+        <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="picture">Product Image</Label>
-            <Input id="picture" type="file" onChange={handleFileChange} disabled={loading} />
-            {loading && (
+            <Input id="picture" type="file" onChange={handleFileChange} disabled={mutation.status == "pending"} />
+            {mutation.status == "pending" && (
                 <div className="flex items-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" />
                     <span>Uploading...</span>

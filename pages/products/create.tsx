@@ -51,7 +51,9 @@ function Products() {
     const methods = useForm<IFormInput>();
     const { register, handleSubmit, setValue } = methods;
     const [fileUploading, setFileUploading] = useState<boolean>(false);
+
     const [categoryId] = useState(getCategoryIdFromUrl);
+    const [preview, setPreview] = useState<string>();
 
     useEffect(() => {
         if (categoryId) {
@@ -61,7 +63,9 @@ function Products() {
 
 
     const onFileUpload = (file: IFile) => {
+        console.log(file);
         setValue('image', file.id);
+        setPreview(file.file);
     }
 
     const mutation = useMutation({
@@ -118,7 +122,7 @@ function Products() {
                 </FormProvider>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <UploadField onFileUpload={onFileUpload} setFileUploading={setFileUploading} />
+                    <UploadField onFileUpload={onFileUpload} setFileUploading={setFileUploading}  preview={preview} />
                     <div>
                         <Label htmlFor="price">Price</Label>
                         <Input
