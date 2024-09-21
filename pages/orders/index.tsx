@@ -12,13 +12,13 @@ import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon, ExternalLink, MoreHori
 import { format } from "date-fns";
 import { DateRange } from 'react-day-picker';
 import { Layout } from '@/components/Layout';
-import { IOrder } from '@/lib/types/order';
 import { request } from "@/lib/api";
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { IOrder } from '@/lib/types';
 
 
 
@@ -375,7 +375,7 @@ export default function Page() {
     const { data: orders, isLoading, error } = useQuery({
         queryKey: ['orders'],
         queryFn: fetchOrders,
-        refetchInterval: 30000,
+        refetchInterval: 10000,
         refetchOnWindowFocus: true
     });
 

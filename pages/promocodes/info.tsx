@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useMemo } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { request } from '@/lib/api'
 import Link from "next/link"
-import { CalendarIcon, CreditCardIcon, ListOrdered, UserIcon } from "lucide-react"
+import { CalendarIcon, CreditCardIcon, UserIcon } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Layout } from "@/components/Layout"
 import { PromocodeForm, PromocodeFormOnSubmitProps } from "@/components/promocode/Form"

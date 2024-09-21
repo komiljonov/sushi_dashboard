@@ -1,7 +1,3 @@
-import { IOrder } from "./order";
-
-
-
 
 export interface ICategory {
     id: number;
@@ -36,7 +32,7 @@ export interface IProduct {
 
 
 export interface ICategoryWithStats {
-    id: number;
+    id: string;
     name_uz: string;
     name_ru: string;
     products_count: number;
@@ -57,23 +53,7 @@ export interface IAdmin {
 
 
 
-export interface IPromocode {
-    id: string
-    name: string
-    code: string
-    measurement: "ABSOLUTE" | "PERCENT"
-    amount: number
-    count: number
-    end_date: Date | null
-    min_amount: number
-    max_amount: number
 
-    is_limited: boolean;
-    is_max_limited: boolean
-
-
-    orders: IOrder[];
-}
 
 
 
@@ -107,14 +87,13 @@ export interface ICart {
     delivery: string;
     time: Date;
     payment: IPayment;
-    
+
 }
 
 
 
 export interface IUser {
     id: string;
-    carts?: ICart[];
     chat_id: number;
     name: string;
     number: string;
@@ -124,5 +103,65 @@ export interface IUser {
     has_order: boolean;
 
 
-    current_order?: ICart;
+    orders?: IOrder[];
+    current_order?: IOrder;
+}
+
+
+
+
+
+export interface IOrderItem {
+    id: number;
+    product: IProduct;
+    count: number;
+    price: number;
+
+}
+
+
+
+
+export type IOrder = {
+    saving: number;
+    id: string;
+    order_id: number;
+    user: IUser;
+    products_count: number;
+    promocode?: IPromocode;
+    order_time: Date;
+    status: string;
+    price: number;
+    discount_price: number;
+    payment: IPayment;
+
+    delivery: "DELIVER" | "TAKEAWAY"
+
+    comment: string;
+
+    items: IOrderItem[]
+}
+
+
+
+type IOrderArray = Array<IOrder>;
+
+
+export type IPromocode<T = IOrderArray> = {
+    id: string;
+    name: string;
+    code: string;
+    measurement: "ABSOLUTE" | "PERCENT";
+    amount: number;
+    count: number;
+    end_date: Date | null;
+
+    min_amount: number;
+    max_amount: number;
+
+    is_limited: boolean;
+    is_max_limited: boolean;
+
+
+    orders: T;
 }

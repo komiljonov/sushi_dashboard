@@ -21,6 +21,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/lib/context/Auth";
 import { request } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/router";
 
 
 interface HeaderProps {
@@ -28,9 +29,11 @@ interface HeaderProps {
   setCollapsed: (collapsed: boolean) => void;
 }
 
-export function Header({ collapsed, setCollapsed }: HeaderProps) {
+export function Header({ collapsed, }: HeaderProps) {
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
   const [passwordError, setPasswordError] = useState("");
+
+  const { back } = useRouter();
 
   const { userInfo, logout } = useAuth();
   const { toast } = useToast();
@@ -81,7 +84,10 @@ export function Header({ collapsed, setCollapsed }: HeaderProps) {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => setCollapsed(!collapsed)}
+          // onClick={() => setCollapsed(!collapsed)}
+          onClick={() => {
+            back();
+          }}
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           className="mr-4"
         >

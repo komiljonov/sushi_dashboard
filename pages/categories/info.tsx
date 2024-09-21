@@ -17,6 +17,8 @@ import Image from "next/image"
 import { queryClient } from "@/lib/query"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Products } from "@/components/product/list"
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title)
 
@@ -44,40 +46,32 @@ const editCategory = async (id: string, edit_data: ICategory): Promise<ICategory
   return data
 }
 
-function CategoryInfo() {
+function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
   const { toast } = useToast();
-  const [categoryId] = useState(getCategoryIdFromUrl);
+
   const { register, reset, handleSubmit } = useForm<ICategory>();
 
-  const { data: category, isSuccess } = useQuery({
-    queryKey: ['category', categoryId],
-    queryFn: () => {
-      if (categoryId !== null) {
-        return fetchCategoryData(categoryId)
-      }
-      return Promise.reject(new Error('Category ID is null'))
-    },
-    enabled: categoryId !== null,
-  })
+
 
   useEffect(() => {
-    if (isSuccess) {
+    if (category) {
       reset({
         name_uz: category?.name_uz,
         name_ru: category?.name_ru
       })
     }
-  }, [isSuccess, reset, category])
+  }, [category, reset]);
+
 
   const mutation = useMutation({
     mutationFn: (data: ICategory) => {
-      if (categoryId !== null) {
-        return editCategory(categoryId, data)
+      if (category) {
+        return editCategory(category.id, data)
       }
       return Promise.reject(new Error('Category ID is null'))
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['category', categoryId] })
+      queryClient.invalidateQueries({ queryKey: ['category', category?.id] })
       reset()
       toast({
         title: 'Saqlandi'
@@ -159,7 +153,7 @@ function CategoryInfo() {
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Kategoriya ma&apos;lumotlari</h1>
-        <Link href={`/products?category=${categoryId}`}>
+        <Link href={`/products?category=${category?.id}`}>
           <Button>
             <Package className="mr-2 h-4 w-4" />
             View Products
@@ -244,9 +238,38 @@ function CategoryInfo() {
 }
 
 export default function Page() {
+  const [activeTab, setActiveTab] = useState("category-info")
+  const [categoryId] = useState(getCategoryIdFromUrl);
+
+
+
+  const { data: category } = useQuery({
+    queryKey: ['category', categoryId],
+    queryFn: () => {
+      if (categoryId !== null) {
+        return fetchCategoryData(categoryId)
+      }
+      return Promise.reject(new Error('Category ID is null'))
+    },
+    enabled: categoryId !== null,
+  });
+
   return (
     <Layout page='categories'>
-      <CategoryInfo />
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="category-info">Category Info</TabsTrigger>
+          <TabsTrigger value="products-list">Products List</TabsTrigger>
+        </TabsList>
+        <TabsContent value="category-info">
+          <CategoryInfo category={category} />
+        </TabsContent>
+        <TabsContent value="products-list">
+          {/* <ProductsList /> */}
+
+          <Products category={category} />
+        </TabsContent>
+      </Tabs>
     </Layout>
   )
 }

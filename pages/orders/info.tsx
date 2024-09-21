@@ -15,9 +15,8 @@ import {
 import { Layout } from "@/components/Layout"
 import { useState } from "react"
 import { request } from "@/lib/api"
-import { IOrder } from "@/lib/types/order"
 import { useQuery } from "@tanstack/react-query"
-import { IFile } from "@/lib/types"
+import { IFile, IOrder } from "@/lib/types"
 import Link from "next/link"
 import { format } from "date-fns"
 

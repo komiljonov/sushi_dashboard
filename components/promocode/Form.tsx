@@ -37,6 +37,9 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
 
     const is_max_limited = watch('is_max_limited');
 
+    const min_amount = watch('min_amount');
+    const max_amount = watch('max_amount')
+
 
 
     return (
@@ -266,9 +269,9 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                         )}
                     />
                     <div className="flex justify-between text-sm text-gray-500">
-                        <span>Min: {watch('min_amount')}</span>
+                        <span>Min: {min_amount}</span>
 
-                        {is_max_limited && <span>Max: {watch('max_amount')}</span>}
+                        {is_max_limited && <span>Max: {max_amount}</span>}
                     </div>
 
                     {(errors.min_amount || errors.max_amount) && (

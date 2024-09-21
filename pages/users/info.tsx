@@ -86,7 +86,7 @@ function UserInfoPage({ user }: { user: IUser }) {
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="font-semibold">Created At:</span>
-                                    <span>{String(user.current_order.created_at)}</span>
+                                    <span>{String(user.current_order.order_time)}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="font-semibold">Delivery:</span>
