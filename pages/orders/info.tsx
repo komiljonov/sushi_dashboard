@@ -1,8 +1,6 @@
 import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
-// import { Button } from "@/components/ui/Button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card"
-// import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/Label"
 import {
     CalendarIcon,
@@ -10,7 +8,11 @@ import {
     ExternalLink,
     PackageIcon,
     UserIcon,
-    PhoneCallIcon
+    PhoneCallIcon,
+    Timer,
+    MapPin,
+    Hash,
+    Ticket, Languages, MessageCircle
 } from "lucide-react"
 import { Layout } from "@/components/Layout"
 import { useState } from "react"
@@ -20,9 +22,7 @@ import { IFile, IOrder } from "@/lib/types"
 import Link from "next/link"
 import { format } from "date-fns"
 
-
-
-function UserInformationCard({ order: { user, comment } }: { order: IOrder }) {
+function UserInformationCard({ order, order: { user, comment } }: { order: IOrder }) {
     return (
         <Card>
             <CardHeader>
@@ -32,15 +32,17 @@ function UserInformationCard({ order: { user, comment } }: { order: IOrder }) {
             <CardContent className="space-y-2">
                 <div className="flex items-center space-x-2">
                     <UserIcon className="h-4 w-4" />
-                    <Label>Name:</Label>
+                    <Label>Ismi:</Label>
                     <span>{user.name}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                     <PhoneCallIcon className="h-4 w-4" />
-                    <Label>Phone:</Label>
-                    <span>{user.number}</span>
+                    <Label>Telefon raqamlari:</Label>
+                    <Link href={`tel:${order.phone_number}`} className="text-blue-500 hover:text-blue-700">{order.phone_number} </Link> &nbsp; <Link href={`tel:${user.number}`} className="text-blue-500 hover:text-blue-700" >{user.number}</Link>
+                    {/* <span>{user.number}</span> */}
                 </div>
                 <div className="flex items-center space-x-2">
+                    <MessageCircle className="h-4 w-4" />
                     <Label>Telegram:</Label>
 
                     <Link href={`https://t.me/${user.username.substring(1)}`} className="flex items-center text-blue-500 hover:text-blue-700">
@@ -50,13 +52,27 @@ function UserInformationCard({ order: { user, comment } }: { order: IOrder }) {
                 </div>
 
                 <div className="flex items-center space-x-2">
-                    <Label>Language:</Label>
+                    <Languages className="h-4 w-4" />
+                    <Label>Tili:</Label>
                     <span>{user.lang}</span>
                 </div>
-                <div className="space-y-1">
+
+
+                <div className="flex items-center space-x-2">
+                    <CalendarIcon className="h-4 w-4" />
+                    <Label>Buyurtma yaratilgan vaqt:</Label>
+                    <span>{order.order_time && format(new Date(order.order_time), "PPpp")}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <Timer className="h-4 w-4" />
+                    <Label>Buyurtma berilgan vaqt:</Label>
+                    <span> {order.time ? format(new Date(order.time), "PPpp") : "Iloji boricha tezroq"} </span>
+                </div>
+
+                {comment && <div className="space-y-1">
                     <Label>Comment:</Label>
                     <p className="text-sm text-muted-foreground">{comment}</p>
-                </div>
+                </div>}
             </CardContent>
         </Card>
     )
@@ -71,14 +87,17 @@ function OrderDetailsCard({ order }: { order: IOrder }) {
             </CardHeader>
             <CardContent className="space-y-2">
                 <div className="flex items-center space-x-2">
+                    <Hash className="h-4 w-4" />
                     <Label>Buyrtma ID:</Label>
                     <span>#{order.order_id}</span>
                 </div>
-                <div className="flex items-center space-x-2">
-                    <CalendarIcon className="h-4 w-4" />
-                    <Label>Buyurtma berilgan vaqt:</Label>
-                    <span>{order.order_time && format(new Date(order.order_time), "PPpp")}</span>
-                </div>
+                {
+                    order.filial && <div className="flex items-center space-x-2">
+                        <MapPin className="h-4 w-4" />
+                        <Label>Filial:</Label>
+                        <Badge variant="outline">{order.filial.name_uz}</Badge>
+                    </div>
+                }
                 <div className="flex items-center space-x-2">
                     <PackageIcon className="h-4 w-4" />
                     <Label>Mahsulotlar soni:</Label>
@@ -86,7 +105,7 @@ function OrderDetailsCard({ order }: { order: IOrder }) {
                 </div>
                 <div className="flex items-center space-x-2">
                     <CreditCardIcon className="h-4 w-4" />
-                    <Label>Narxi:</Label>
+                    <Label>Buyurtma narxi:</Label>
                     <div className="flex items-center space-x-2">
                         <Badge variant="secondary" className="text-green-600 bg-green-100">
                             {order.discount_price ? order.discount_price.toFixed(2) : order.price.toFixed(2)} so&apos;m
@@ -100,21 +119,35 @@ function OrderDetailsCard({ order }: { order: IOrder }) {
                         )}
                     </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                    <Label>Holati:</Label>
-                    <Badge variant="outline">{order.status}</Badge>
-                </div>
 
-                {order.promocode && <div className="space-y-1">
+                {/* {order.payment && <div className="flex items-center space-x-2">
+                    <CreditCardIcon className="h-4 w-4" />
+                    <Label>To&apos;lov:</Label>
+                    <Link href={`payments/info?id=${order?.payment?.id}`} className="hover:underline text-blue-600">{order.payment.amount} so&apos;m</Link>
+                </div>} */}
+
+
+
+
+
+
+
+                {order.promocode && <div className="flex items-center space-x-2">
+                    <Ticket className="h-4 w-4" />
                     <Label>Promokod:</Label>
                     <div className="text-sm">
                         <Badge variant="outline" className="mr-2">{order.promocode?.name}</Badge>
                         <span>
                             {order.promocode?.amount}
-                            {order.promocode?.measurement === "PERCENT" ? "% off" : " so'm chegirma"}
+                            {order.promocode?.measurement === "PERCENT" ? "% chegirma" : " so'm chegirma"}
                         </span>
                     </div>
                 </div>}
+                <div className="flex items-center space-x-2">
+                    <Label>Holati:</Label>
+                    <Badge variant="outline">{order.status}</Badge>
+                </div>
+
             </CardContent>
         </Card>
     )
@@ -133,13 +166,13 @@ function ProductListCard({ order: { items: items } }: { order: IOrder }) {
                         <div key={item.id} className="flex items-center space-x-4">
                             <Image src={(item?.product?.image as IFile).file} alt={item.product.name_uz} width={64} height={64} className="rounded-md" />
                             <div className="flex-1">
-                                <h3 className="font-semibold">{item.product.name_uz}</h3>
+                                <Link href={`/products/info?id=${item.product.id}`} className="hover:underline"><h3 className="font-semibold">{item.product.name_uz}</h3></Link>
                                 <div className="text-sm text-muted-foreground">
-                                    ${item.price.toFixed(2)} x {item.count}
+                                    {item.price.toFixed(2)} so&apos;m x {item.count}
                                 </div>
                             </div>
                             <div className="font-semibold">
-                                ${(item.price * item.count).toFixed(2)}
+                                {(item.price * item.count).toFixed(2)} so&apos;m
                             </div>
                         </div>
                     ))}
@@ -149,133 +182,21 @@ function ProductListCard({ order: { items: items } }: { order: IOrder }) {
     )
 }
 
-// function SendMessageDialog({ onSendMessage }: { onSendMessage: (message: string) => void }) {
-//     //   const [message, setMessage] = useState("")
-
-//     const methods = useForm<{ message: string }>();
-
-//     const handleSend = (message: string) => {
-//         console.log(message);
-
-//         onSendMessage(message);
-//     }
-
-
-
-//     const { getValues } = methods;
-
-
-
-//     return (
-//         <form onSubmit={(e) => {
-//             e.preventDefault();
-//         }} >
-
-
-//             <Dialog>
-//                 <DialogTrigger asChild>
-//                     <Button>
-//                         <MessageCircleIcon className="mr-2 h-4 w-4" />
-//                         Send Message to User
-//                     </Button>
-//                 </DialogTrigger>
-//                 <DialogContent className="sm:max-w-[425px] bg-white">
-//                     <DialogHeader>
-//                         <DialogTitle>Send Message to User</DialogTitle>
-//                         <DialogDescription>
-//                             Type your message below. It will be sent to the user&apos;s Telegram.
-//                         </DialogDescription>
-//                     </DialogHeader>
-//                     <div className="grid gap-4 py-4">
-
-//                         <FormProvider {...methods} >
-
-//                             <FormattedInput id={"message"} label={"Habarni yozing."} placeholder="Habarni yozing" always_show_preview />
-
-//                         </FormProvider>
-
-//                     </div>
-//                     <DialogFooter>
-//                         <Button type="submit" onClick={() => {
-//                             handleSend(getValues('message'));
-//                         }}>Send Message</Button>
-//                     </DialogFooter>
-//                 </DialogContent>
-//             </Dialog>
-//         </form>
-//     )
-// }
-
-// function ConfirmationDialog({
-//     title,
-//     description,
-//     onConfirm,
-// }: {
-//     title: string
-//     description: string
-//     onConfirm: () => void
-// }) {
-//     return (
-//         <Dialog>
-//             <DialogTrigger asChild>
-//                 <Button variant={title === "Accept Order" ? "default" : "outline"}>{title}</Button>
-//             </DialogTrigger>
-//             <DialogContent className="bg-white">
-//                 <DialogHeader>
-//                     <DialogTitle>{title}</DialogTitle>
-//                     <DialogDescription>{description}</DialogDescription>
-//                 </DialogHeader>
-//                 <DialogFooter>
-//                     <Button onClick={onConfirm}>{title}</Button>
-//                 </DialogFooter>
-//             </DialogContent>
-//         </Dialog>
-//     )
-// }
-
 function OrderInfo({ order }: { order: IOrder }) {
-    // const handleSendMessage = (message: string) => {
-    //     console.log("Sending message:", message)
-    //     // Implement the actual message sending logic here
-    // }
-
-    // const handleAccept = () => {
-    //     console.log("Order accepted")
-    //     // Implement the order acceptance logic here
-    // }
-
-    // const handleCancel = () => {
-    //     console.log("Order cancelled")
-    //     // Implement the order cancellation logic here
-    // }
 
     return (
         <div className="container mx-auto p-4">
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-bold">Order Information</h1>
-                {/* <SendMessageDialog onSendMessage={handleSendMessage} /> */}
             </div>
             <div className="grid gap-4 md:grid-cols-2">
                 <UserInformationCard order={order} />
                 <OrderDetailsCard order={order} />
                 <ProductListCard order={order} />
             </div>
-            {/* <div className="mt-4 flex justify-end space-x-2">
-                <ConfirmationDialog
-                    title="Cancel Order"
-                    description="Are you sure you want to cancel this order?"
-                    onConfirm={handleCancel}
-                />
-                <ConfirmationDialog
-                    title="Accept Order"
-                    description="Are you sure you want to accept this order?"
-                    onConfirm={handleAccept}
-                />
-            </div> */}
         </div>
     )
 }
-
 
 const getOrderIdFromUrl = (): string | null => {
     if (typeof window !== 'undefined') {
@@ -287,21 +208,13 @@ const getOrderIdFromUrl = (): string | null => {
     return null
 }
 
-
-
-
 const fetchOrderInfo = async (id: string): Promise<IOrder> => {
     const { data } = await request.get(`orders/${id}`)
     return data
 }
 
-
-
 export default function Page() {
-
     const [orderId] = useState(getOrderIdFromUrl);
-
-
 
     const { data: order } = useQuery({
         queryKey: ['promocodes', orderId],
@@ -313,9 +226,6 @@ export default function Page() {
         },
         enabled: !!orderId
     });
-
-
-
 
     return <Layout page="orders">
         {

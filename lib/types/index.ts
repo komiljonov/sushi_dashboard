@@ -70,11 +70,14 @@ export interface ILocation {
 
 export interface IPayment {
     id: string;
-    amount: string;
+    amount: number;
     provider: string;
     status: string;
     data: unknown;
     user: IUser;
+    order?: IOrder;
+
+    created_at: string;
 
 }
 
@@ -133,10 +136,12 @@ export type IOrder = {
     products_count: number;
     promocode?: IPromocode;
     order_time: Date;
+    time: Date | null;
     status: string;
     price: number;
     discount_price: number;
-    payment: IPayment;
+    payment?: IPayment;
+    filial?: IFilial;
 
     delivery: "DELIVER" | "TAKEAWAY"
 

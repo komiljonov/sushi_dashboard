@@ -280,9 +280,13 @@ function OrderList({ orders }: { orders: IOrder[] }) {
                                             <ExternalLink className="h-4 w-4 mr-1" /> {order.promocode?.name}</Link>
                                         : '-'}
                                 </TableCell>
+
                                 <TableCell onClick={() => {
-                                    push(`orders/info?id=${order.id}`)
-                                }}>{order.order_time && new Date(order.order_time).toLocaleString()}</TableCell>
+                                    push(`orders/info?id=${order.id}`);
+                                    // }}>{order.order_time && new Date(order.order_time).toLocaleString()}</TableCell>
+                                }}>{order.time ? new Date(order.time).toLocaleString() : "Iloji boricha tez"}</TableCell>
+
+
                                 <TableCell onClick={() => {
                                     push(`orders/info?id=${order.id}`)
                                 }}>

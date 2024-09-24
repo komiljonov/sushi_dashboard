@@ -4,6 +4,9 @@ import { useState } from 'react'
 import { Sidebar } from './Sidebar'
 import { Header } from './Header'
 
+
+
+
 export function Layout({ children, page }: { children: React.ReactNode, page: string }) {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
 
