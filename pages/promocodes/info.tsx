@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+import { useQuery, useMutation } from "@tanstack/react-query"
 import { request } from '@/lib/api'
 import Link from "next/link"
 import { CalendarIcon, CreditCardIcon, UserIcon } from "lucide-react"
@@ -13,6 +13,7 @@ import { PromocodeForm, PromocodeFormOnSubmitProps } from "@/components/promocod
 import { IPromocode } from "@/lib/types"
 
 import PromocodeFormSkeleton from "@/components/promocode/Skeleton"
+import { queryClient } from "@/lib/query"
 
 const getCategoryIdFromUrl = (): string | null => {
     if (typeof window !== 'undefined') {
@@ -57,7 +58,6 @@ const updatePromocode = async (promocode: IPromocode) => {
 
 function EditPromocode() {
     const router = useRouter();
-    const queryClient = useQueryClient();
 
 
 

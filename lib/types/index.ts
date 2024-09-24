@@ -49,6 +49,8 @@ export interface IAdmin {
     username: string;
     fullname: string;
     is_staff: boolean;
+    filial: string;
+    role: string;
 }
 
 
@@ -127,6 +129,7 @@ export type IOrder = {
     id: string;
     order_id: number;
     user: IUser;
+    phone_number: string;
     products_count: number;
     promocode?: IPromocode;
     order_time: Date;
@@ -164,4 +167,17 @@ export type IPromocode<T = IOrderArray> = {
 
 
     orders: T;
+}
+
+
+
+
+
+
+export interface IFilial {
+    id: string;
+    name_uz: string;
+    name_ru: string;
+
+    location: ILocation;
 }

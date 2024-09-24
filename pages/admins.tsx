@@ -2,18 +2,22 @@
 
 import { Layout } from '@/components/Layout'
 import type { NextPage } from 'next'
-import { useState } from "react"
-import { useForm } from "react-hook-form"
+import { useEffect, useState } from "react"
+import { Controller, useForm } from "react-hook-form"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { Label } from "@/components/ui/Label"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { IAdmin  } from '@/lib/types'
+import { IAdmin, IFilial } from '@/lib/types'
 import { request } from '@/lib/api'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Skeleton } from "@/components/ui/skeleton"
 import { MoreVertical } from 'lucide-react'
+import { queryClient } from '@/lib/query'
+import { Select, SelectContent, SelectItem, SelectValue } from '@/components/ui/select'
+import { SelectTrigger } from '@radix-ui/react-select'
+
 
 interface CreateAdminData {
     first_name: string;
@@ -21,12 +25,22 @@ interface CreateAdminData {
     username: string;
     password: string;
     password_repeat: string;
+
+    role: string;
+    filial: string;
 }
 
 const fetchAdmins = async (): Promise<IAdmin[]> => {
     const { data } = await request.get('admins/');
     return data;
 }
+const fetchFilials = async (): Promise<IFilial[]> => {
+    const { data } = await request.get('filials');
+    return data;
+}
+
+
+
 
 const AdminsTable = ({ admins }: { admins: IAdmin[] }) => (
     <Table>
@@ -35,7 +49,7 @@ const AdminsTable = ({ admins }: { admins: IAdmin[] }) => (
                 <TableHead>Ismi</TableHead>
                 <TableHead>Familyasi</TableHead>
                 <TableHead>Username</TableHead>
-                {/* <TableHead>Actions</TableHead> */}
+                <TableHead>Lavozim</TableHead>
             </TableRow>
         </TableHeader>
         <TableBody>
@@ -44,6 +58,8 @@ const AdminsTable = ({ admins }: { admins: IAdmin[] }) => (
                     <TableCell>{admin.first_name}</TableCell>
                     <TableCell>{admin.last_name}</TableCell>
                     <TableCell>{admin.username}</TableCell>
+                    <TableCell>{admin.role}</TableCell>
+
 
                     <TableCell>
                         <UpdateAdminDialog admin={admin} />
@@ -56,8 +72,9 @@ const AdminsTable = ({ admins }: { admins: IAdmin[] }) => (
 
 const CreateAdminDialog = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const { register, handleSubmit, reset, formState: { errors }, watch } = useForm<CreateAdminData>();
-    const queryClient = useQueryClient();
+    const { register, handleSubmit, reset, formState: { errors }, control, watch } = useForm<CreateAdminData>();
+    const password = watch("password");
+
 
     const onSubmit = async (data: CreateAdminData) => {
         try {
@@ -72,7 +89,25 @@ const CreateAdminDialog = () => {
         }
     }
 
-    const password = watch("password");
+
+
+
+    const { data: filials = [] } = useQuery({
+        queryKey: ['filials'],
+        queryFn: fetchFilials
+    });
+
+
+
+
+
+
+
+
+
+
+
+
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -111,6 +146,70 @@ const CreateAdminDialog = () => {
                     </div>
 
 
+
+                    <div className="grid grid-row-1 grid-cols-2 gap-4">
+
+                        <div className="grid grid-cols-1 gap-4">
+                            <Label htmlFor="filial">Filial</Label>
+                            <Controller
+                                name="filial"
+                                control={control}
+                                rules={{ required: 'Filialni tanlash shart' }}
+                                render={({ field }) => (
+                                    <Select onValueChange={field.onChange} value={field.value}>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Filialni tanlash" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {filials.map((filial) => {
+                                                return <SelectItem key={filial.id} value={filial.id}>{filial.name_uz}</SelectItem>
+                                            })}
+                                        </SelectContent>
+                                    </Select>
+                                )}
+                            />
+
+                            {errors.filial && (
+                                <p className="text-red-500 text-sm" id="measurement-error">
+                                    {errors.filial.message}
+                                </p>
+                            )}
+                        </div>
+
+
+
+                        <div className="grid grid-cols-1 gap-4">
+                            <Label htmlFor="role">Role</Label>
+                            <Controller
+                                name="role"
+                                control={control}
+                                rules={{ required: 'Lavozimni tanlash shart' }}
+                                render={({ field }) => (
+                                    <Select onValueChange={field.onChange} value={field.value}>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Lavozimni tanlang" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="ADMIN">Admin</SelectItem>
+                                            <SelectItem value="CHEF">Oshpaz</SelectItem>
+                                            <SelectItem value="CASHIER">Kassir</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                )}
+                            />
+
+                            {errors.role && (
+                                <p className="text-red-500 text-sm" id="measurement-error">
+                                    {errors.role.message}
+                                </p>
+                            )}
+                        </div>
+
+                    </div>
+
+
+
+
                     <div>
                         <Label htmlFor="password">Parol</Label>
                         <Input id="password" type="password" {...register("password", { required: "Parol kiritish shart" })} />
@@ -132,6 +231,8 @@ const CreateAdminDialog = () => {
                             <p className="text-red-500 text-sm mt-1">{errors.password_repeat.message}</p>
                         )}
                     </div>
+
+
                     <Button type="submit">Qo&apos;shish</Button>
                 </form>
             </DialogContent>
@@ -162,41 +263,63 @@ const DeleteConfirmationDialog = ({ onConfirm, isOpen, setIsOpen }: { onConfirm:
 const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-    const { register, handleSubmit, reset, formState: { errors }, watch } = useForm<CreateAdminData>({
-        defaultValues: {
+
+    const { register, handleSubmit, reset, formState: { errors }, control, watch } = useForm<CreateAdminData>();
+
+
+    useEffect(() => {
+        reset({
             first_name: admin.first_name,
             last_name: admin.last_name,
-            username: admin.username
-        }
-    });
-    const queryClient = useQueryClient();
+            username: admin.username,
+            role: admin.role,
+            filial: admin.filial
+        })
+    }, [admin, reset]);
 
-    const onSubmit = async (data: CreateAdminData) => {
-        try {
-            await request.put(`admins/${admin.id}/`, data);
-            queryClient.invalidateQueries({
-                queryKey: ['admins']
-            });
+    const updateAdminMutation = useMutation({
+        mutationFn: (data: CreateAdminData) => request.put(`admins/${admin.id}/`, data),
+        onSuccess: () => {
+            // queryClient.invalidateQueries({
+            //     queryKey: ['admins'],
+            // });
+
+            queryClient.refetchQueries({ queryKey: ['admins'] });
             setIsOpen(false);
             reset();
-        } catch (error) {
+        },
+        onError: (error) => {
             console.error('Error updating user:', error);
         }
-    }
+    });
 
-    const onDelete = async () => {
-        try {
-            await request.delete(`admins/${admin.id}/`);
+    const deleteAdminMutation = useMutation({
+        mutationFn: () => request.delete(`admins/${admin.id}/`),
+        onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ['admins']
+                queryKey: ['admins'],
             });
             setIsOpen(false);
-        } catch (error) {
+        },
+        onError: (error) => {
             console.error('Error deleting user:', error);
         }
-    }
+    });
 
-    const password = watch("password")
+    const onSubmit = (data: CreateAdminData) => {
+        updateAdminMutation.mutate(data);
+    };
+
+    const onDelete = () => {
+        deleteAdminMutation.mutate();
+    };
+
+    const password = watch("password");
+
+    const { data: filials = [] } = useQuery({
+        queryKey: ['filials'],
+        queryFn: fetchFilials
+    });
 
     return (
         <>
@@ -237,6 +360,66 @@ const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
                             {errors.username && (
                                 <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>
                             )}
+                        </div>
+
+                        <div className="grid grid-row-1 grid-cols-2 gap-4">
+
+                            <div className="grid grid-cols-1 gap-4">
+                                <Label htmlFor="filial">Filial</Label>
+                                <Controller
+                                    name="filial"
+                                    control={control}
+                                    rules={{ required: 'Filialni tanlash shart' }}
+                                    render={({ field }) => (
+                                        <Select onValueChange={field.onChange} value={field.value}>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Filialni tanlash" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {filials.map((filial) => {
+                                                    return <SelectItem key={filial.id} value={filial.id}>{filial.name_uz}</SelectItem>
+                                                })}
+                                            </SelectContent>
+                                        </Select>
+                                    )}
+                                />
+
+                                {errors.filial && (
+                                    <p className="text-red-500 text-sm" id="measurement-error">
+                                        {errors.filial.message}
+                                    </p>
+                                )}
+                            </div>
+
+
+
+                            <div className="grid grid-cols-1 gap-4">
+                                <Label htmlFor="role">Role</Label>
+                                <Controller
+                                    name="role"
+                                    control={control}
+                                    rules={{ required: 'Lavozimni tanlash shart' }}
+                                    render={({ field }) => (
+                                        <Select onValueChange={field.onChange} value={field.value}>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Lavozimni tanlang" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="ADMIN">Admin</SelectItem>
+                                                <SelectItem value="CHEF">Oshpaz</SelectItem>
+                                                <SelectItem value="CASHIER">Kassir</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    )}
+                                />
+
+                                {errors.role && (
+                                    <p className="text-red-500 text-sm" id="measurement-error">
+                                        {errors.role.message}
+                                    </p>
+                                )}
+                            </div>
+
                         </div>
 
 

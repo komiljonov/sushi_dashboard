@@ -16,7 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Bell, User, ChevronRight, ChevronLeft } from "lucide-react";
+import { User, ChevronRight, ChevronLeft } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/lib/context/Auth";
 import { request } from "@/lib/api";
@@ -96,9 +96,6 @@ export function Header({ collapsed, }: HeaderProps) {
         <h1 className="text-xl font-semibold">Boshqaruv</h1>
       </div>
       <div className="flex items-center space-x-4">
-        <Button variant="ghost" size="icon" aria-label="Notifications">
-          <Bell className="h-5 w-5" />
-        </Button>
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="ghost" size="icon" aria-label="User menu">

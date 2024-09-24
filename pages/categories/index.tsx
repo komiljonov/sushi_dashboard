@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/Button';
 import { Table, TableHeader, TableBody, TableCell, TableRow, TableHead } from '@/components/ui/table';
-
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { request } from '@/lib/api';
 import { Layout } from '@/components/Layout';
@@ -11,29 +10,17 @@ import CreateCategoryModal from '@/components/category/create';
 import { ICategory } from '@/lib/types';
 import CategoryInfo from '@/components/category/row';
 
-
-
 const fetchCategories = async (): Promise<ICategory[]> => {
-
-
     const { data } = await request.get('categories');
     return data;
 }
 
-
-
 export function Categories() {
-
 
     const { data: categories = [], isLoading } = useQuery({
         queryKey: ['categories'],
         queryFn: fetchCategories,
     });
-
-
-
-
-
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
@@ -46,16 +33,6 @@ export function Categories() {
     const nextPage = () => setCurrentPage(prev => Math.min(prev + 1, totalPages));
     const prevPage = () => setCurrentPage(prev => Math.max(prev - 1, 1));
 
-
-
-
-
-
-
-
-
-
-
     return (
         <div className="container mx-auto py-10">
             <div className="flex justify-between items-center mb-6">
@@ -67,7 +44,6 @@ export function Categories() {
                 </CreateCategoryModal>
 
             </div>
-
             <div className="border rounded-md">
                 {isLoading ? (
                     <SkeletonTable />
@@ -77,7 +53,6 @@ export function Categories() {
                     />
                 )}
             </div>
-
             <div className="flex items-center justify-between space-x-2 py-4">
                 <div className="text-sm text-muted-foreground">
                     Kategoriyalar  {categories.length} dan {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, categories.length)}
@@ -112,8 +87,6 @@ interface CategoryTableProps {
 }
 
 function CategoryTable({ categories }: CategoryTableProps) {
-
-
     return (
         <Table>
             <TableHeader>

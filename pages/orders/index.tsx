@@ -23,12 +23,14 @@ import { IOrder } from '@/lib/types';
 
 
 const statuses = [
-    { value: "ALL", name: "All", color: "bg-gray-100 hover:bg-gray-200 text-gray-800" },
-    { value: "PENDING", name: "PENDING", color: "bg-yellow-100 hover:bg-yellow-200 text-yellow-800" },
-    { value: "PENDING_PAYMENT", name: "Pending payment", color: "bg-yellow-100 hover:bg-yellow-200 text-yellow-800" },
-    { value: "DELIVERING", name: "Delivering", color: "bg-blue-100 hover:bg-blue-200 text-blue-800" },
-    { value: "COMPLETED", name: "Completed", color: "bg-green-100 hover:bg-green-200 text-green-800" },
-    { value: "CANCELLED", name: "Cancelled", color: "bg-red-100 hover:bg-red-200 text-red-800" }
+    { value: "ALL", name: "Hammasi", color: "bg-gray-100 hover:bg-gray-200 text-gray-800" },
+    { value: "PENDING", name: "Kutilmoqda", color: "bg-yellow-100 hover:bg-yellow-200 text-yellow-800" },
+    { value: "PENDING_PAYMENT", name: "To'lov kutilmoqda", color: "bg-yellow-100 hover:bg-yellow-200 text-yellow-800" },
+    { value: "PENDING_KITCHEN", name: "Oshpazni kutmoqda", color: "bg-blue-100 hover:bg-blue-200 text-blue-800" },
+    { value: "DELIVERING", name: "Yetkazib berilmoqda", color: "bg-blue-100 hover:bg-blue-200 text-blue-800" },
+
+    { value: "COMPLETED", name: "Yakunlangan", color: "bg-green-100 hover:bg-green-200 text-green-800" },
+    { value: "CANCELLED", name: "Bekor qilingan", color: "bg-red-100 hover:bg-red-200 text-red-800" }
 ]
 
 function OrderList({ orders }: { orders: IOrder[] }) {
@@ -53,8 +55,11 @@ function OrderList({ orders }: { orders: IOrder[] }) {
         const isInDateRange = (!dateRange.from || orderDate >= dateRange.from) &&
             (!dateRange.to || orderDate <= dateRange.to)
         return (selectedStatus === "ALL" || order.status === selectedStatus) &&
-            (order.user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                order.order_id.toString().includes(searchTerm)) &&
+            (
+                order.user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                order.order_id.toString().includes(searchTerm) ||
+                order.phone_number.toLowerCase().includes(searchTerm)
+            ) &&
             isInDateRange
     });
 
@@ -141,11 +146,11 @@ function OrderList({ orders }: { orders: IOrder[] }) {
 
     return (
         <div className="container mx-auto py-10">
-            <h1 className="text-3xl font-bold mb-6">Order List</h1>
+            <h1 className="text-3xl font-bold mb-6">Buyurtmalar</h1>
 
             <div className="flex flex-col space-y-4 mb-6">
                 <div className="flex items-center space-x-4">
-                    <Label>Date Range:</Label>
+                    <Label>Vaqt bo&apos;yicha filter:</Label>
                     <Popover>
                         <PopoverTrigger asChild>
                             <Button
@@ -191,11 +196,11 @@ function OrderList({ orders }: { orders: IOrder[] }) {
                         variant="outline"
                         onClick={() => setDateRange({ from: undefined, to: undefined })}
                     >
-                        Clear Dates
+                        Tozalash
                     </Button>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                    <Label className="flex items-center mr-2">Filter by Status:</Label>
+                    <Label className="flex items-center mr-2">Holat bo&apos;yicha saralash:</Label>
                     {statuses.map((status) => (
                         <Button
                             key={status.name}
@@ -211,10 +216,10 @@ function OrderList({ orders }: { orders: IOrder[] }) {
                     ))}
                 </div>
                 <div className="flex items-center space-x-4">
-                    <Label htmlFor="search">Search:</Label>
+                    <Label htmlFor="search">Qidirish:</Label>
                     <Input
                         id="search"
-                        placeholder="Search by ID or user"
+                        placeholder="Buyurtma raqami, mijoz ismi yoki telefon raqam."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="max-w-sm"
@@ -226,12 +231,13 @@ function OrderList({ orders }: { orders: IOrder[] }) {
                     <TableHeader>
                         <TableRow>
                             <TableHead>ID</TableHead>
-                            <TableHead>User</TableHead>
-                            <TableHead>Price</TableHead>
-                            <TableHead>Products Count</TableHead>
-                            <TableHead>Coupon</TableHead>
-                            <TableHead>Date & Time</TableHead>
-                            <TableHead>Status</TableHead>
+                            <TableHead>Mijoz</TableHead>
+                            <TableHead>Telefon raqami</TableHead>
+                            <TableHead>Narxi</TableHead>
+                            <TableHead>Mahsulotlar soni</TableHead>
+                            <TableHead>Promokod</TableHead>
+                            <TableHead>Buyurtma vaqti</TableHead>
+                            <TableHead>Holati</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -243,6 +249,11 @@ function OrderList({ orders }: { orders: IOrder[] }) {
                                 <TableCell onClick={() => {
                                     push(`orders/info?id=${order.id}`)
                                 }}>{order.user.name}</TableCell>
+                                <TableCell onClick={() => {
+                                    push(`orders/info?id=${order.id}`)
+                                }}>{order.phone_number}</TableCell>
+
+
                                 <TableCell onClick={() => {
                                     push(`orders/info?id=${order.id}`)
                                 }}>

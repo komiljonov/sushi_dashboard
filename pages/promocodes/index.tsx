@@ -3,13 +3,14 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/Button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { request } from "@/lib/api"
 import { PromocodeForm } from "@/components/promocode/Form"
 import { PromocodeTable } from "@/components/promocode/Table"
 import { DeleteDialog } from "@/components/promocode/DeleteDialog"
 import { IPromocode } from "@/lib/types"
 import { Layout } from "@/components/Layout"
+import { queryClient } from "@/lib/query"
 
 const fetchPromocodes = async (): Promise<IPromocode[]> => {
   const { data } = await request.get('promocodes/');
@@ -64,7 +65,6 @@ const deletePromocode = async (id: string) => {
 }
 
 export function Promocodes() {
-  const queryClient = useQueryClient();
   const { data: promocodes = [] } = useQuery({
     queryKey: ['promocodes'],
     queryFn: fetchPromocodes
