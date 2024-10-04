@@ -105,11 +105,12 @@ export function Categories() {
         if (selectedCategory) {
             if (event.key === "Delete") {
                 handleDeleteCategory();
-            } else if (event.key === "Enter") {
+            } else if (event.key === "Enter" && !isDeleteDialogOpen) {
+                // Only open category if the delete dialog is not open
                 router.push(`/categories/info?id=${selectedCategory.id}`);
             }
         }
-    }, [selectedCategory, handleDeleteCategory, router]);
+    }, [selectedCategory, handleDeleteCategory, router, isDeleteDialogOpen]);
 
 
     useEffect(() => {
@@ -144,7 +145,10 @@ export function Categories() {
                     />
                 )}
             </div>
-            <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+            <AlertDialog
+                open={isDeleteDialogOpen}
+                onOpenChange={setIsDeleteDialogOpen}
+            >
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>Kategoriyani o&apos;chirish</AlertDialogTitle>
@@ -154,7 +158,9 @@ export function Categories() {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Bekor qilish</AlertDialogCancel>
-                        <AlertDialogAction onClick={confirmDelete}>O&apos;chirish</AlertDialogAction>
+                        <AlertDialogAction onClick={confirmDelete}>
+                            O&apos;chirish
+                        </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
@@ -196,14 +202,15 @@ function CategoryList({
                         onClick={() => handleCategoryClick(category)}
                         onDoubleClick={() => handleDoubleClick(category.id)}
                     >
-                        <div className="flex-1 flex items-center">
+                        
+                        <div className="flex-1 flex items-center" onClick={(e) => {
+                            e.stopPropagation();
+                            toggleCategory(category.id);
+                        }}>
                             {category.content_type == "CATEGORY" && (
                                 <span
                                     className="mr-2 cursor-pointer"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        toggleCategory(category.id);
-                                    }}
+
                                 >
                                     {expandedCategories.includes(category.id) ? (
                                         <ChevronDown className="h-4 w-4" />
@@ -214,6 +221,7 @@ function CategoryList({
                             )}
                             <span>{category.name_uz}</span>
                         </div>
+
                         <div className="flex-1">
                             Mahsulotlar soni: {category.products_count}
                         </div>

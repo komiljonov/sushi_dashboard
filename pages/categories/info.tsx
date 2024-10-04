@@ -20,6 +20,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Products } from "@/components/product/list";
 import { splitToHundreds } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
+import HierarchyList from '@/components/category/HierarchyList';
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
 
@@ -251,36 +252,52 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
     </div>
   )
 }
-
 export default function Page() {
-  const [activeTab, setActiveTab] = useState("category-info")
+  const [activeTab, setActiveTab] = useState("category-info");
   const categoryId = getCategoryIdFromUrl();
 
   const { data: category } = useQuery({
     queryKey: ['category', categoryId],
     queryFn: () => {
       if (categoryId !== null) {
-        return fetchCategoryData(categoryId)
+        return fetchCategoryData(categoryId);
       }
-      return Promise.reject(new Error('Kategoriya ID null'))
+      return Promise.reject(new Error('Kategoriya ID null'));
     },
     enabled: categoryId !== null,
   });
 
+  // If the category is not of type "PRODUCT", show the page without tabs.
+  if (category && category.content_type !== "PRODUCT") {
+    return (
+      <Layout page="categories">
+        <CategoryInfo category={category} />
+      </Layout>
+    );
+  }
+
+  // If the category is of type "PRODUCT", show the tabs as before.
   return (
-    <Layout page='categories'>
+    <Layout page="categories">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="category-info">Kategoriya ma&apos;lumotlari</TabsTrigger>
-          <TabsTrigger value="products-list">Mahsulotlar ro&apos;yxati</TabsTrigger>
+
+          {category?.content_type === "PRODUCT" && (
+            <TabsTrigger value="products-list">Mahsulotlar ro&apos;yxati</TabsTrigger>
+          )}
         </TabsList>
+
         <TabsContent value="category-info">
           <CategoryInfo category={category} />
         </TabsContent>
-        <TabsContent value="products-list">
-          <Products category={category} />
-        </TabsContent>
+
+        {category?.content_type === "PRODUCT" && (
+          <TabsContent value="products-list">
+            <Products category={category} />
+          </TabsContent>
+        )}
       </Tabs>
     </Layout>
-  )
+  );
 }

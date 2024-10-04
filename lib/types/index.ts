@@ -42,24 +42,17 @@ export interface IProduct {
 }
 
 
-export interface ICategoryWithStats {
-    id: string;
-    name_uz: string;
-    name_ru: string;
-    products_count: number;
-    active: boolean;
-
+export interface ICategoryWithStats extends ICategory {
     products: IProduct[];
 
     visits: {
         date: string;
-        visits: number
+        visits: number;
     }[];
-
 
     average_visit_time: {
         hour: string;
-        visit_count: number
+        visit_count: number;
     }[];
 }
 
