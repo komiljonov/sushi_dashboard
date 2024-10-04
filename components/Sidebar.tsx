@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from "@/components/ui/Button"
 import { cn } from "@/lib/utils"
-import { Users, LogOut, Box, Home, Ticket, FingerprintIcon, ShoppingCartIcon, MapPin, CreditCard } from "lucide-react"
+import { Users, LogOut, Box, Home, Ticket, FingerprintIcon, ShoppingCartIcon, MapPin, CreditCard, LinkIcon } from "lucide-react"
 import { useAuth } from '@/lib/context/Auth'
 import { useRouter } from 'next/router'
 
@@ -57,6 +57,7 @@ export function Sidebar({ collapsed, page }: SidebarProps) {
                     <NavItem href="/orders" icon={<ShoppingCartIcon className="h-4 w-4" />} label="Buyurtmalar" collapsed={collapsed} isSelected={page == 'orders'} />
                     <NavItem href="/filials" icon={<MapPin className="h-4 w-4" />} label="Filiallar" collapsed={collapsed} isSelected={page == 'filials'} />
                     <NavItem href="/payments" icon={<CreditCard className="h-4 w-4" />} label="To'lovlar" collapsed={collapsed} isSelected={page == 'payments'} />
+                    <NavItem href="/referrals" icon={<LinkIcon className="h-4 w-4" />} label="Referrals" collapsed={collapsed} isSelected={page == 'referrals'} />
 
                 </nav>
                 {/* </ScrollArea> */}

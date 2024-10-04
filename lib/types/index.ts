@@ -1,9 +1,19 @@
 
 export interface ICategory {
-    id: number;
+    id: string;
     name_uz: string;
     name_ru: string;
     products_count: number;
+    today_visits: number;
+    active: boolean;
+    children_count: number;
+
+    content_type: "CATEGORY" | "PRODUCT";
+
+    parent: string;
+
+    children: ICategory[]
+
 }
 
 export interface IFile {
@@ -28,6 +38,7 @@ export interface IProduct {
     image: IFile | string;
 
     price: number;
+    sale_count: number;
 }
 
 
@@ -36,8 +47,20 @@ export interface ICategoryWithStats {
     name_uz: string;
     name_ru: string;
     products_count: number;
+    active: boolean;
 
-    products: IProduct[]
+    products: IProduct[];
+
+    visits: {
+        date: string;
+        visits: number
+    }[];
+
+
+    average_visit_time: {
+        hour: string;
+        visit_count: number
+    }[];
 }
 
 
@@ -142,6 +165,8 @@ export type IOrder = {
     discount_price: number;
     payment?: IPayment;
     filial?: IFilial;
+
+    location?: ILocation;
 
     delivery: "DELIVER" | "TAKEAWAY"
 

@@ -84,6 +84,7 @@ export default function CategoryInfo({ category }: { category: ICategory }) {
             <TableCell className="font-medium" onClick={event => handleRowClick(event)}>{category.name_uz}</TableCell>
             <TableCell onClick={event => handleRowClick(event)}>{category.name_ru}</TableCell>
             <TableCell onClick={event => handleRowClick(event)}>{category.products_count}</TableCell>
+            <TableCell onClick={event => handleRowClick(event)}>{category.today_visits}</TableCell>
 
             <TableCell>
 

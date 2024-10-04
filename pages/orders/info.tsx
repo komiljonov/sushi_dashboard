@@ -148,6 +148,14 @@ function OrderDetailsCard({ order }: { order: IOrder }) {
                     <Badge variant="outline">{order.status}</Badge>
                 </div>
 
+                {order.location && <div className="flex space-x-2">
+                    <Label>Joylashuv:</Label>
+                    {/* <Badge variant="outline">{order.location.address}</Badge> */}
+                    <p className="text-sm" >{order.location.address}</p>
+                </div>}
+
+
+
             </CardContent>
         </Card>
     )

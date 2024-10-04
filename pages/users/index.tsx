@@ -26,12 +26,12 @@ function UsersTable({ users }: { users: IUser[] }) {
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Phone Number</TableHead>
-                        <TableHead>Has Order</TableHead>
-                        <TableHead>Language</TableHead>
+                        <TableHead>Ismi</TableHead>
+                        <TableHead>Telefon raqami</TableHead>
+                        <TableHead>Buyurtmasi bormi</TableHead>
+                        <TableHead>Tili</TableHead>
                         <TableHead>Telegram</TableHead>
-                        <TableHead>Current Order</TableHead>
+                        <TableHead>Hozirgi buyurtmasi</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -62,7 +62,7 @@ function UsersTable({ users }: { users: IUser[] }) {
                                     className="flex items-center text-blue-500 hover:text-blue-700"
                                 >
                                     <ExternalLink className="h-4 w-4 mr-1" />
-                                    Open
+                                    Ochish
                                 </Link>
                             </TableCell>
                             <TableCell>
@@ -77,7 +77,7 @@ function UsersTable({ users }: { users: IUser[] }) {
                                         }}
                                     >
                                         <ShoppingCart className="h-4 w-4 mr-1" />
-                                        View Order
+                                        Buyurtmani ochish
                                     </Button>
                                 )}
                             </TableCell>
@@ -93,10 +93,10 @@ function UsersTable({ users }: { users: IUser[] }) {
                     disabled={currentPage === 1}
                 >
                     <ChevronLeft className="h-4 w-4" />
-                    Previous
+                    Oldingi
                 </Button>
                 <div className="text-sm font-medium">
-                    Page {currentPage} of {totalPages}
+                    Foydalanuvchilar {totalPages} dan {currentPage} 
                 </div>
                 <Button
                     variant="outline"
@@ -104,7 +104,7 @@ function UsersTable({ users }: { users: IUser[] }) {
                     onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                     disabled={currentPage === totalPages}
                 >
-                    Next
+                    Keyingi
                     <ChevronRight className="h-4 w-4" />
                 </Button>
             </div>
@@ -118,12 +118,12 @@ function UsersTableSkeleton() {
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Phone Number</TableHead>
-                        <TableHead>Has Order</TableHead>
-                        <TableHead>Language</TableHead>
+                        <TableHead>Ismi</TableHead>
+                        <TableHead>Telefon raqami</TableHead>
+                        <TableHead>Buyurtma berganmi</TableHead>
+                        <TableHead>Tili</TableHead>
                         <TableHead>Telegram</TableHead>
-                        <TableHead>Current Order</TableHead>
+                        <TableHead>Hozirgi buyurtmasi</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -163,7 +163,7 @@ export default function UsersListPage() {
     return (
         <Layout page="users">
             <div className="container mx-auto py-10">
-                <h1 className="text-2xl font-bold mb-5">Users List</h1>
+                <h1 className="text-2xl font-bold mb-5">Foydalanuvchilar ro&apos;yxati</h1>
                 {isLoading ? (
                     <UsersTableSkeleton />
                 ) : users ? (

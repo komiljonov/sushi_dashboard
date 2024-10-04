@@ -1,121 +1,121 @@
-'use client'
+'use client';
 
-import { Layout } from "@/components/Layout"
-import { useEffect, useState } from "react"
-import { Bar, Pie } from 'react-chartjs-2'
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
-import { Input } from "@/components/ui/Input"
-import { Label } from "@/components/ui/Label"
-import { Button } from "@/components/ui/Button"
-import { ShoppingCart, Users, TrendingUp, Package } from 'lucide-react'
-import { request } from '@/lib/api'
-import { ICategory, ICategoryWithStats, IFile } from "@/lib/types"
-import { useMutation, useQuery } from "@tanstack/react-query"
-import { useForm } from "react-hook-form"
-import Image from "next/image"
-import { queryClient } from "@/lib/query"
-import { useToast } from "@/hooks/use-toast"
-import Link from "next/link"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Products } from "@/components/product/list"
+import { Layout } from "@/components/Layout";
+import { useEffect, useState } from "react";
+import { Bar, Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Input } from "@/components/ui/Input";
+import { Label } from "@/components/ui/Label";
+import { Button } from "@/components/ui/Button";
+import { ShoppingCart, TrendingUp } from 'lucide-react';
+import { request } from '@/lib/api';
+import { ICategory, ICategoryWithStats, IFile } from "@/lib/types";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Controller, useForm } from "react-hook-form";
+import Image from "next/image";
+import { queryClient } from "@/lib/query";
+import { useToast } from "@/hooks/use-toast";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Products } from "@/components/product/list";
+import { splitToHundreds } from "@/lib/utils";
+import { Checkbox } from "@/components/ui/checkbox";
 
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title)
-
-function getRandomNumber(start: number, end: number): number {
-  return Math.floor(Math.random() * (end - start + 1)) + start
-}
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
 
 const getCategoryIdFromUrl = (): string | null => {
   if (typeof window !== 'undefined') {
-    const url = new URL(window.location.href)
-    const queryParams = new URLSearchParams(url.search)
-    const id = queryParams.get('id')
-    return id
+    const url = new URL(window.location.href);
+    const queryParams = new URLSearchParams(url.search);
+    return queryParams.get('id');
   }
-  return null
+  return null;
 }
 
 const fetchCategoryData = async (id: string): Promise<ICategoryWithStats> => {
-  const { data } = await request.get(`categories/${id}/stats`)
-  return data
+  const { data } = await request.get(`categories/${id}/stats`);
+  return data;
 }
 
 const editCategory = async (id: string, edit_data: ICategory): Promise<ICategory> => {
-  const { data } = await request.patch(`categories/${id}`, edit_data)
-  return data
+  const { data } = await request.patch(`categories/${id}`, edit_data);
+  return data;
 }
 
 function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
   const { toast } = useToast();
-
-  const { register, reset, handleSubmit } = useForm<ICategory>();
-
-
+  const { register, reset, handleSubmit, control } = useForm<ICategory>();
 
   useEffect(() => {
     if (category) {
       reset({
-        name_uz: category?.name_uz,
-        name_ru: category?.name_ru
-      })
+        name_uz: category.name_uz,
+        name_ru: category.name_ru,
+        active: category.active
+      });
     }
   }, [category, reset]);
-
 
   const mutation = useMutation({
     mutationFn: (data: ICategory) => {
       if (category) {
-        return editCategory(category.id, data)
+        return editCategory(category.id, data);
       }
-      return Promise.reject(new Error('Category ID is null'))
+      return Promise.reject(new Error('Kategoriya ID null'));
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['category', category?.id] })
-      reset()
+      queryClient.invalidateQueries({ queryKey: ['category', category?.id] });
       toast({
         title: 'Saqlandi'
-      })
+      });
     },
     onError: (error) => {
-      console.log('Error creating category:', error)
+      console.error('Kategoriya yaratishda xatolik:', error);
+      toast({
+        title: 'Xatolik yuz berdi',
+        variant: 'destructive'
+      });
     }
-  })
+  });
 
   const handleSave = (data: ICategory) => {
-    mutation.mutate(data)
+    mutation.mutate(data);
   }
-
-  const visitCounts = 15000
-  const visitFrequency = [
-    { date: '2023-06-01', visits: 500 },
-    { date: '2023-06-02', visits: 600 },
-    { date: '2023-06-03', visits: 550 },
-    { date: '2023-06-04', visits: 700 },
-    { date: '2023-06-05', visits: 800 },
-  ]
 
   const pieChartData = {
     labels: category?.products?.map(product => product.name_uz),
     datasets: [
       {
-        data: category?.products?.map(() => getRandomNumber(100, 200)),
+        data: category?.products?.map((product) => product.sale_count),
         backgroundColor: [
-          '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
-          '#FF9F40', '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'
+          '#FF6B6B', '#FFD93D', '#6BCB77', '#4D96FF', '#6F42C1',
+          '#F03E3E', '#FFD33D', '#4BBF73', '#3B82F6', '#5F3F8D'
         ],
+      },
+    ],
+  };
+
+  const barChartData = {
+    labels: category?.visits?.map(item => item.date) || [],
+    datasets: [
+      {
+        label: 'Tashrif chastotasi',
+        data: category?.visits?.map(item => item.visits) || [],
+        backgroundColor: 'rgba(59, 130, 246, 0.6)',
+        borderColor: 'rgb(59, 130, 246)',
+        borderWidth: 1,
       },
     ],
   }
 
-  const barChartData = {
-    labels: visitFrequency.map(item => item.date),
+  const barChartDataTime = {
+    labels: category?.average_visit_time?.map(item => item.hour) || [],
     datasets: [
       {
-        label: 'Visit Frequency',
-        data: visitFrequency.map(item => item.visits),
-        backgroundColor: 'rgba(59, 130, 246, 0.6)', // Changed to a blue color
-        borderColor: 'rgb(59, 130, 246)', // Added border color
+        label: 'Tashrif chastotasi',
+        data: category?.average_visit_time?.map(item => item.visit_count) || [],
+        backgroundColor: 'rgba(59, 130, 246, 0.6)',
+        borderColor: 'rgb(59, 130, 246)',
         borderWidth: 1,
       },
     ],
@@ -126,10 +126,10 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
     plugins: {
       title: {
         display: true,
-        text: 'Visit Frequency',
+        text: 'Tashrif chastotasi',
       },
       legend: {
-        display: false, // Hide legend as we only have one dataset
+        display: false,
       },
     },
     scales: {
@@ -137,13 +137,13 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
         beginAtZero: true,
         title: {
           display: true,
-          text: 'Number of Visits',
+          text: 'Tashriflar soni',
         },
       },
       x: {
         title: {
           display: true,
-          text: 'Date',
+          text: 'Sana',
         },
       },
     },
@@ -153,31 +153,39 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Kategoriya ma&apos;lumotlari</h1>
-        <Link href={`/products?category=${category?.id}`}>
-          <Button>
-            <Package className="mr-2 h-4 w-4" />
-            View Products
-          </Button>
-        </Link>
       </div>
 
       <div className="grid gap-8 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Edit Category</CardTitle>
+            <CardTitle>Kategoriyani tahrirlash</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(handleSave)}>
               <div className="grid gap-4">
                 <div>
-                  <Label htmlFor="name_uz">Name (Uzbek)</Label>
-                  <Input id="name_uz"  {...register('name_uz', { required: true })} />
+                  <Label htmlFor="name_uz">Nomi (O&apos;zbek)</Label>
+                  <Input id="name_uz" {...register('name_uz', { required: true })} />
                 </div>
                 <div>
-                  <Label htmlFor="name_ru">Name (Russian)</Label>
+                  <Label htmlFor="name_ru">Nomi (Rus)</Label>
                   <Input id="name_ru" {...register('name_ru', { required: true })} />
                 </div>
-                <Button type="submit">Save</Button>
+                <div className="flex items-center space-x-2">
+                  <Controller
+                    name="active"
+                    control={control}
+                    render={({ field }) => (
+                      <Checkbox
+                        id="active"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    )}
+                  />
+                  <Label htmlFor="active">Active</Label>
+                </div>
+                <Button type="submit">Saqlash</Button>
               </div>
             </form>
           </CardContent>
@@ -185,12 +193,13 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Visit Counts</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Tashrif chastotasi</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{visitCounts.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">Total visits</p>
+            <div className="h-[300px]">
+              {category?.visits && <Bar options={barChartOptions} data={barChartData} />}
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -198,7 +207,7 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
       <div className="grid gap-8 md:grid-cols-2 mt-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Top Products Sales Share</CardTitle>
+            <CardTitle className="text-sm font-medium">Eng ko&apos;p sotilgan mahsulotlar ulushi</CardTitle>
             <ShoppingCart className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -209,12 +218,18 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
               {category?.products?.map((product, index) => (
                 <li key={index} className="flex items-center justify-between py-2">
                   <div className="flex items-center">
-
-                    {product.image && <Image src={(product.image as IFile)?.file} alt={product.name_uz} width={50} height={50} className="w-8 h-8 mr-2" />}
-
+                    {product.image && (
+                      <Image
+                        src={(product.image as IFile).file}
+                        alt={product.name_uz}
+                        width={50}
+                        height={50}
+                        className="w-8 h-8 mr-2"
+                      />
+                    )}
                     <span>{product.name_uz}</span>
                   </div>
-                  <span>${product.price.toFixed(2)}</span>
+                  <span>{splitToHundreds(product.price)} so&apos;m</span>
                 </li>
               ))}
             </ul>
@@ -223,12 +238,12 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Visit Frequency</CardTitle>
+            <CardTitle className="text-sm font-medium">Ohirgi yetti kunda eng ko&apos;p tashriflar vaqtlari</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
-              <Bar options={barChartOptions} data={barChartData} />
+              {category?.average_visit_time && <Bar options={barChartOptions} data={barChartDataTime} />}
             </div>
           </CardContent>
         </Card>
@@ -239,9 +254,7 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState("category-info")
-  const [categoryId] = useState(getCategoryIdFromUrl);
-
-
+  const categoryId = getCategoryIdFromUrl();
 
   const { data: category } = useQuery({
     queryKey: ['category', categoryId],
@@ -249,7 +262,7 @@ export default function Page() {
       if (categoryId !== null) {
         return fetchCategoryData(categoryId)
       }
-      return Promise.reject(new Error('Category ID is null'))
+      return Promise.reject(new Error('Kategoriya ID null'))
     },
     enabled: categoryId !== null,
   });
@@ -258,15 +271,13 @@ export default function Page() {
     <Layout page='categories'>
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="category-info">Category Info</TabsTrigger>
-          <TabsTrigger value="products-list">Products List</TabsTrigger>
+          <TabsTrigger value="category-info">Kategoriya ma&apos;lumotlari</TabsTrigger>
+          <TabsTrigger value="products-list">Mahsulotlar ro&apos;yxati</TabsTrigger>
         </TabsList>
         <TabsContent value="category-info">
           <CategoryInfo category={category} />
         </TabsContent>
         <TabsContent value="products-list">
-          {/* <ProductsList /> */}
-
           <Products category={category} />
         </TabsContent>
       </Tabs>

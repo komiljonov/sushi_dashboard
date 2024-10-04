@@ -1,7 +1,4 @@
 'use client';
-
-
-// import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 
@@ -11,8 +8,6 @@ import { Label } from '@/components/ui/Label';
 import { Input } from '@/components/ui/Input';
 import { UploadField } from '@/components/ui/file_upload';
 import { FormProvider, useForm } from 'react-hook-form';
-// import { useMutation, useQuery } from '@tanstack/react-query';
-// import { useRouter } from 'next/router';
 import { FormattedInput } from '@/components/ui/formattedInput';
 import { IFile, IProduct } from '@/lib/types';
 import { useMutation, useQuery } from '@tanstack/react-query';
@@ -135,7 +130,7 @@ function Products() {
                             id="name_uz"
 
                             {...register("name_uz", { required: true })}
-                            placeholder="Enter product name in Uzbek"
+                            placeholder="Mahsulotning o'zbek tilidagi nomini kiriting."
                         />
                     </div>
                     <div>
@@ -143,7 +138,7 @@ function Products() {
                         <Input
                             id="name_ru"
                             {...register("name_ru", { required: true })}
-                            placeholder="Enter product name in Russian"
+                            placeholder="Mahsulotni rus tilidagi nomini kiriting."
                         />
                     </div>
 
@@ -153,13 +148,13 @@ function Products() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <FormattedInput
                             id="caption_uz"
-                            label="Caption (Uzbek)"
-                            placeholder="Enter product caption in Uzbek"
+                            label="Tavsif"
+                            placeholder="Mahsulotni ma'lumotlarini kiriting"
                         />
                         <FormattedInput
                             id="caption_ru"
-                            label="Caption (Russian)"
-                            placeholder="Enter product caption in Russian"
+                            label="Tavsif rus tilida"
+                            placeholder="Mahsulotni rus tilidagi ma'lumotini kiriting"
                         />
                     </div>
                 </FormProvider>
@@ -168,19 +163,19 @@ function Products() {
 
                     <UploadField onFileUpload={onFileUpload} setFileUploading={setFileUploading} preview={image || ''} />
                     <div>
-                        <Label htmlFor="price">Price</Label>
+                        <Label htmlFor="price">Narxi</Label>
                         <Input
                             id="price"
                             type="number"
                             {...register("price", { required: true, valueAsNumber: true })}
-                            placeholder="Enter product price"
+                            placeholder="Mahsulot narxini kiriting."
                         />
                     </div>
 
                 </div>
 
 
-                <Button type="submit" disabled={fileUploading || mutation.status == 'pending'} >Submit</Button>
+                <Button type="submit" disabled={fileUploading || mutation.status == 'pending'} >Saqlash</Button>
             </form>
         </div>
     );

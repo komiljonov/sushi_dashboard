@@ -10,27 +10,6 @@ import { useQuery } from "@tanstack/react-query"
 import { request } from '@/lib/api';
 
 
-// interface IUser {
-//     id: string;
-//     name: string;
-//     number: string;
-//     tg_name: string;
-//     username: string;
-//     lang: string;
-//     has_order: boolean;
-//     current_order?: {
-//         id: string;
-//         status: string;
-//         created_at: string;
-//         delivery: string;
-//         payment: {
-//             provider: string;
-//             amount: string;
-//             status: string;
-//         };
-//     };
-// }
-
 function UserInfoPage({ user }: { user: IUser }) {
 
 
@@ -45,15 +24,15 @@ function UserInfoPage({ user }: { user: IUser }) {
                     <CardContent>
                         <form className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="name">Name</Label>
+                                <Label htmlFor="name">Ismi</Label>
                                 <Input id="name" value={user.name} readOnly />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="number">Phone Number</Label>
+                                <Label htmlFor="number">Telefon raqami</Label>
                                 <Input id="number" value={user.number} readOnly />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="tg_name">Telegram Name</Label>
+                                <Label htmlFor="tg_name">Telegramdagi ismi</Label>
                                 <Input id="tg_name" value={user.tg_name} readOnly />
                             </div>
                             <div className="space-y-2">
@@ -61,7 +40,7 @@ function UserInfoPage({ user }: { user: IUser }) {
                                 <Input id="username" value={user.username} readOnly />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="lang">Language</Label>
+                                <Label htmlFor="lang">Tili</Label>
                                 <Input id="lang" value={user.lang} readOnly />
                             </div>
                         </form>
@@ -168,7 +147,8 @@ export default function Page() {
                 return fetchUserInfo(userId);
             }
             return Promise.reject(new Error("user id is null"));
-        }
+        },
+        refetchInterval: 30000
     })
 
 
