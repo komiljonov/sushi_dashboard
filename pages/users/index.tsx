@@ -13,14 +13,14 @@ import { useRouter } from "next/router"
 import { Skeleton } from "@/components/ui/skeleton"
 
 function UsersTable({ users }: { users: IUser[] }) {
-    const { push } = useRouter()
-    const [currentPage, setCurrentPage] = useState(1)
-    const itemsPerPage = 5
-    const totalPages = Math.ceil(users.length / itemsPerPage)
-    const startIndex = (currentPage - 1) * itemsPerPage
-    const endIndex = startIndex + itemsPerPage
+    const { push } = useRouter();
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
+    const totalPages = Math.ceil(users.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
 
-    const currentUsers = users.slice(startIndex, endIndex)
+    const currentUsers = users.slice(startIndex, endIndex);
 
     return (
         <div className="border rounded-md">
@@ -146,12 +146,12 @@ function UsersTableSkeleton() {
                 <Skeleton className="h-8 w-24" />
             </div>
         </div>
-    )
+    );
 }
 
 const fetchUsers = async (): Promise<IUser[]> => {
-    const { data } = await request.get('users/')
-    return data
+    const { data } = await request.get('users/');
+    return data;
 }
 
 export default function UsersListPage() {
