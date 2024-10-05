@@ -101,9 +101,9 @@ function Products() {
                 caption_uz: product.caption_uz,
                 caption_ru: product.caption_ru,
                 price: product.price,
-                image: (product.image as IFile).id
+                image: (product.image as IFile)?.id
             });
-            setImage((product.image as IFile).file);
+            setImage((product.image as IFile)?.file);
         }
     }, [isSuccess, reset, product]);
 

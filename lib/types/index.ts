@@ -158,15 +158,15 @@ export type IOrder = {
     discount_price: number;
     payment?: IPayment;
     filial?: IFilial;
-    
+
     location?: ILocation;
-    
+
     delivery: "DELIVER" | "TAKEAWAY"
-    
+
     comment: string;
-    
+
     taxi: ITaxi | null | undefined;
-    
+
     items: IOrderItem[]
 }
 

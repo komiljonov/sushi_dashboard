@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect, useCallback } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/Button";
-import { Plus, ChevronDown, ChevronRight } from "lucide-react";
+import { Plus, ChevronDown, ChevronRight, Trash2, Edit } from "lucide-react";
 import { request } from "@/lib/api";
 import { Layout } from "@/components/Layout";
 import CreateCategoryModal from "@/components/category/create";
@@ -22,13 +22,11 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-// Fetching categories from API
 const fetchCategories = async (): Promise<ICategory[]> => {
     const { data } = await request.get("categories");
     return data;
 };
 
-// Deleting category API request
 const deleteCategory = async (categoryId: string) => {
     await request.delete(`categories/${categoryId}`);
 };
@@ -46,7 +44,6 @@ export function Categories() {
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const router = useRouter();
 
-    // Mutation for deleting category
     const { mutate: deleteMutate } = useMutation({
         mutationFn: deleteCategory,
         onSuccess: () => {
@@ -74,25 +71,23 @@ export function Categories() {
     }, []);
 
     const handleCategoryClick = useCallback((category: ICategory) => {
-        console.log(category);
-
-        setSelectedCategory(category.id);
+        if (category.content_type == "CATEGORY") {
+            setSelectedCategory(category.id);
+        }
     }, []);
 
     const handleDoubleClick = useCallback((categoryId: string) => {
         router.push(`/categories/info?id=${categoryId}`);
     }, [router]);
 
-    const handleDeleteCategory = useCallback(() => {
-        if (selectedCategory) {
-            setIsDeleteDialogOpen(true);
-        } else {
-            toast({
-                title: "Ogohlantirish",
-                description: "Hech qanday kategoriya tanlanmagan",
-            });
-        }
-    }, [selectedCategory, toast]);
+    const handleDeleteCategory = useCallback((categoryId: string) => {
+        setSelectedCategory(categoryId);
+        setIsDeleteDialogOpen(true);
+    }, []);
+
+    const handleEditCategory = useCallback((categoryId: string) => {
+        router.push(`/categories/info?id=${categoryId}`);
+    }, [router]);
 
     const confirmDelete = useCallback(() => {
         if (selectedCategory) {
@@ -104,21 +99,19 @@ export function Categories() {
     const handleKeyPress = useCallback((event: KeyboardEvent) => {
         if (selectedCategory) {
             if (event.key === "Delete") {
-                handleDeleteCategory();
+                handleDeleteCategory(selectedCategory);
             } else if (event.key === "Enter" && !isDeleteDialogOpen) {
-                // Only open category if the delete dialog is not open
                 router.push(`/categories/info?id=${selectedCategory}`);
             }
         }
     }, [selectedCategory, handleDeleteCategory, router, isDeleteDialogOpen]);
-
 
     useEffect(() => {
         window.addEventListener("keydown", handleKeyPress);
         return () => {
             window.removeEventListener("keydown", handleKeyPress);
         };
-    }, [selectedCategory, handleKeyPress]);
+    }, [handleKeyPress]);
 
     return (
         <div className="container mx-auto py-10">
@@ -141,6 +134,8 @@ export function Categories() {
                         selectedCategory={selectedCategory}
                         handleCategoryClick={handleCategoryClick}
                         handleDoubleClick={handleDoubleClick}
+                        handleDeleteCategory={handleDeleteCategory}
+                        handleEditCategory={handleEditCategory}
                     />
                 )}
             </div>
@@ -174,6 +169,8 @@ interface CategoryListProps {
     selectedCategory: string | null;
     handleCategoryClick: (category: ICategory) => void;
     handleDoubleClick: (categoryId: string) => void;
+    handleDeleteCategory: (categoryId: string) => void;
+    handleEditCategory: (categoryId: string) => void;
     level?: number;
 }
 
@@ -184,9 +181,11 @@ function CategoryList({
     selectedCategory,
     handleCategoryClick,
     handleDoubleClick,
+    handleDeleteCategory,
+    handleEditCategory,
     level = 0,
 }: CategoryListProps) {
-    const indent = level * 24; // Adjusting indentation in pixels
+    const indent = level * 24;
 
     return (
         <div className="space-y-2">
@@ -203,10 +202,7 @@ function CategoryList({
                         }}
                         onDoubleClick={() => handleDoubleClick(category.id)}
                     >
-                        <div
-                            className="flex-1 flex items-center"
-
-                        >
+                        <div className="flex-1 flex items-center">
                             {category.content_type === "CATEGORY" && (
                                 <span className="mr-2 cursor-pointer">
                                     {expandedCategories.includes(category.id) ? (
@@ -217,11 +213,31 @@ function CategoryList({
                                 </span>
                             )}
                             <span>{category.name_uz}</span>
-
                         </div>
-
                         <div className="flex-1">Mahsulotlar soni: {category.products_count}</div>
                         <div className="flex-1">Bugungi tashriflar: {category.today_visits}</div>
+                        <div className="flex items-center space-x-2">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleEditCategory(category.id);
+                                }}
+                            >
+                                <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteCategory(category.id);
+                                }}
+                            >
+                                <Trash2 className="h-4 w-4" />
+                            </Button>
+                        </div>
                     </div>
 
                     {expandedCategories.includes(category.id) && category.children.length > 0 && (
@@ -232,6 +248,8 @@ function CategoryList({
                             selectedCategory={selectedCategory}
                             handleCategoryClick={handleCategoryClick}
                             handleDoubleClick={handleDoubleClick}
+                            handleDeleteCategory={handleDeleteCategory}
+                            handleEditCategory={handleEditCategory}
                             level={level + 1}
                         />
                     )}
@@ -256,6 +274,10 @@ function SkeletonCategories() {
                         </div>
                         <div className="flex-1">
                             <Skeleton className="h-4 w-28" />
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <Skeleton className="h-8 w-8" />
+                            <Skeleton className="h-8 w-8" />
                         </div>
                     </div>
                 ))}

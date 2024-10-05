@@ -38,7 +38,6 @@ const updatePromocode = async (promocode: IPromocode) => {
         ? `${end_date.getFullYear()}-${String(end_date.getMonth() + 1).padStart(2, '0')}-${String(end_date.getDate()).padStart(2, '0')}`
         : undefined;
 
-    // Construct request payload conditionally
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const payload: any = { ...promocode };
     if (formattedEndDate !== undefined) {
@@ -49,12 +48,6 @@ const updatePromocode = async (promocode: IPromocode) => {
 
     return data;
 }
-
-// const users = [
-//     { id: 1, name: "Alice Johnson", avatar: "/placeholder.svg?height=40&width=40" },
-//     { id: 2, name: "Bob Smith", avatar: "/placeholder.svg?height=40&width=40" },
-//     { id: 3, name: "Carol Williams", avatar: "/placeholder.svg?height=40&width=40" },
-// ]
 
 function EditPromocode() {
     const router = useRouter();
