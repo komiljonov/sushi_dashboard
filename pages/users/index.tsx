@@ -19,6 +19,7 @@ function UsersTable({ users }: { users: IUser[] }) {
     const totalPages = Math.ceil(users.length / itemsPerPage)
     const startIndex = (currentPage - 1) * itemsPerPage
     const endIndex = startIndex + itemsPerPage
+
     const currentUsers = users.slice(startIndex, endIndex)
 
     return (
@@ -96,7 +97,7 @@ function UsersTable({ users }: { users: IUser[] }) {
                     Oldingi
                 </Button>
                 <div className="text-sm font-medium">
-                    Foydalanuvchilar {totalPages} dan {currentPage} 
+                    Foydalanuvchilar {totalPages} dan {currentPage}
                 </div>
                 <Button
                     variant="outline"
@@ -154,7 +155,7 @@ const fetchUsers = async (): Promise<IUser[]> => {
 }
 
 export default function UsersListPage() {
-    const { data: users, isLoading } = useQuery({
+    const { data: users = [], isLoading } = useQuery({
         queryKey: ['users'],
         queryFn: fetchUsers,
         refetchInterval: 60000
