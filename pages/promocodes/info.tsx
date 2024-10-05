@@ -33,12 +33,10 @@ const fetchPromocodeInfo = async (id: string): Promise<IPromocode> => {
 const updatePromocode = async (promocode: IPromocode) => {
     const { end_date } = promocode;
 
-    // Format end_date if it's a Date object, otherwise keep it as-is
     const formattedEndDate = end_date instanceof Date
         ? `${end_date.getFullYear()}-${String(end_date.getMonth() + 1).padStart(2, '0')}-${String(end_date.getDate()).padStart(2, '0')}`
         : undefined;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const payload: any = { ...promocode };
     if (formattedEndDate !== undefined) {
         payload.end_date = formattedEndDate;
@@ -52,9 +50,6 @@ const updatePromocode = async (promocode: IPromocode) => {
 function EditPromocode() {
     const router = useRouter();
 
-
-
-
     const [promocodeId] = useState(getCategoryIdFromUrl);
 
     const { data: promocode, isLoading } = useQuery({
@@ -63,7 +58,7 @@ function EditPromocode() {
             if (promocodeId) {
                 return fetchPromocodeInfo(promocodeId);
             }
-            return Promise.reject(new Error("Promocode Id is null"));
+            return Promise.reject(new Error("Promokod ID si null"));
         },
         enabled: !!promocodeId
     });
@@ -75,17 +70,12 @@ function EditPromocode() {
             router.push("/promocodes");
         },
         onError: (error) => {
-            console.error("Error updating promocode:", error);
+            console.error("Promokodni yangilashda xatolik:", error);
         }
     });
 
-
     const handleSave = (data: PromocodeFormOnSubmitProps) => {
         if (promocodeId) {
-
-
-
-
             mutation.mutate({
                 ...data,
                 id: promocodeId,
@@ -93,34 +83,28 @@ function EditPromocode() {
         }
     }
 
-    // const memoizedUsers = useMemo(() => users, []);
-
     if (!promocodeId) {
-        return <div>Loading...</div>
+        return <div>Yuklanmoqda...</div>
     }
-
-
 
     return (
         <div className="container mx-auto py-10">
-            <h1 className="text-2xl font-bold mb-5">Edit Promocode</h1>
+            <h1 className="text-2xl font-bold mb-5">Promokodni tahrirlash</h1>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <Card className="lg:col-span-2">
                     <CardHeader>
-                        <CardTitle>Promocode Details</CardTitle>
+                        <CardTitle>Promokod tafsilotlari</CardTitle>
                     </CardHeader>
                     <CardContent>
                         {isLoading ? <PromocodeFormSkeleton /> : <PromocodeForm
                             onSubmit={handleSave}
                             defaultValues={promocode as Omit<IPromocode, "id">}
                         />}
-
-
                     </CardContent>
                 </Card>
                 <Card className="w-full max-w-3xl">
                     <CardHeader>
-                        <CardTitle className="text-2xl font-bold">Users Who Used This Promocode</CardTitle>
+                        <CardTitle className="text-2xl font-bold">Bu promokoddan foydalangan foydalanuvchilar</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-6">
@@ -150,7 +134,7 @@ function EditPromocode() {
                                         </div>
                                         <Link href={`/orders/info?id=${order.id}`} className="flex items-center text-primary hover:underline">
                                             <CreditCardIcon className="mr-1 h-4 w-4" />
-                                            <span>Order #{order.order_id}</span>
+                                            <span>Buyurtma #{order.order_id}</span>
                                         </Link>
                                     </div>
                                 </div>
@@ -161,21 +145,21 @@ function EditPromocode() {
             </div>
             <Card className="mt-6">
                 <CardHeader>
-                    <CardTitle>Promocode Statistics</CardTitle>
+                    <CardTitle>Promokod statistikasi</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="border p-4 rounded-lg">
-                            <h3 className="font-bold mb-2">Total Uses</h3>
+                            <h3 className="font-bold mb-2">Jami foydalanishlar</h3>
                             <p className="text-4xl font-bold">{promocode?.orders?.length}</p>
                         </div>
                         <div className="border p-4 rounded-lg">
-                            <h3 className="font-bold mb-2">Total Savings</h3>
-                            <p className="text-4xl font-bold">$5,678</p>
+                            <h3 className="font-bold mb-2">Jami tejamlar</h3>
+                            <p className="text-4xl font-bold">5,678 so&apos;m</p>
                         </div>
                         <div className="border p-4 rounded-lg">
-                            <h3 className="font-bold mb-2">Average Order Value</h3>
-                            <p className="text-4xl font-bold">$89.99</p>
+                            <h3 className="font-bold mb-2">O&apos;rtacha buyurtma qiymati</h3>
+                            <p className="text-4xl font-bold">89,990 so&apos;m</p>
                         </div>
                     </div>
                 </CardContent>
@@ -183,9 +167,6 @@ function EditPromocode() {
         </div>
     )
 }
-
-
-
 
 export default function Page() {
     return <Layout page={"promocodes"}>

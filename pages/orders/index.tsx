@@ -259,12 +259,12 @@ function OrderList({ orders }: { orders: IOrder[] }) {
                                     push(`orders/info?id=${order.id}`)
                                 }}>
                                     <div className="flex items-center space-x-2">
-                                        <Badge variant="secondary" className="text-green-600 bg-green-100">
-                                            ${order.discount_price ? order.discount_price?.toFixed(2) : order.price?.toFixed(2)}
-                                        </Badge>
-                                        {order.discount_price && (
+                                        {order.price && <Badge variant="secondary" className="text-green-600 bg-green-100">
+                                            {order.discount_price ? order.discount_price?.toFixed(2) : order.price?.toFixed(2)} so&apos;m
+                                        </Badge>}
+                                        {order.promocode && (
                                             <span className="text-sm text-muted-foreground line-through">
-                                                ${order.price?.toFixed(2)}
+                                                {order.saving?.toFixed(2)} so&apos;m
                                             </span>
                                         )}
                                     </div>
@@ -284,7 +284,6 @@ function OrderList({ orders }: { orders: IOrder[] }) {
 
                                 <TableCell onClick={() => {
                                     push(`orders/info?id=${order.id}`);
-                                    // }}>{order.order_time && new Date(order.order_time).toLocaleString()}</TableCell>
                                 }}>{order.time ? new Date(order.time).toLocaleString() : "Iloji boricha tez"}</TableCell>
 
 

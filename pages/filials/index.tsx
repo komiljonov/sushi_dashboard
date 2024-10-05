@@ -198,12 +198,12 @@ const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
 
 
           <DialogHeader>
-            <DialogTitle>{mode === 'create' ? 'Create New Filial' : 'Edit Filial'}</DialogTitle>
+            <DialogTitle>{mode === 'create' ? "Yangi filial qo'shish" : "Filialni tahrirlash"}</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name_uz" className="text-right">
-                Name (UZ)
+                Nomi (UZ)
               </Label>
               <Input
                 id="name_uz"
@@ -215,7 +215,7 @@ const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name_ru" className="text-right">
-                Name (RU)
+                Nomi (RU)
               </Label>
               <Input
                 id="name_ru"
@@ -262,7 +262,7 @@ const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">{mode === 'create' ? 'Create Filial' : 'Update Filial'}</Button>
+            <Button type="submit">{mode === 'create' ? 'Yaratish' : 'Saqlash'}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

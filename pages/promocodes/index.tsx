@@ -108,7 +108,7 @@ export function Promocodes() {
           </DialogTrigger>
           <DialogContent className="bg-white">
             <DialogHeader>
-              <DialogTitle>Create New Promocode</DialogTitle>
+              <DialogTitle>Promocode qo&apos;shish</DialogTitle>
             </DialogHeader>
             <PromocodeForm
               onSubmit={handleCreatePromocode}

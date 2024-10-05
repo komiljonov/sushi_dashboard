@@ -117,7 +117,7 @@ function OrderDetailsCard({ order }: { order: IOrder }) {
                         </Badge>
                         {order.discount_price && (
                             <>
-                                <span className="text-sm text-muted-foreground line-through">{order.price?.toFixed(2)} so&apos;m  </span>
+                                <span className="text-sm text-muted-foreground line-through">{order.saving?.toFixed(2)} so&apos;m  </span>
                                 {[1, 2].map(() => <>&nbsp;</>)}
                                 ({order.saving} so&apos;m)
                             </>

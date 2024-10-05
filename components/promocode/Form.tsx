@@ -6,14 +6,12 @@ import { Input } from "@/components/ui/Input"
 import { Label } from "@/components/ui/Label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { IPromocode } from "@/lib/types"
-import * as Slider from '@radix-ui/react-slider'
 import { Checkbox } from "../ui/checkbox"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { cn } from "@/lib/utils"
 import { CalendarIcon } from "lucide-react"
 import { format } from "date-fns/format"
 import { Calendar } from "../ui/calendar"
-
 
 export type PromocodeFormOnSubmitProps = Omit<IPromocode, "id">;
 
@@ -27,30 +25,18 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
         defaultValues,
     })
 
-
-
-
     const measurement = watch('measurement');
-
-
     const is_limited = watch('is_limited');
-
     const is_max_limited = watch('is_max_limited');
 
-    const min_amount = watch('min_amount');
-    const max_amount = watch('max_amount')
-
-
-
     return (
-
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
+                    <Label htmlFor="name">Nomi</Label>
                     <Input
                         id="name"
-                        {...register("name", { required: "Name is required" })}
+                        {...register("name", { required: "Nom kiritish shart" })}
                         aria-invalid={errors.name ? "true" : "false"}
                     />
                     {errors.name && (
@@ -60,10 +46,10 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                     )}
                 </div>
                 <div className="space-y-2">
-                    <Label htmlFor="code">Code</Label>
+                    <Label htmlFor="code">Kod</Label>
                     <Input
                         id="code"
-                        {...register("code", { required: "Code is required" })}
+                        {...register("code", { required: "Kod kiritish shart" })}
                         aria-invalid={errors.code ? "true" : "false"}
                     />
                     {errors.code && (
@@ -75,19 +61,19 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <Label htmlFor="measurement">Measurement</Label>
+                    <Label htmlFor="measurement">O&apos;lchov</Label>
                     <Controller
                         name="measurement"
                         control={control}
-                        rules={{ required: "Measurement is required" }}
+                        rules={{ required: "O'lchov tanlash shart" }}
                         render={({ field }) => (
                             <Select onValueChange={field.onChange} value={field.value}>
                                 <SelectTrigger id="measurement">
-                                    <SelectValue placeholder="Select measurement" />
+                                    <SelectValue placeholder="O'lchovni tanlang" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="ABSOLUTE">Absolute</SelectItem>
-                                    <SelectItem value="PERCENT">Percent</SelectItem>
+                                    <SelectItem value="ABSOLUTE">Mutlaq</SelectItem>
+                                    <SelectItem value="PERCENT">Foiz</SelectItem>
                                 </SelectContent>
                             </Select>
                         )}
@@ -99,18 +85,18 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                     )}
                 </div>
                 <div className="space-y-2">
-                    <Label htmlFor="amount">Amount</Label>
+                    <Label htmlFor="amount">Miqdor</Label>
                     <Input
                         id="amount"
                         type="number"
                         {...register("amount", {
-                            required: "Amount is required",
+                            required: "Miqdor kiritish shart",
                             validate: (value) => {
                                 if (measurement === "PERCENT" && (value < 1 || value > 100)) {
-                                    return "Percentage must be between 1 and 100";
+                                    return "Foiz 1 dan 100 gacha bo'lishi kerak";
                                 }
                                 if (measurement === "ABSOLUTE" && value < 0) {
-                                    return "Amount cannot be negative";
+                                    return "Miqdor manfiy bo'lishi mumkin emas";
                                 }
                                 return true;
                             }
@@ -126,11 +112,11 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <Label htmlFor="count">Count</Label>
+                    <Label htmlFor="count">Soni</Label>
                     <Input
                         id="count"
                         type="number"
-                        {...register("count", { required: "Count is required" })}
+                        {...register("count", { required: "Son kiritish shart" })}
                         aria-invalid={errors.count ? "true" : "false"}
                     />
                     {errors.count && (
@@ -140,41 +126,34 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                     )}
                 </div>
                 <div className="space-y-2">
-                    <Label htmlFor="end_date">End Date</Label>
-                    <br />
-
+                    <Label htmlFor="end_date">Tugash sanasi</Label>
                     <Controller
                         name="end_date"
                         control={control}
-                        rules={{ required: "End date is required" }}
+                        rules={{ required: "Tugash sanasini kiritish shart" }}
                         render={({ field }) => (
-                            <>
-                                {String(field.value)}<br />
-                                <Popover>
-                                    <PopoverTrigger asChild>
-
-                                        <Button
-                                            variant={"outline"}
-                                            className={cn(
-                                                "w-full justify-start text-left font-normal",
-                                                !field.value && "text-muted-foreground"
-                                            )}
-                                        >
-                                            <CalendarIcon className="mr-2 h-4 w-4" />
-
-                                            {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                                        </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
-                                        <Calendar
-                                            mode="single"
-                                            selected={field.value || undefined}
-                                            onSelect={field.onChange}
-                                            initialFocus
-                                        />
-                                    </PopoverContent>
-                                </Popover>
-                            </>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant={"outline"}
+                                        className={cn(
+                                            "w-full justify-start text-left font-normal",
+                                            !field.value && "text-muted-foreground"
+                                        )}
+                                    >
+                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                        {field.value ? format(field.value, "PPP") : <span>Sanani tanlang</span>}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                    <Calendar
+                                        mode="single"
+                                        selected={field.value || undefined}
+                                        onSelect={field.onChange}
+                                        initialFocus
+                                    />
+                                </PopoverContent>
+                            </Popover>
                         )}
                     />
                     {errors.end_date && (
@@ -196,7 +175,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                         />
                     )}
                 />
-                <Label htmlFor="is_limited">Limit promocode to specific amount range</Label>
+                <Label htmlFor="is_limited">Promokodni ma&apos;lum miqdor oralig&apos;ida cheklash</Label>
             </div>
             {is_limited && (
                 <div className="flex items-center space-x-2">
@@ -211,78 +190,42 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                             />
                         )}
                     />
-                    <Label htmlFor="isMaxValue">Set to maximum value</Label>
+                    <Label htmlFor="isMaxValue">Maksimal qiymatni o&apos;rnatish</Label>
                 </div>
             )}
-
             {is_limited && (
                 <div className="space-y-2">
-                    <Label htmlFor="amount-range">Amount Range</Label>
-                    <Controller
-                        name="min_amount"
-                        control={control}
-                        rules={{ required: "Minimum amount is required" }}
-                        render={({ field: { onChange, value } }) => (
-                            <Controller
-                                name="max_amount"
-                                control={control}
-                                rules={{ required: "Maximum amount is required" }}
-                                render={({ field: { onChange: onChangeMax, value: valueMax } }) => (
-                                    <Slider.Root
-                                        className="relative flex items-center select-none touch-none w-full h-5"
-                                        value={!is_max_limited ? [value] : [value, valueMax]}
-                                        onValueChange={(newValues) => {
-                                            if (!is_max_limited) {
-                                                onChange(newValues[0]);
-                                            } else {
-                                                onChange(newValues[0]);
-                                                onChangeMax(newValues[1]);
-                                            }
-                                        }}
-                                        max={1000000}
-                                        step={1}
-                                        aria-label="Amount range"
-                                    >
-
-
-                                        <Slider.Track className="bg-blackA10 relative grow rounded-full h-[3px]">
-                                            <Slider.Range className="absolute bg-primary rounded-full h-full" />
-                                        </Slider.Track>
-
-
-                                        <Slider.Thumb
-                                            className="block w-5 h-5 bg-primary shadow-md rounded-full hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary"
-                                            aria-label="Minimum amount"
-                                        />
-
-
-
-                                        {is_max_limited && <Slider.Thumb
-
-                                            className="block w-5 h-5 bg-primary shadow-md rounded-full hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary"
-                                            aria-label="Maximum amount"
-                                        />}
-
-                                    </Slider.Root>
-                                )}
-                            />
-                        )}
+                    <Label htmlFor="min_amount">Minimal miqdor</Label>
+                    <Input
+                        id="min_amount"
+                        type="number"
+                        {...register("min_amount", { required: is_limited ? "Minimal miqdorni kiritish shart" : false })}
+                        aria-invalid={errors.min_amount ? "true" : "false"}
                     />
-                    <div className="flex justify-between text-sm text-gray-500">
-                        <span>Min: {min_amount}</span>
-
-                        {is_max_limited && <span>Max: {max_amount}</span>}
-                    </div>
-
-                    {(errors.min_amount || errors.max_amount) && (
-                        <p className="text-red-500 text-sm" id="amount-range-error">
-                            {errors.min_amount?.message || errors.max_amount?.message}
+                    {errors.min_amount && (
+                        <p className="text-red-500 text-sm" id="min-amount-error">
+                            {errors.min_amount.message}
                         </p>
                     )}
                 </div>
             )}
-            <Button type="submit" className="w-full">Save Changes</Button>
+            {is_limited && is_max_limited && (
+                <div className="space-y-2">
+                    <Label htmlFor="max_amount">Maksimal miqdor</Label>
+                    <Input
+                        id="max_amount"
+                        type="number"
+                        {...register("max_amount", { required: is_limited && is_max_limited ? "Maksimal miqdorni kiritish shart" : false })}
+                        aria-invalid={errors.max_amount ? "true" : "false"}
+                    />
+                    {errors.max_amount && (
+                        <p className="text-red-500 text-sm" id="max-amount-error">
+                            {errors.max_amount.message}
+                        </p>
+                    )}
+                </div>
+            )}
+            <Button type="submit" className="w-full">O&apos;zgarishlarni saqlash</Button>
         </form>
-
     )
 }
