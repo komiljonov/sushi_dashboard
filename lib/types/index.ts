@@ -25,7 +25,7 @@ export interface IFile {
 }
 
 export interface IProduct {
-    id: number;
+    id: string;
 
     name_uz: string;
     name_ru: string;

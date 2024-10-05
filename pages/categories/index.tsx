@@ -42,9 +42,7 @@ export function Categories() {
     });
 
     const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
-    const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(
-        null
-    );
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const router = useRouter();
 
@@ -76,7 +74,9 @@ export function Categories() {
     }, []);
 
     const handleCategoryClick = useCallback((category: ICategory) => {
-        setSelectedCategory(category);
+        console.log(category);
+
+        setSelectedCategory(category.id);
     }, []);
 
     const handleDoubleClick = useCallback((categoryId: string) => {
@@ -96,7 +96,7 @@ export function Categories() {
 
     const confirmDelete = useCallback(() => {
         if (selectedCategory) {
-            deleteMutate(selectedCategory.id);
+            deleteMutate(selectedCategory);
         }
         setIsDeleteDialogOpen(false);
     }, [selectedCategory, deleteMutate]);
@@ -107,7 +107,7 @@ export function Categories() {
                 handleDeleteCategory();
             } else if (event.key === "Enter" && !isDeleteDialogOpen) {
                 // Only open category if the delete dialog is not open
-                router.push(`/categories/info?id=${selectedCategory.id}`);
+                router.push(`/categories/info?id=${selectedCategory}`);
             }
         }
     }, [selectedCategory, handleDeleteCategory, router, isDeleteDialogOpen]);
@@ -126,7 +126,7 @@ export function Categories() {
                 <h1 className="text-2xl font-bold">Kategoriyalar</h1>
                 <CreateCategoryModal parent={selectedCategory}>
                     <Button>
-                        <Plus className="mr-2 h-4 w-4" /> Kategoriya qo&apos;shish
+                        <Plus className="mr-2 h-4 w-4" />Kategoriya qo&apos;shish
                     </Button>
                 </CreateCategoryModal>
             </div>
@@ -139,7 +139,6 @@ export function Categories() {
                         expandedCategories={expandedCategories}
                         toggleCategory={toggleCategory}
                         selectedCategory={selectedCategory}
-                        setSelectedCategory={setSelectedCategory}
                         handleCategoryClick={handleCategoryClick}
                         handleDoubleClick={handleDoubleClick}
                     />
@@ -172,8 +171,7 @@ interface CategoryListProps {
     categories: ICategory[];
     expandedCategories: string[];
     toggleCategory: (categoryId: string) => void;
-    selectedCategory: ICategory | null;
-    setSelectedCategory: (category: ICategory) => void;
+    selectedCategory: string | null;
     handleCategoryClick: (category: ICategory) => void;
     handleDoubleClick: (categoryId: string) => void;
     level?: number;
@@ -184,7 +182,6 @@ function CategoryList({
     expandedCategories,
     toggleCategory,
     selectedCategory,
-    setSelectedCategory,
     handleCategoryClick,
     handleDoubleClick,
     level = 0,
@@ -196,22 +193,22 @@ function CategoryList({
             {categories.map((category) => (
                 <div key={category.id}>
                     <div
-                        className={`flex items-center p-2 hover:bg-green-100 rounded-md cursor-pointer ${selectedCategory?.id === category.id ? "bg-green-200" : ""
+                        className={`flex items-center p-2 hover:bg-green-100 rounded-md cursor-pointer ${selectedCategory === category.id ? "bg-green-200" : ""
                             }`}
                         style={{ marginLeft: `${indent}px` }}
-                        onClick={() => handleCategoryClick(category)}
-                        onDoubleClick={() => handleDoubleClick(category.id)}
-                    >
-                        
-                        <div className="flex-1 flex items-center" onClick={(e) => {
+                        onClick={(e) => {
+                            handleCategoryClick(category);
                             e.stopPropagation();
                             toggleCategory(category.id);
-                        }}>
-                            {category.content_type == "CATEGORY" && (
-                                <span
-                                    className="mr-2 cursor-pointer"
+                        }}
+                        onDoubleClick={() => handleDoubleClick(category.id)}
+                    >
+                        <div
+                            className="flex-1 flex items-center"
 
-                                >
+                        >
+                            {category.content_type === "CATEGORY" && (
+                                <span className="mr-2 cursor-pointer">
                                     {expandedCategories.includes(category.id) ? (
                                         <ChevronDown className="h-4 w-4" />
                                     ) : (
@@ -220,29 +217,24 @@ function CategoryList({
                                 </span>
                             )}
                             <span>{category.name_uz}</span>
+
                         </div>
 
-                        <div className="flex-1">
-                            Mahsulotlar soni: {category.products_count}
-                        </div>
-                        <div className="flex-1">
-                            Bugungi tashriflar: {category.today_visits}
-                        </div>
+                        <div className="flex-1">Mahsulotlar soni: {category.products_count}</div>
+                        <div className="flex-1">Bugungi tashriflar: {category.today_visits}</div>
                     </div>
 
-                    {expandedCategories.includes(category.id) &&
-                        category.children.length > 0 && (
-                            <CategoryList
-                                categories={category.children}
-                                expandedCategories={expandedCategories}
-                                toggleCategory={toggleCategory}
-                                selectedCategory={selectedCategory}
-                                setSelectedCategory={setSelectedCategory}
-                                handleCategoryClick={handleCategoryClick}
-                                handleDoubleClick={handleDoubleClick}
-                                level={level + 1}
-                            />
-                        )}
+                    {expandedCategories.includes(category.id) && category.children.length > 0 && (
+                        <CategoryList
+                            categories={category.children}
+                            expandedCategories={expandedCategories}
+                            toggleCategory={toggleCategory}
+                            selectedCategory={selectedCategory}
+                            handleCategoryClick={handleCategoryClick}
+                            handleDoubleClick={handleDoubleClick}
+                            level={level + 1}
+                        />
+                    )}
                 </div>
             ))}
         </div>

@@ -17,7 +17,6 @@ import { useMutation } from "@tanstack/react-query"
 import { request } from '@/lib/api'
 import { queryClient } from '@/lib/query'
 import { Select, SelectContent, SelectTrigger, SelectValue, SelectItem } from "../ui/select"
-import { ICategory } from "@/lib/types"
 
 
 interface IFormInput {
@@ -34,7 +33,7 @@ const createCategory = async (create_data: IFormInput) => {
 
 interface CreateCategoryModalProps {
     children: React.ReactNode;
-    parent: ICategory | null;
+    parent: string | null;
 }
 
 export default function CreateCategoryModal({ children, parent }: CreateCategoryModalProps) {
@@ -55,7 +54,7 @@ export default function CreateCategoryModal({ children, parent }: CreateCategory
 
     const _handleSubmit = (data: IFormInput) => {
         if (parent) {
-            data.parent = parent.id;
+            data.parent = parent;
         }
         mutation.mutate(data)
     }
@@ -71,7 +70,7 @@ export default function CreateCategoryModal({ children, parent }: CreateCategory
                     <DialogTitle>Create Category</DialogTitle>
                     <DialogDescription>
                         {parent
-                            ? `Create a new subcategory under ${parent.name_uz}`
+                            ? `Create a new subcategory under`
                             : 'Create a new top-level category'}
                     </DialogDescription>
                 </DialogHeader>

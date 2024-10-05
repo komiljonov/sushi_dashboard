@@ -20,7 +20,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Products } from "@/components/product/list";
 import { splitToHundreds } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
-import HierarchyList from '@/components/category/HierarchyList';
+// import HierarchyList from '@/components/category/HierarchyList';
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
 
@@ -46,6 +46,7 @@ const editCategory = async (id: string, edit_data: ICategory): Promise<ICategory
 function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
   const { toast } = useToast();
   const { register, reset, handleSubmit, control } = useForm<ICategory>();
+  
 
   useEffect(() => {
     if (category) {

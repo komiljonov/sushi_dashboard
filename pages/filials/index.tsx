@@ -88,7 +88,7 @@ const FilialTable = ({ filials, onDelete, onEdit }: { filials: IFilial[], onDele
           <TableCell>{filial.name_uz}</TableCell>
           <TableCell>{filial.name_ru}</TableCell>
           <TableCell>
-            <Link className="flex items-center text-blue-500 hover:text-blue-700" href={`https://www.google.com/maps/@${filial.location.latitude},${filial.location.longitude},17z`}>
+            <Link className="flex items-center text-blue-500 hover:text-blue-700" href={`https://www.google.com/maps/@${filial.location?.latitude},${filial.location?.longitude},17z`}>
               <ExternalLink className="h-4 w-4 mr-1" /> Joylashuv
             </Link>
           </TableCell>
@@ -181,8 +181,8 @@ const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
       reset({
         "name_uz": filial.name_uz,
         "name_ru": filial.name_uz,
-        "loc_latitude": filial.location.latitude,
-        "loc_longitude": filial.location.longitude
+        "loc_latitude": filial.location?.latitude,
+        "loc_longitude": filial.location?.longitude
       })
     }
 

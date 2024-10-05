@@ -1,77 +1,51 @@
-'use client';
+'use client'
 
-
-import { useState } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from '@/components/ui/Button';
-import { Table, TableHeader, TableBody, TableCell, TableRow, TableHead } from '@/components/ui/table';
-
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
-import ProductInfo from '@/components/product/row';
-
-import Link from "next/link"
-import { ICategoryWithStats, IProduct } from '@/lib/types';
-
-
-
-
-
-
+import { useState } from 'react'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Button } from '@/components/ui/Button'
+import { Table, TableHeader, TableBody, TableCell, TableRow, TableHead } from '@/components/ui/table'
+import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
+import ProductInfo from '@/components/product/row'
+// import Link from "next/link"
+import { ICategoryWithStats, IProduct } from '@/lib/types'
+import { CategoryProductModal } from '@/components/category/productSelection'
 
 export function Products({ category }: { category?: ICategoryWithStats }) {
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const products = category ? category.products : []
 
-    const products = category ? category.products : [];
+    const [currentPage, setCurrentPage] = useState(1)
+    const itemsPerPage = 10
+    const totalPages = Math.ceil(products.length / itemsPerPage)
 
+    const indexOfLastItem = currentPage * itemsPerPage
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage
+    const currentCategories = products.slice(indexOfFirstItem, indexOfLastItem)
 
-
-
-
-
-
-
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10;
-    const totalPages = Math.ceil(products.length / itemsPerPage);
-
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentCategories = products.slice(indexOfFirstItem, indexOfLastItem);
-
-    const nextPage = () => setCurrentPage(prev => Math.min(prev + 1, totalPages));
-    const prevPage = () => setCurrentPage(prev => Math.max(prev - 1, 1));
-
-
-
-
-
-
-
-
-
-
+    const nextPage = () => setCurrentPage(prev => Math.min(prev + 1, totalPages))
+    const prevPage = () => setCurrentPage(prev => Math.max(prev - 1, 1))
 
     return (
         <div className="container mx-auto py-10">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold">Mahsulotlar</h1>
-                {/* <CreateProductModal> */}
-                <Link href={`/products/create?category=${category?.id}`} >
-                    <Button  >
-                        <Plus className="mr-2 h-4 w-4" /> Mahsulot qo&apos;shish
+                <div className="space-x-2">
+                    {/* <Link href={`/products/create?category=${category?.id}`}>
+                        <Button>
+                            <Plus className="mr-2 h-4 w-4" /> Mahsulot qo&apos;shish
+                        </Button>
+                    </Link> */}
+                    <Button onClick={() => setIsModalOpen(true)}>
+                        <Plus className="mr-2 h-4 w-4" /> Mavjud mahsulotlarni qo&apos;shish
                     </Button>
-                </Link>
-
-                {/* </CreateProductModal> */}
-
+                </div>
             </div>
 
             <div className="border rounded-md">
                 {!category ? (
                     <SkeletonTable />
                 ) : (
-                    <CategoryTable
-                        products={currentCategories}
-                    />
+                    <CategoryTable products={currentCategories} />
                 )}
             </div>
 
@@ -100,20 +74,23 @@ export function Products({ category }: { category?: ICategoryWithStats }) {
                     </Button>
                 </div>
             </div>
+
+            {category && (
+                <CategoryProductModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    categoryId={category.id}
+                />
+            )}
         </div>
-    );
+    )
 }
 
-
-
-
 interface ProductsTableProps {
-    products: IProduct[];
+    products: IProduct[]
 }
 
 function CategoryTable({ products }: ProductsTableProps) {
-
-
     return (
         <Table>
             <TableHeader>
@@ -126,12 +103,11 @@ function CategoryTable({ products }: ProductsTableProps) {
             </TableHeader>
             <TableBody>
                 {products.map(product => (
-                    // product.name_uz
                     <ProductInfo key={product.id} product={product} />
                 ))}
             </TableBody>
         </Table>
-    );
+    )
 }
 
 function SkeletonTable() {
@@ -176,6 +152,5 @@ function SkeletonTable() {
                 ))}
             </TableBody>
         </Table>
-    );
+    )
 }
-

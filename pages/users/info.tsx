@@ -57,32 +57,32 @@ function UserInfoPage({ user }: { user: IUser }) {
                             <div className="space-y-4">
                                 <div className="flex justify-between">
                                     <span className="font-semibold">Order ID:</span>
-                                    <span>{user.current_order.id}</span>
+                                    <span>{user.current_order?.id}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="font-semibold">Status:</span>
-                                    <Badge>{user.current_order.status}</Badge>
+                                    <Badge>{user.current_order?.status}</Badge>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="font-semibold">Created At:</span>
-                                    <span>{String(user.current_order.order_time)}</span>
+                                    <span>{String(user.current_order?.order_time)}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="font-semibold">Delivery:</span>
-                                    <span>{user.current_order.delivery}</span>
+                                    <span>{user.current_order?.delivery}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="font-semibold">Payment Provider:</span>
-                                    <span>{user.current_order.payment.provider}</span>
+                                    <span>{user.current_order?.payment?.provider}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="font-semibold">Amount:</span>
-                                    <span>{user.current_order.payment.amount}</span>
+                                    <span>{user.current_order?.payment?.amount}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="font-semibold">Payment Status:</span>
-                                    <Badge variant={user.current_order.payment.status === "completed" ? "default" : "destructive"}>
-                                        {user.current_order.payment.status}
+                                    <Badge variant={user.current_order.payment?.status === "completed" ? "default" : "destructive"}>
+                                        {user.current_order?.payment?.status}
                                     </Badge>
                                 </div>
                             </div>
