@@ -33,11 +33,13 @@ const fetchPromocodeInfo = async (id: string): Promise<IPromocode> => {
 const updatePromocode = async (promocode: IPromocode) => {
     const { end_date } = promocode;
 
+    // Format end_date if it's a Date object, otherwise keep it as-is
     const formattedEndDate = end_date instanceof Date
         ? `${end_date.getFullYear()}-${String(end_date.getMonth() + 1).padStart(2, '0')}-${String(end_date.getDate()).padStart(2, '0')}`
         : undefined;
 
-    const payload: any = { ...promocode };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const payload = promocode;
     if (formattedEndDate !== undefined) {
         payload.end_date = formattedEndDate;
     }

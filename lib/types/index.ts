@@ -182,7 +182,7 @@ export type IPromocode<T = IOrderArray> = {
     measurement: "ABSOLUTE" | "PERCENT";
     amount: number;
     count: number;
-    end_date: Date | null;
+    end_date: Date | string | null;
 
     min_amount: number;
     max_amount: number;

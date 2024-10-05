@@ -148,7 +148,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                                 <PopoverContent className="w-auto p-0" align="start">
                                     <Calendar
                                         mode="single"
-                                        selected={field.value || undefined}
+                                        selected={(field.value as Date) || undefined}
                                         onSelect={field.onChange}
                                         initialFocus
                                     />
