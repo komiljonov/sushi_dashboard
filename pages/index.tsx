@@ -12,6 +12,7 @@ import { useQuery } from '@tanstack/react-query'
 import { request } from "@/lib/api";
 import { IOrder } from '@/lib/types'
 import { Badge } from '@/components/ui/badge'
+import StatisticsModal from '@/components/statistics'
 
 interface IStatistics {
   user_count: number,
@@ -43,6 +44,7 @@ function EnhancedAnalyticsDashboard() {
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Tahliliy panel</h1>
+        <StatisticsModal />
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
