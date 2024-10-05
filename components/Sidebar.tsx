@@ -89,7 +89,7 @@ interface NavItemProps {
 
 export function NavItem({ href, icon, label, collapsed, isSelected }: NavItemProps) {
     return (
-        <Link href={href} passHref>
+        <Link href={href}>
             <Button
                 variant={isSelected ? "secondary" : "ghost"}
                 className={cn(

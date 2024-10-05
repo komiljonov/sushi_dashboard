@@ -37,7 +37,7 @@ function EnhancedAnalyticsDashboard() {
     queryKey: ['users'],
     queryFn: fetchStatistics,
     refetchInterval: 60000
-  })
+  });
 
   return (
     <div className="p-6 space-y-6">
