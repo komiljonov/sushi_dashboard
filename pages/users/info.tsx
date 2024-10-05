@@ -8,6 +8,8 @@ import { IUser } from "@/lib/types"
 import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { request } from '@/lib/api';
+import Link from "next/link"
+import { CalendarIcon, CreditCardIcon, UserIcon } from "lucide-react"
 
 
 function UserInfoPage({ user }: { user: IUser }) {
@@ -102,8 +104,49 @@ function UserInfoPage({ user }: { user: IUser }) {
                             <TabsTrigger value="used-coupons">Used Coupons</TabsTrigger>
                         </TabsList>
                         <TabsContent value="order-history">
+
+
+
+
                             {/* Order History content will go here */}
-                            <div className="p-4 text-center text-muted-foreground">Order History Content</div>
+                            {/* <div className="p-4 text-center text-muted-foreground">Order History Content</div> */}
+
+                            {user?.carts?.map((order) => (
+                                <div key={order.order_id} className="flex items-center space-x-4 p-4 rounded-lg border bg-card text-card-foreground shadow-sm">
+                                    <div className="flex-1 space-y-1">
+                                        <Link href={`/users/info?id=${order.id}`} className="font-semibold hover:underline">
+                                            {user?.name || user?.tg_name}
+                                        </Link>
+                                        <div className="flex items-center text-sm text-muted-foreground">
+                                            <UserIcon className="mr-1 h-4 w-4" />
+                                            <span>{user?.name || user?.tg_name}</span>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <Badge variant="secondary" className="text-green-600 bg-green-100">
+                                                {order.discount_price} so&apos;m
+                                            </Badge>
+                                            <span className="text-sm text-muted-foreground line-through">
+                                                ${order.price} so&apos;m
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-1 text-sm">
+                                        <div className="flex items-center text-muted-foreground">
+                                            <CalendarIcon className="mr-1 h-4 w-4" />
+                                            <span>{new Date().toLocaleDateString()}</span>
+                                        </div>
+                                        <Link href={`/orders/info?id=${order.id}`} className="flex items-center text-primary hover:underline">
+                                            <CreditCardIcon className="mr-1 h-4 w-4" />
+                                            <span>Order #{order.order_id}</span>
+                                        </Link>
+                                    </div>
+                                </div>
+                            ))}
+
+
+
+
+
                         </TabsContent>
                         <TabsContent value="used-coupons">
                             {/* Used Coupons content will go here */}

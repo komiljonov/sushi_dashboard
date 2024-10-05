@@ -17,10 +17,15 @@ import {
 import { Layout } from "@/components/Layout"
 import { useState } from "react"
 import { request } from "@/lib/api"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { IFile, IOrder } from "@/lib/types"
 import Link from "next/link"
 import { format } from "date-fns"
+import React from "react"
+import { TaxiInfoCard } from "@/components/orders/taxiInfo"
+import { queryClient } from "@/lib/query"
+import { Button } from "@/components/ui/Button"
+import { useLoading } from "@/lib/context/Loading"
 
 function UserInformationCard({ order, order: { user, comment } }: { order: IOrder }) {
     return (
@@ -108,11 +113,11 @@ function OrderDetailsCard({ order }: { order: IOrder }) {
                     <Label>Buyurtma narxi:</Label>
                     <div className="flex items-center space-x-2">
                         <Badge variant="secondary" className="text-green-600 bg-green-100">
-                            {order.discount_price ? order.discount_price.toFixed(2) : order.price.toFixed(2)} so&apos;m
+                            {order.discount_price ? order.discount_price.toFixed(2) : order.price?.toFixed(2)} so&apos;m
                         </Badge>
                         {order.discount_price && (
                             <>
-                                <span className="text-sm text-muted-foreground line-through">{order.price.toFixed(2)} so&apos;m  </span>
+                                <span className="text-sm text-muted-foreground line-through">{order.price?.toFixed(2)} so&apos;m  </span>
                                 {[1, 2].map(() => <>&nbsp;</>)}
                                 ({order.saving} so&apos;m)
                             </>
@@ -172,9 +177,10 @@ function ProductListCard({ order: { items: items } }: { order: IOrder }) {
                 <div className="space-y-4">
                     {items?.map((item) => (
                         <div key={item.id} className="flex items-center space-x-4">
-                            <Image src={(item?.product?.image as IFile).file} alt={item.product.name_uz} width={64} height={64} className="rounded-md" />
+                            {item.product?.image ? <Image src={(item?.product?.image as IFile).file} alt={item.product.name_uz} width={64} height={64} className="rounded-md" /> : <div className="w-16 h-16"></div>}
+
                             <div className="flex-1">
-                                <Link href={`/products/info?id=${item.product.id}`} className="hover:underline"><h3 className="font-semibold">{item.product.name_uz}</h3></Link>
+                                {item.product ? <Link href={`/products/info?id=${item.product.id}`} className="hover:underline"><h3 className="font-semibold">{item.product.name_uz}</h3></Link> : "Unknow product"}
                                 <div className="text-sm text-muted-foreground">
                                     {item.price.toFixed(2)} so&apos;m x {item.count}
                                 </div>
@@ -190,17 +196,71 @@ function ProductListCard({ order: { items: items } }: { order: IOrder }) {
     )
 }
 
+
+const callTaxi = async (id: string): Promise<void> => {
+    await request.get(`orders/${id}/call_taxi`)
+}
+
+
+
+
 function OrderInfo({ order }: { order: IOrder }) {
+    const { setLoading, loading } = useLoading();
+
+    const mutation = useMutation({
+        mutationFn: callTaxi,
+        onMutate: () => {
+            setLoading(true)
+            // You can implement your loading screen here
+            // For example: router.push('/loading')
+            queryClient.invalidateQueries({
+                queryKey: ['orders', order.id]
+            });
+
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['orders', order.id]
+            });
+        },
+        onError: () => {
+            setLoading(false);
+        },
+        onSettled: () => {
+            setLoading(false)
+            queryClient.invalidateQueries({
+                queryKey: ['orders', order.id]
+            });
+            // You can remove your loading screen here
+            // For example: router.back()
+        },
+    })
+
+    const handleCallTaxi = () => {
+        mutation.mutate(order.id);
+    }
+
+
+    if (!order) {
+        return <div>Order not found</div>
+    }
 
     return (
         <div className="container mx-auto p-4">
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-bold">Order Information</h1>
+                <Button
+                    onClick={handleCallTaxi}
+                    disabled={loading || !!order.taxi}
+                >
+                    {loading ? 'Calling Taxi...' : 'Call Taxi'}
+                </Button>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
                 <UserInformationCard order={order} />
                 <OrderDetailsCard order={order} />
                 <ProductListCard order={order} />
+                <TaxiInfoCard taxi={order.taxi} />
             </div>
         </div>
     )
@@ -225,7 +285,7 @@ export default function Page() {
     const [orderId] = useState(getOrderIdFromUrl);
 
     const { data: order } = useQuery({
-        queryKey: ['promocodes', orderId],
+        queryKey: ['orders', orderId],
         queryFn: () => {
             if (orderId) {
                 return fetchOrderInfo(orderId);
@@ -235,10 +295,9 @@ export default function Page() {
         enabled: !!orderId
     });
 
-    return <Layout page="orders">
-        {
-            order && <OrderInfo order={order} />
-        }
-
-    </Layout>
+    return (
+        <Layout page="orders">
+            {order && <OrderInfo order={order} />}
+        </Layout>
+    )
 }

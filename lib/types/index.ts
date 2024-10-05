@@ -35,7 +35,7 @@ export interface IProduct {
 
     category: string;
 
-    image: IFile | string;
+    image?: IFile | string;
 
     price: number;
     sale_count: number;
@@ -124,7 +124,7 @@ export interface IUser {
     has_order: boolean;
 
 
-    orders?: IOrder[];
+    carts?: IOrder[];
     current_order?: IOrder;
 }
 
@@ -134,7 +134,7 @@ export interface IUser {
 
 export interface IOrderItem {
     id: number;
-    product: IProduct;
+    product?: IProduct;
     count: number;
     price: number;
 
@@ -148,23 +148,25 @@ export type IOrder = {
     id: string;
     order_id: number;
     user: IUser;
-    phone_number: string;
-    products_count: number;
+    phone_number?: string;
+    products_count?: number;
     promocode?: IPromocode;
     order_time: Date;
-    time: Date | null;
+    time?: Date | null;
     status: string;
-    price: number;
+    price?: number;
     discount_price: number;
     payment?: IPayment;
     filial?: IFilial;
-
+    
     location?: ILocation;
-
+    
     delivery: "DELIVER" | "TAKEAWAY"
-
+    
     comment: string;
-
+    
+    taxi: ITaxi | null | undefined;
+    
     items: IOrderItem[]
 }
 
@@ -203,4 +205,17 @@ export interface IFilial {
     name_ru: string;
 
     location: ILocation;
+}
+
+
+
+
+
+export interface ITaxi {
+    mark: string;
+    car_model: string;
+    car_color: string;
+    car_number: string;
+    total_sum: number;
+    driver_phone_number: string;
 }

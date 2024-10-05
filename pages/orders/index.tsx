@@ -19,6 +19,7 @@ import { useRouter } from 'next/router';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { IOrder } from '@/lib/types';
+import React from 'react';
 
 
 
@@ -58,7 +59,7 @@ function OrderList({ orders }: { orders: IOrder[] }) {
             (
                 order.user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 order.order_id.toString().includes(searchTerm) ||
-                order.phone_number.toLowerCase().includes(searchTerm)
+                order.phone_number?.toLowerCase().includes(searchTerm)
             ) &&
             isInDateRange
     });
@@ -259,11 +260,11 @@ function OrderList({ orders }: { orders: IOrder[] }) {
                                 }}>
                                     <div className="flex items-center space-x-2">
                                         <Badge variant="secondary" className="text-green-600 bg-green-100">
-                                            ${order.discount_price ? order.discount_price.toFixed(2) : order.price.toFixed(2)}
+                                            ${order.discount_price ? order.discount_price?.toFixed(2) : order.price?.toFixed(2)}
                                         </Badge>
                                         {order.discount_price && (
                                             <span className="text-sm text-muted-foreground line-through">
-                                                ${order.price.toFixed(2)}
+                                                ${order.price?.toFixed(2)}
                                             </span>
                                         )}
                                     </div>
