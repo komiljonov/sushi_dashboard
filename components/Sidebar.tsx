@@ -11,11 +11,11 @@ interface SidebarProps {
     page: string;
 }
 
-
-
 export function Sidebar({ collapsed, page }: SidebarProps) {
     const { push } = useRouter();
     const { logout } = useAuth();
+
+    collapsed = true;
 
     const handleLogout = () => {
         // Implement logout logic here
@@ -26,7 +26,7 @@ export function Sidebar({ collapsed, page }: SidebarProps) {
 
     return (
         <aside className={cn(
-            "bg-background border-r transition-all duration-300 ease-in-out",
+            "bg-white text-black border-r border-gray-200 transition-all duration-300 ease-in-out", // Ensured light mode adaptation
             collapsed ? "w-16" : "w-64"
         )}>
             <div className="flex flex-col h-full">
@@ -45,10 +45,8 @@ export function Sidebar({ collapsed, page }: SidebarProps) {
                         </Link>
                         {!collapsed && <h2 className="text-lg font-semibold ml-2 overflow-clip">Sushi Yummy</h2>}
                     </div>
-
                 </div>
                 <nav className="flex flex-col gap-2 p-2">
-
                     <NavItem href="/" icon={<Home className="h-4 w-4" />} label="Bosh menu" collapsed={collapsed} isSelected={page == 'home'} />
                     <NavItem href="/admins" icon={<FingerprintIcon className="h-4 w-4" />} label="Hodimlar" collapsed={collapsed} isSelected={page == 'admins'} />
                     <NavItem href="/categories" icon={<Box className="h-4 w-4" />} label="Kategoriyalar" collapsed={collapsed} isSelected={page == 'categories'} />
@@ -58,9 +56,7 @@ export function Sidebar({ collapsed, page }: SidebarProps) {
                     <NavItem href="/filials" icon={<MapPin className="h-4 w-4" />} label="Filiallar" collapsed={collapsed} isSelected={page == 'filials'} />
                     <NavItem href="/payments" icon={<CreditCard className="h-4 w-4" />} label="To'lovlar" collapsed={collapsed} isSelected={page == 'payments'} />
                     <NavItem href="/referrals" icon={<LinkIcon className="h-4 w-4" />} label="Referrals" collapsed={collapsed} isSelected={page == 'referrals'} />
-
                 </nav>
-                {/* </ScrollArea> */}
                 <div className="p-2 mt-auto">
                     <Button
                         variant="ghost"
@@ -89,7 +85,7 @@ interface NavItemProps {
 
 export function NavItem({ href, icon, label, collapsed, isSelected }: NavItemProps) {
     return (
-        <Link href={href}>
+        <Link href={href} as={href}>
             <Button
                 variant={isSelected ? "secondary" : "ghost"}
                 className={cn(
@@ -103,7 +99,7 @@ export function NavItem({ href, icon, label, collapsed, isSelected }: NavItemPro
                     isSelected && "text-secondary-foreground"
                 )}>
                     {icon}
-                    {!collapsed && <span className="ml-2">{label}</span>}
+                    {!collapsed && (<span className="ml-2">{label}</span>)}
                 </span>
             </Button>
         </Link>
