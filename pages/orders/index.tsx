@@ -20,6 +20,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { IOrder } from '@/lib/types';
 import React from 'react';
+import CreateOrderButton from '@/components/orders/create';
 
 
 
@@ -147,7 +148,11 @@ function OrderList({ orders }: { orders: IOrder[] }) {
 
     return (
         <div className="container mx-auto py-10">
-            <h1 className="text-3xl font-bold mb-6">Buyurtmalar</h1>
+            {/* <h1 className="text-3xl font-bold mb-6">Buyurtmalar</h1> */}
+            <div className="flex justify-between items-center mb-6">
+                <h1 className="text-3xl font-bold">Buyurtmalar</h1>
+                <CreateOrderButton />
+            </div>
 
             <div className="flex flex-col space-y-4 mb-6">
                 <div className="flex items-center space-x-4">

@@ -11,11 +11,8 @@ import { DeleteDialog } from "@/components/promocode/DeleteDialog"
 import { IPromocode } from "@/lib/types"
 import { Layout } from "@/components/Layout"
 import { queryClient } from "@/lib/query"
+import { fetchPromocodes } from "@/lib/fetchers"
 
-const fetchPromocodes = async (): Promise<IPromocode[]> => {
-  const { data } = await request.get('promocodes/');
-  return data;
-}
 
 
 
@@ -50,14 +47,6 @@ const createPromocode = async (promocode: Omit<IPromocode, "id">) => {
   await request.post('promocodes/', payload);
 
 }
-
-
-
-
-
-
-
-
 
 
 const deletePromocode = async (id: string) => {

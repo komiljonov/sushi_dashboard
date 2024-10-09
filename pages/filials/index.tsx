@@ -29,6 +29,7 @@ import { request } from "@/lib/api"
 import { queryClient } from "@/lib/query"
 import { Controller, useForm } from "react-hook-form"
 import { IFilial } from "@/lib/types"
+import { fetchFilials } from "@/lib/fetchers"
 
 export interface ILocation {
   id: string
@@ -48,10 +49,7 @@ function generateRandomWord(length: number = 8): string {
   return Array.from({ length }, () => characters[Math.floor(Math.random() * characters.length)]).join('')
 }
 
-const fetchFilials = async (): Promise<IFilial[]> => {
-  const { data } = await request.get('filials')
-  return data
-}
+
 
 const deleteFilialAttachment = async (filialId: string) => {
   await request.delete(`filials/${filialId}`)

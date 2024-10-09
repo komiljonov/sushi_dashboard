@@ -15,7 +15,7 @@ export function Sidebar({ collapsed, page }: SidebarProps) {
     const { push } = useRouter();
     const { logout } = useAuth();
 
-    collapsed = true;
+    // collapsed = true;
 
     const handleLogout = () => {
         // Implement logout logic here
