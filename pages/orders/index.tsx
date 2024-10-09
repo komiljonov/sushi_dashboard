@@ -25,14 +25,12 @@ import CreateOrderButton from '@/components/orders/create';
 
 
 const statuses = [
-    { value: "ALL", name: "Hammasi", color: "bg-gray-100 hover:bg-gray-200 text-gray-800" },
-    { value: "PENDING", name: "Kutilmoqda", color: "bg-yellow-100 hover:bg-yellow-200 text-yellow-800" },
-    { value: "PENDING_PAYMENT", name: "To'lov kutilmoqda", color: "bg-yellow-100 hover:bg-yellow-200 text-yellow-800" },
-    { value: "PENDING_KITCHEN", name: "Oshpazni kutmoqda", color: "bg-blue-100 hover:bg-blue-200 text-blue-800" },
-    { value: "DELIVERING", name: "Yetkazib berilmoqda", color: "bg-blue-100 hover:bg-blue-200 text-blue-800" },
-
-    { value: "COMPLETED", name: "Yakunlangan", color: "bg-green-100 hover:bg-green-200 text-green-800" },
-    { value: "CANCELLED", name: "Bekor qilingan", color: "bg-red-100 hover:bg-red-200 text-red-800" }
+    { value: "ALL", name: "Hammasi", color: "bg-gray-100 hover:bg-gray-200 text-gray-800", border: "border-gray-800" },
+    { value: "PENDING_KITCHEN", name: "Tayyorlanishi kutilmoqda", color: "bg-yellow-100 hover:bg-yellow-200 text-yellow-800", border: "border-yellow-800" },
+    { value: "PREPARING", name: "Tayyorlanmoda", color: "bg-blue-100 hover:bg-blue-200 text-blue-800", border: "border-blue-800" },
+    { value: "DELIVERING", name: "Yetkazib berilmoqda", color: "bg-purple-100 hover:bg-purple-200 text-purple-800", border: "border-purple-800" },
+    { value: "COMPLETED", name: "Yakunlangan", color: "bg-green-100 hover:bg-green-200 text-green-800", border: "border-green-800" },
+    { value: "CANCELLED", name: "Bekor qilingan", color: "bg-red-100 hover:bg-red-200 text-red-800", border: "border-red-800" },
 ]
 
 function OrderList({ orders }: { orders: IOrder[] }) {
@@ -42,15 +40,7 @@ function OrderList({ orders }: { orders: IOrder[] }) {
     const [currentPage, setCurrentPage] = useState(1);
     const ordersPerPage = 10;
 
-
-
     const { push } = useRouter();
-
-
-
-
-
-
 
     const filteredOrders = orders.filter(order => {
         const orderDate = new Date(order.order_time)
@@ -59,7 +49,7 @@ function OrderList({ orders }: { orders: IOrder[] }) {
         return (selectedStatus === "ALL" || order.status === selectedStatus) &&
             (
                 order.user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                order.order_id.toString().includes(searchTerm) ||
+                order.order_id?.toString().includes(searchTerm) ||
                 order.phone_number?.toLowerCase().includes(searchTerm)
             ) &&
             isInDateRange
@@ -148,7 +138,6 @@ function OrderList({ orders }: { orders: IOrder[] }) {
 
     return (
         <div className="container mx-auto py-10">
-            {/* <h1 className="text-3xl font-bold mb-6">Buyurtmalar</h1> */}
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold">Buyurtmalar</h1>
                 <CreateOrderButton />
@@ -213,7 +202,7 @@ function OrderList({ orders }: { orders: IOrder[] }) {
                             variant="outline"
                             onClick={() => setSelectedStatus(status.value)}
                             className={`transition-colors duration-200 ${selectedStatus === status.value
-                                ? `${status.color} border-2 border-primary`
+                                ? `${status.color} border-2 ${status.border}`
                                 : `bg-white hover:${status.color}`
                                 }`}
                         >
@@ -243,6 +232,7 @@ function OrderList({ orders }: { orders: IOrder[] }) {
                             <TableHead>Mahsulotlar soni</TableHead>
                             <TableHead>Promokod</TableHead>
                             <TableHead>Buyurtma vaqti</TableHead>
+                            <TableHead>Yetkazish/Olib ketish</TableHead>
                             <TableHead>Holati</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -258,8 +248,6 @@ function OrderList({ orders }: { orders: IOrder[] }) {
                                 <TableCell onClick={() => {
                                     push(`orders/info?id=${order.id}`)
                                 }}>{order.phone_number}</TableCell>
-
-
                                 <TableCell onClick={() => {
                                     push(`orders/info?id=${order.id}`)
                                 }}>
@@ -286,23 +274,16 @@ function OrderList({ orders }: { orders: IOrder[] }) {
                                             <ExternalLink className="h-4 w-4 mr-1" /> {order.promocode?.name}</Link>
                                         : '-'}
                                 </TableCell>
-
                                 <TableCell onClick={() => {
                                     push(`orders/info?id=${order.id}`);
                                 }}>{order.time ? new Date(order.time).toLocaleString() : "Iloji boricha tez"}</TableCell>
-
-
+                                <TableCell>{order.delivery == "DELIVER" ? "Yetkazib berish" : "Olib ketish"}</TableCell>
                                 <TableCell onClick={() => {
                                     push(`orders/info?id=${order.id}`)
                                 }}>
                                     <Badge
                                         variant="outline"
-                                        className={
-                                            order.status === "PENDING" ? "border-yellow-500 text-yellow-800 bg-yellow-100" :
-                                                order.status === "DELIVERING" ? "border-blue-500 text-blue-800 bg-blue-100" :
-                                                    order.status === "COMPLETED" ? "border-green-500 text-green-800 bg-green-100" :
-                                                        "border-red-500 text-red-800 bg-red-100"
-                                        }
+                                        className={statuses.find((status) => (status.value === order.status))?.color}
                                     >
                                         {order.status}
                                     </Badge>
@@ -341,7 +322,6 @@ function OrderList({ orders }: { orders: IOrder[] }) {
         </div>
     )
 }
-
 
 
 

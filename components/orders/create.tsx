@@ -2,7 +2,7 @@
 
 import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
 import { useForm, Controller, ControllerRenderProps, useFormContext, FormProvider, useFieldArray } from 'react-hook-form'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Check, ChevronsUpDown, Plus, Minus, Trash2 } from "lucide-react"
 import { calculate_discount, cn } from "@/lib/utils"
 import { Button } from "@/components/ui/Button"
@@ -38,12 +38,13 @@ import {
 } from "@/components/ui/popover"
 import { request } from '@/lib/api'
 import { IPromocode, IUser } from '@/lib/types'
-import { fetchFilials, fetchProducts, fetchPromocodes } from '@/lib/fetchers'
+import { fetchFilials, fetchProducts, fetchPromocodes, getDeliveryPrice } from '@/lib/fetchers'
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api'
 import { addHours, format } from 'date-fns'
 import debounce from 'lodash.debounce'
 
-import { FormData, OrderItem } from './types'
+import { CreateOrderForm, OrderItem } from './types'
+import { CreateOrder } from '@/lib/mutators'
 
 // Location Picker Component
 const LocationPicker = ({ location }: { location: { loc_latitude: number, loc_longitude: number } }) => {
@@ -51,24 +52,93 @@ const LocationPicker = ({ location }: { location: { loc_latitude: number, loc_lo
     return <Marker position={position} />
 }
 
-// User Search Function
 const searchUser = async (): Promise<IUser[]> => {
     const { data } = await request.get(`/users`);
     return data;
 }
 
-// Delivery Map Component
+
+// function DeliveryMap() {
+//     const { isLoaded } = useJsApiLoader({
+//         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
+//         libraries: ['places'] // Load the 'places' library for Autocomplete
+//     });
+
+//     const { control } = useFormContext<CreateOrderForm>();
+//     // const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete | null>(null);
+//     const [mapCenter] = useState({ lat: 41.2995, lng: 69.2401 });
+
+//     const bounds = useMemo(() => ({
+//         north: 45.0,
+//         south: 37.0,
+//         east: 72.0,
+//         west: 55.0,
+//     }), []);
+
+//     const mapStyles = [
+//         {
+//             featureType: "poi.business",
+//             stylers: [{ visibility: "off" }]
+//         },
+//         {
+//             featureType: "poi",
+//             stylers: [{ visibility: "off" }]
+//         }
+//     ];
+
+
+//     return (
+//         <div className="h-80 bg-gray-100 flex flex-col items-center justify-center rounded-md">
+//             {isLoaded && (
+//                 <>
+
+//                     <Controller
+//                         name="location.latitude"
+//                         control={control}
+//                         render={({ field: latitude }) => (
+//                             <Controller
+//                                 name="location.longitude"
+//                                 control={control}
+//                                 render={({ field: longitude }) => (
+//                                     <GoogleMap
+//                                         center={mapCenter}
+//                                         zoom={13}
+//                                         onClick={(e: google.maps.MapMouseEvent) => {
+//                                             latitude.onChange(e.latLng?.lat());
+//                                             longitude.onChange(e.latLng?.lng());
+//                                         }}
+//                                         mapContainerStyle={{ height: '100%', width: '100%' }}
+//                                         options={{
+//                                             restriction: {
+//                                                 latLngBounds: bounds,
+//                                                 strictBounds: true,
+//                                             },
+//                                             styles: mapStyles,
+//                                         }}
+//                                     >
+//                                         <LocationPicker location={{ loc_longitude: longitude.value, loc_latitude: latitude.value }} />
+//                                     </GoogleMap>
+//                                 )}
+//                             />
+//                         )}
+//                     />
+//                 </>
+//             )}
+//         </div>
+//     );
+// }
+
+
 function DeliveryMap() {
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
+        libraries: ['places'] // Load the 'places' library for Autocomplete
     });
 
-    const { control } = useFormContext<FormData>();
 
-    const mapCenter = useMemo(() => ({
-        lat: 41.2995,
-        lng: 69.2401,
-    }), []);
+
+    const { control } = useFormContext<CreateOrderForm>();
+    const [mapCenter] = useState({ lat: 41.2995, lng: 69.2401 });
 
     const bounds = useMemo(() => ({
         north: 45.0,
@@ -88,43 +158,61 @@ function DeliveryMap() {
         }
     ];
 
+
+
+
+
+
+
     return (
-        <div className="h-60 bg-gray-100 flex items-center justify-center rounded-md">
+        <div className="h-80 bg-gray-100 flex flex-col items-center justify-center rounded-md">
             {isLoaded && (
-                <Controller
-                    name="location.latitude"
-                    control={control}
-                    render={({ field: latitude }) => (
-                        <Controller
-                            name="location.longitude"
-                            control={control}
-                            render={({ field: longitude }) => (
-                                <GoogleMap
-                                    center={mapCenter}
-                                    zoom={13}
-                                    onClick={(e: google.maps.MapMouseEvent) => {
-                                        latitude.onChange(e.latLng?.lat());
-                                        longitude.onChange(e.latLng?.lng());
-                                    }}
-                                    mapContainerStyle={{ height: '100%', width: '100%' }}
-                                    options={{
-                                        restriction: {
-                                            latLngBounds: bounds,
-                                            strictBounds: true,
-                                        },
-                                        styles: mapStyles,
-                                    }}
-                                >
-                                    <LocationPicker location={{ loc_longitude: longitude.value, loc_latitude: latitude.value }} />
-                                </GoogleMap>
-                            )}
-                        />
-                    )}
-                />
+                <>
+                    {/* Custom text above the map */}
+                    <p className="text-sm text-gray-700">Select a location by clicking on the map</p>
+
+                    <Controller
+                        name="location.latitude"
+                        control={control}
+                        render={({ field: latitude }) => (
+                            <Controller
+                                name="location.longitude"
+                                control={control}
+                                render={({ field: longitude }) => (
+                                    <GoogleMap
+                                        center={mapCenter}
+                                        zoom={13}
+                                        onClick={(e: google.maps.MapMouseEvent) => {
+                                            latitude.onChange(e.latLng?.lat());
+                                            longitude.onChange(e.latLng?.lng());
+                                        }}
+                                        mapContainerStyle={{ height: '100%', width: '100%' }}
+                                        options={{
+                                            restriction: {
+                                                latLngBounds: bounds,
+                                                strictBounds: true,
+                                            },
+                                            styles: mapStyles,
+                                        }}
+                                    >
+                                        <LocationPicker location={{ loc_longitude: longitude.value, loc_latitude: latitude.value }} />
+                                    </GoogleMap>
+                                )}
+                            />
+                        )}
+                    />
+
+                    {/* Custom text below the map */}
+                    <p className="text-xs text-gray-500 mt-2">Click on the map to select a delivery location</p>
+                </>
             )}
         </div>
     );
 }
+
+
+
+
 
 // Filial Select Component
 function FilialSelect({ filial, setFilial }: { filial: string, setFilial: (filial: string) => void }) {
@@ -150,7 +238,7 @@ function FilialSelect({ filial, setFilial }: { filial: string, setFilial: (filia
 }
 
 // Promocode Select Component
-function PromocodeSelect({ value, onChange, promocodes }: ControllerRenderProps<FormData, "promocode"> & { promocodes: IPromocode[] }) {
+function PromocodeSelect({ value, onChange, promocodes }: ControllerRenderProps<CreateOrderForm, "promocode"> & { promocodes: IPromocode[] }) {
 
 
     return (
@@ -178,13 +266,13 @@ function AddItemModal({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (isOp
     const [quantity, setQuantity] = useState(1)
     const [searchTerm, setSearchTerm] = useState('')
 
-    const { control } = useFormContext<FormData>()
+    const { control } = useFormContext<CreateOrderForm>()
 
     const { append } = useFieldArray({
         control,
         name: "items",
         rules: { minLength: 1 }
-    })
+    });
 
     const { data: products = [] } = useQuery({
         queryKey: ["products"],
@@ -206,7 +294,8 @@ function AddItemModal({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (isOp
                 setSearchTerm('')
 
                 const new_item: OrderItem = {
-                    product: selectedProduct,
+                    product: selectedProduct.id,
+                    _product: selectedProduct,
                     quantity: quantity
                 }
 
@@ -289,7 +378,7 @@ function AddItemModal({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (isOp
 function OrderItems({ setIsAddItemOpen }: {
     setIsAddItemOpen: Dispatch<SetStateAction<boolean>>
 }) {
-    const { control, watch, setValue } = useFormContext<FormData>();
+    const { control, watch, setValue } = useFormContext<CreateOrderForm>();
 
     const { remove } = useFieldArray({
         control,
@@ -305,7 +394,7 @@ function OrderItems({ setIsAddItemOpen }: {
         <CardContent>
             {orderItems.map((field, index) => (
                 <div key={index} className="flex items-center space-x-2 mb-2">
-                    <span className="flex-grow">{field.product.name_uz}</span>
+                    <span className="flex-grow">{field._product.name_uz}</span>
                     <div className="flex items-center space-x-2">
                         <Button
                             type="button"
@@ -349,18 +438,19 @@ export default function CreateOrderButton() {
     const [isAddItemOpen, setIsAddItemOpen] = useState(false);
     const [open, setOpen] = useState(false);
 
-    const methods = useForm<FormData>({
+    const methods = useForm<CreateOrderForm>({
         defaultValues: {
-            delivery: 'pickup',
+            delivery: 'PICKUP',
             time: null,
             items: []
         }
     });
 
-    const { register, control, handleSubmit, watch, setValue } = methods;
+    const { register, control, handleSubmit, watch, setValue, reset } = methods;
 
     const deliveryMethod = watch('delivery');
     const orderItems = watch("items");
+
 
     const { data: users = [] } = useQuery<IUser[]>(
         {
@@ -374,13 +464,27 @@ export default function CreateOrderButton() {
         queryFn: fetchPromocodes
     });
 
-    const onSubmit = (data: FormData) => {
+
+    const createOrderMutation = useMutation({
+        mutationFn: CreateOrder,
+        onSuccess: (data) => {
+            console.log(data);
+            reset();
+        },
+        onError: (e) => {
+            console.log(e);
+            alert("Error occured");
+        }
+    })
+
+    const onSubmit = (data: CreateOrderForm) => {
         console.log('Buyurtma yuborildi', { ...data, orderItems });
+        createOrderMutation.mutate(data);
         setIsOpen(false);
     }
 
     const calculateTotal = () => {
-        return orderItems.reduce((total, item) => total + item.product.price * item.quantity, 0);
+        return orderItems.reduce((total, item) => total + item._product.price * item.quantity, 0);
     }
 
     const calculateDiscount = () => {
@@ -392,16 +496,17 @@ export default function CreateOrderButton() {
             return 0;
         }
 
-
         return calculate_discount(promocode, calculateTotal());
 
-
-
-
-        // return promocode ? calculateTotal() * 0.1 : 0;
     }
 
-    const deliveryPrice = deliveryMethod === 'delivery' ? 5 : 0;
+    const deliveryPrice = deliveryMethod === 'DELIVERY' ? 5 : 0;
+
+    const { data: _deliveryPrice } = useQuery({
+        queryKey: ["deliveryPrice", watch("location.latitude"), watch("location.longitude")],
+        queryFn: () => getDeliveryPrice({ latitude: watch("location.latitude"), longitude: watch("location.longitude") }),
+        enabled: !!watch('location')
+    })
 
     const generateTimeOptions = () => {
         const now = new Date();
@@ -410,7 +515,7 @@ export default function CreateOrderButton() {
             label: "Iloji boricha tez"
         }];
         for (let i = 0; i < 5; i++) {
-            const time = addHours(now, i + 1);
+            const time = addHours(now, i + .5);
             options.push({
                 value: format(time, 'HH:mm'),
                 label: format(time, 'h:mm a')
@@ -515,7 +620,7 @@ export default function CreateOrderButton() {
                                 <Controller
                                     name="delivery"
                                     control={control}
-                                    defaultValue="pickup"
+                                    defaultValue="PICKUP"
                                     render={({ field }) => (
                                         <RadioGroup
                                             onValueChange={field.onChange}
@@ -523,11 +628,11 @@ export default function CreateOrderButton() {
                                             className="flex space-x-4"
                                         >
                                             <div className="flex items-center space-x-2">
-                                                <RadioGroupItem value="pickup" id="pickup" />
+                                                <RadioGroupItem value="PICKUP" id="pickup" />
                                                 <Label htmlFor="pickup">Olib ketish</Label>
                                             </div>
                                             <div className="flex items-center space-x-2">
-                                                <RadioGroupItem value="delivery" id="delivery" />
+                                                <RadioGroupItem value="DELIVERY" id="delivery" />
                                                 <Label htmlFor="delivery">Yetkazib berish</Label>
                                             </div>
                                         </RadioGroup>
@@ -535,13 +640,16 @@ export default function CreateOrderButton() {
                                 />
                             </div>
                         </div>
-                        {deliveryMethod === 'delivery' && (
+
+                        {deliveryMethod === 'DELIVERY' && (
                             <div className="space-y-2">
                                 <Label>Yetkazib berish joyi</Label>
                                 <DeliveryMap />
+                                <p>{_deliveryPrice?.address ?? "Yuklanmoqda"}</p>
                             </div>
                         )}
-                        {deliveryMethod === 'pickup' && (
+
+                        {deliveryMethod === 'PICKUP' && (
                             <div className="space-y-2">
                                 <Label>Filialni tanlang</Label>
                                 <Controller
@@ -551,6 +659,7 @@ export default function CreateOrderButton() {
                                 />
                             </div>
                         )}
+
                         <div className="space-y-2">
                             <Label>Yetkazib berish vaqti</Label>
                             <Controller
@@ -590,10 +699,14 @@ export default function CreateOrderButton() {
                                 </div>
                             )}
 
-                            <div className="flex justify-between">
-                                <span>Yetkazib berish:</span>
-                                <span>{deliveryPrice.toFixed(2)} so&apos;m</span>
-                            </div>
+                            {
+                                deliveryMethod == "DELIVERY" && <div className="flex justify-between">
+                                    <span>Yetkazib berish:</span>
+                                    {/* <span>{deliveryPrice.toFixed(2)} so&apos;m</span> */}
+                                    <span>{_deliveryPrice?.cost ?? "Hisoblanmoqda..."}</span>
+                                </div>
+                            }
+
                             <div className="flex justify-between font-bold">
                                 <span>Jami:</span>
                                 <div className="flex items-center space-x-2">

@@ -146,7 +146,7 @@ export interface IOrderItem {
 export type IOrder = {
     saving: number;
     id: string;
-    order_id: number;
+    order_id?: number;
     user: IUser;
     phone_number?: string;
     products_count?: number;
@@ -218,4 +218,13 @@ export interface ITaxi {
     car_number: string;
     total_sum: number;
     driver_phone_number: string;
+}
+
+
+
+
+
+export interface DeliveryPrice {
+    address: string;
+    cost: number;
 }

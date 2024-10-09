@@ -20,27 +20,31 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/Label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Download } from "lucide-react";
-import { request } from "@/lib/api"
-
-
-
+import { Download, CalendarIcon } from "lucide-react";
+import { request } from "@/lib/api";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 
 interface StatisticsFilter {
-    filial: string;
-    start_date: Date | null;
-    end_date: Date | null;
-    delivery_type: string;
-    payment_type: string;
+    filial: string | null | undefined;
+    start_date: Date | null | undefined;
+    end_date: Date | null | undefined;
+    delivery_type?: "DELIVERY" | "PICKUP" | null | undefined;
+    payment_type?: string | null | undefined;
 }
 
-// API call function
 const downloadStatistics = async (data: StatisticsFilter) => {
-    const response = await request.post("/xlsx", data, {
+    const filteredData = Object.fromEntries(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        Object.entries(data).filter(([_, v]) => v != null)
+    );
+
+    const response = await request.post("/xlsx", filteredData, {
         headers: {
             "Content-Type": "application/json",
         },
-        responseType: "blob",  // Ensure Axios handles it as a blob
+        responseType: "blob",
     });
 
     const blob = new Blob([response.data]);
@@ -57,11 +61,11 @@ const downloadStatistics = async (data: StatisticsFilter) => {
 export default function StatisticsModal() {
     const { control, handleSubmit } = useForm<StatisticsFilter>({
         defaultValues: {
-            filial: "",
-            start_date: null,
-            end_date: null,
-            delivery_type: "olib_ketish",
-            payment_type: "",
+            filial: undefined,
+            start_date: undefined,
+            end_date: undefined,
+            delivery_type: undefined,
+            payment_type: undefined,
         },
     });
 
@@ -81,22 +85,22 @@ export default function StatisticsModal() {
             <DialogTrigger asChild>
                 <Button variant="outline">Statistikani ochish</Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[900px]">
+            <DialogContent className="sm:max-w-[600px]">
                 <DialogHeader>
-                    <DialogTitle>Statistika</DialogTitle>
+                    <DialogTitle className="text-2xl font-bold">Statistika</DialogTitle>
                 </DialogHeader>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
-                            <Label htmlFor="filial" className="text-right">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                    <div className="grid grid-cols-1 gap-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="filial" className="text-sm font-medium">
                                 Filial
                             </Label>
                             <Controller
                                 name="filial"
                                 control={control}
                                 render={({ field }) => (
-                                    <Select {...field}>
-                                        <SelectTrigger className="col-span-3">
+                                    <Select {...field} value={field.value || undefined}>
+                                        <SelectTrigger>
                                             <SelectValue placeholder="Filialni tanlang" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -109,45 +113,77 @@ export default function StatisticsModal() {
                             />
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
-                            <Label className="text-right">Sana oralig&apos;i</Label>
-                            <div className="col-span-3 flex gap-2">
+                        <div className="space-y-2">
+                            <Label className="text-sm font-medium">Sana oralig&apos;i</Label>
+                            <div className="flex flex-wrap gap-4">
                                 <Controller
                                     name="start_date"
                                     control={control}
                                     render={({ field }) => (
-                                        <Calendar
-                                            mode="single"
-                                            selected={field.value ?? undefined}
-                                            onSelect={field.onChange}
-                                            className="rounded-md border"
-                                        />
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant={"outline"}
+                                                    className={cn(
+                                                        "w-[240px] justify-start text-left font-normal",
+                                                        !field.value && "text-muted-foreground"
+                                                    )}
+                                                >
+                                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                                    {field.value ? format(field.value, "PPP") : <span>Boshlanish sanasi</span>}
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0" align="start">
+                                                <Calendar
+                                                    mode="single"
+                                                    selected={field.value ?? undefined}
+                                                    onSelect={field.onChange}
+                                                    initialFocus
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
                                     )}
                                 />
                                 <Controller
                                     name="end_date"
                                     control={control}
                                     render={({ field }) => (
-                                        <Calendar
-                                            mode="single"
-                                            selected={field.value ?? undefined}
-                                            onSelect={field.onChange}
-                                            className="rounded-md border"
-                                        />
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant={"outline"}
+                                                    className={cn(
+                                                        "w-[240px] justify-start text-left font-normal",
+                                                        !field.value && "text-muted-foreground"
+                                                    )}
+                                                >
+                                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                                    {field.value ? format(field.value, "PPP") : <span>Tugash sanasi</span>}
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0" align="start">
+                                                <Calendar
+                                                    mode="single"
+                                                    selected={field.value ?? undefined}
+                                                    onSelect={field.onChange}
+                                                    initialFocus
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
                                     )}
                                 />
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
-                            <Label className="text-right">Yetkazib berish turi</Label>
+                        <div className="space-y-2">
+                            <Label className="text-sm font-medium">Yetkazib berish turi</Label>
                             <Controller
                                 name="delivery_type"
                                 control={control}
                                 render={({ field }) => (
                                     <RadioGroup
-                                        className="row-span-3"
-                                        value={field.value}
+                                        className="flex flex-wrap gap-4"
+                                        value={field.value || undefined}
                                         onValueChange={field.onChange}
                                     >
                                         <div className="flex items-center space-x-2">
@@ -155,11 +191,11 @@ export default function StatisticsModal() {
                                             <Label htmlFor="all">Barchasi</Label>
                                         </div>
                                         <div className="flex items-center space-x-2">
-                                            <RadioGroupItem value="olib_ketish" id="olib_ketish" />
+                                            <RadioGroupItem value="PICKUP" id="olib_ketish" />
                                             <Label htmlFor="olib_ketish">Olib ketish</Label>
                                         </div>
                                         <div className="flex items-center space-x-2">
-                                            <RadioGroupItem value="yetkazib_berish" id="yetkazib_berish" />
+                                            <RadioGroupItem value="DELIVERY" id="yetkazib_berish" />
                                             <Label htmlFor="yetkazib_berish">Yetkazib berish</Label>
                                         </div>
                                     </RadioGroup>
@@ -167,24 +203,36 @@ export default function StatisticsModal() {
                             />
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
-                            <Label htmlFor="payment" className="text-right">
+                        <div className="space-y-2">
+                            <Label htmlFor="payment" className="text-sm font-medium">
                                 To&apos;lov turi
                             </Label>
                             <Controller
                                 name="payment_type"
                                 control={control}
                                 render={({ field }) => (
-                                    <Select {...field}>
-                                        <SelectTrigger className="col-span-3">
-                                            <SelectValue placeholder="To'lov turini tanlang" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="naqd">Naqd</SelectItem>
-                                            <SelectItem value="karta">Karta</SelectItem>
-                                            <SelectItem value="online">Online</SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                                    <RadioGroup
+                                        className="flex flex-wrap gap-4"
+                                        value={field.value || undefined}
+                                        onValueChange={field.onChange}
+                                    >
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="all" id="all_payment" />
+                                            <Label htmlFor="all_payment">Barchasi</Label>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="CLICK" id="CLICK" />
+                                            <Label htmlFor="CLICK">CLICK</Label>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="PAYME" id="PAYME" />
+                                            <Label htmlFor="PAYME">PAYME</Label>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="CASH" id="CASH" />
+                                            <Label htmlFor="CASH">CASH</Label>
+                                        </div>
+                                    </RadioGroup>
                                 )}
                             />
                         </div>

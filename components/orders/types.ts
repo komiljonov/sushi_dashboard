@@ -2,23 +2,23 @@ import { IProduct } from "@/lib/types";
 
 
 export type OrderItem = {
-    product: IProduct;
+    _product: IProduct;
+    product: string;
     quantity: number;
 }
 
-export type FormData = {
+export type CreateOrderForm = {
     user: string;
     phone: string;
     comment: string;
     promocode?: string;
-    delivery: 'pickup' | 'delivery';
+    delivery: 'PICKUP' | 'DELIVERY';
     filial: string;
     time: string | null;
     location: {
         latitude: number,
         longitude: number
     }
-
 
     items: OrderItem[]
 }
