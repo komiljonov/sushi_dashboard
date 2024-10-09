@@ -201,6 +201,7 @@ export default function StatisticsModal() {
                                     </RadioGroup>
                                 )}
                             />
+                            
                         </div>
 
                         <div className="space-y-2">
