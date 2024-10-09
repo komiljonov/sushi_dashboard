@@ -188,7 +188,7 @@ export default function StatisticsModal() {
                                     >
                                         <div className="flex items-center space-x-2">
                                             <RadioGroupItem value="all" id="all" />
-                                            <Label htmlFor="all">Barchasi</Label>
+                                            <Label htmlFor="ALL">Barchasi</Label>
                                         </div>
                                         <div className="flex items-center space-x-2">
                                             <RadioGroupItem value="PICKUP" id="olib_ketish" />
@@ -201,7 +201,7 @@ export default function StatisticsModal() {
                                     </RadioGroup>
                                 )}
                             />
-                            
+
                         </div>
 
                         <div className="space-y-2">
@@ -218,7 +218,7 @@ export default function StatisticsModal() {
                                         onValueChange={field.onChange}
                                     >
                                         <div className="flex items-center space-x-2">
-                                            <RadioGroupItem value="all" id="all_payment" />
+                                            <RadioGroupItem value="ALL" id="all_payment" />
                                             <Label htmlFor="all_payment">Barchasi</Label>
                                         </div>
                                         <div className="flex items-center space-x-2">
