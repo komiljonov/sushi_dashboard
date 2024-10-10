@@ -17,7 +17,7 @@ export const PromocodeTable = ({ promocodes, onDelete }: PromocodeTableProps) =>
                     <TableRow>
                         <TableHead>Nomi</TableHead>
                         <TableHead>kod</TableHead>
-                        <TableHead>Summa yoki foyiz</TableHead>
+                        {/* <TableHead>Summa yoki foyiz</TableHead> */}
                         <TableHead>Chegirma</TableHead>
                         <TableHead>Soni</TableHead>
                         <TableHead>Amallar</TableHead>
@@ -28,7 +28,7 @@ export const PromocodeTable = ({ promocodes, onDelete }: PromocodeTableProps) =>
                         <TableRow key={index}>
                             <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
                             <TableCell><Skeleton className="h-4 w-[80px]" /></TableCell>
-                            <TableCell><Skeleton className="h-4 w-[120px]" /></TableCell>
+                            {/* <TableCell><Skeleton className="h-4 w-[120px]" /></TableCell> */}
                             <TableCell><Skeleton className="h-4 w-[60px]" /></TableCell>
                             <TableCell><Skeleton className="h-4 w-[40px]" /></TableCell>
                             <TableCell>
@@ -47,7 +47,7 @@ export const PromocodeTable = ({ promocodes, onDelete }: PromocodeTableProps) =>
                 <TableRow>
                     <TableHead>Nomi</TableHead>
                     <TableHead>kod</TableHead>
-                    <TableHead>Summa yoki foyiz</TableHead>
+                    {/* <TableHead>Summa yoki foyiz</TableHead> */}
                     <TableHead>Chegirma</TableHead>
                     <TableHead>Soni</TableHead>
                     <TableHead>Amallar</TableHead>
@@ -58,7 +58,7 @@ export const PromocodeTable = ({ promocodes, onDelete }: PromocodeTableProps) =>
                     <TableRow key={promo.id}>
                         <TableCell>{promo.name}</TableCell>
                         <TableCell>{promo.code}</TableCell>
-                        <TableCell>{promo.measurement}</TableCell>
+                        {/* <TableCell>{promo.measurement}</TableCell> */}
                         <TableCell>{promo.amount}{promo.measurement == "ABSOLUTE" ? " so'm" : "%"}</TableCell>
                         <TableCell>{promo.count}</TableCell>
                         <TableCell>
