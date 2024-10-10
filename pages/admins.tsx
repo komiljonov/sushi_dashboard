@@ -102,11 +102,11 @@ const CreateAdminDialog = () => {
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button>Foydalanuvchi qo&apos;shish</Button>
+                <Button>Hodim qo'shish</Button>
             </DialogTrigger>
             <DialogContent className='bg-white'>
                 <DialogHeader>
-                    <DialogTitle>Foydalanuvchi qo&apos;shish</DialogTitle>
+                    <DialogTitle>Hodim qo'shish</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     <div className='flex space-x-6'>
