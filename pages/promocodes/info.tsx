@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { useQuery, useMutation } from "@tanstack/react-query"
 import { request } from '@/lib/api'
 import Link from "next/link"
-import { CalendarIcon, CreditCardIcon, UserIcon, DollarSign } from "lucide-react"
+import { CalendarIcon, CreditCardIcon, UserIcon, DollarSign, DownloadIcon } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Layout } from "@/components/Layout"
 import { PromocodeForm, PromocodeFormOnSubmitProps } from "@/components/promocode/Form"
@@ -15,6 +15,7 @@ import { IPromocode } from "@/lib/types"
 import PromocodeFormSkeleton from "@/components/promocode/Skeleton"
 import { queryClient } from "@/lib/query"
 import { splitToHundreds } from "@/lib/utils"
+import { Button } from "@/components/ui/Button"
 
 const getCategoryIdFromUrl = (): string | null => {
     if (typeof window !== 'undefined') {
@@ -49,6 +50,29 @@ const updatePromocode = async (promocode: IPromocode) => {
 
     return data;
 }
+
+
+const downloadStatistics = async (promocodeId?: string) => {
+
+    if(!promocodeId) return;
+
+    const response = await request.get(`promocodes/${promocodeId}/xlsx/`, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        responseType: "blob",
+    });
+
+    const blob = new Blob([response.data]);
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.style.display = "none";
+    a.href = url;
+    a.download = "statistika.xlsx";
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+};
 
 function EditPromocode() {
     const router = useRouter();
@@ -86,6 +110,13 @@ function EditPromocode() {
         }
     }
 
+    const { mutate: download } = useMutation({
+        mutationFn: downloadStatistics,
+        onError: (error) => {
+            console.error("Faylni yuklab olishda xatolik yuz berdi:", error);
+        },
+    });
+
     if (!promocodeId) {
         return <div>Yuklanmoqda...</div>
     }
@@ -95,8 +126,11 @@ function EditPromocode() {
             <h1 className="text-2xl font-bold mb-5">Promokodni tahrirlash</h1>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <Card className="lg:col-span-2">
-                    <CardHeader>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0">
+
                         <CardTitle>Promokod tafsilotlari</CardTitle>
+                        <Button onClick={() => download(promocode?.id)} ><DownloadIcon className="h-4 w-4 mr-2" />Yuklab olish</Button>
+
                     </CardHeader>
                     <CardContent>
                         {isLoading ? <PromocodeFormSkeleton /> : <PromocodeForm
