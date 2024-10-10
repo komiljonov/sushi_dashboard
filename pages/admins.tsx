@@ -324,12 +324,12 @@ const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
 }
 
 const Admins: NextPage = () => {
-    const { data: admins = [], isLoading } = useQuery({
+    const { data: admins, isLoading } = useQuery({
         queryKey: ["admins"],
         queryFn: fetchAdmins,
     });
 
-    if (isLoading) {
+    if (isLoading || !admins) {
         return <LoadingSkeleton />;
     }
 

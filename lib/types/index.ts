@@ -89,7 +89,6 @@ export interface IPayment {
     amount: number;
     provider: string;
     status: string;
-    data: unknown;
     user: IUser;
     order?: IOrder;
 

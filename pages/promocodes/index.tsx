@@ -54,7 +54,7 @@ const deletePromocode = async (id: string) => {
 }
 
 export function Promocodes() {
-  const { data: promocodes = [] } = useQuery({
+  const { data: promocodes } = useQuery({
     queryKey: ['promocodes'],
     queryFn: fetchPromocodes
   });

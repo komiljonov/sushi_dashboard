@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useEffect } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useQuery, useMutation } from "@tanstack/react-query"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
@@ -28,14 +28,20 @@ import { Layout } from "@/components/Layout"
 import { request } from "@/lib/api"
 import { queryClient } from "@/lib/query"
 import { Controller, useForm } from "react-hook-form"
-import { IFilial } from "@/lib/types"
-import { fetchFilials } from "@/lib/fetchers"
+import { Skeleton } from "@/components/ui/skeleton"
 
-export interface ILocation {
+interface ILocation {
   id: string
   latitude: number
   longitude: number
-  address: null
+  address: string | null
+}
+
+interface IFilial {
+  id: string
+  name_uz: string
+  name_ru: string
+  location: ILocation
 }
 
 type FilialCreate = Omit<Omit<IFilial, 'id'>, 'location'> & {
@@ -43,30 +49,32 @@ type FilialCreate = Omit<Omit<IFilial, 'id'>, 'location'> & {
   loc_longitude: number
 }
 
-
-function generateRandomWord(length: number = 8): string {
+const generateRandomWord = (length: number = 8): string => {
   const characters = 'abcdefghijklmnopqrstuvwxyz'
   return Array.from({ length }, () => characters[Math.floor(Math.random() * characters.length)]).join('')
 }
 
-
-
-const deleteFilialAttachment = async (filialId: string) => {
+const deleteFilialAttachment = async (filialId: string): Promise<void> => {
   await request.delete(`filials/${filialId}`)
 }
 
 const createFilial = async (filial: FilialCreate): Promise<IFilial> => {
-  const { data } = await request.post('filials', filial);
-  return data;
+  const { data } = await request.post<IFilial>('filials', filial)
+  return data
 }
 
 const updateFilial = async ({ filial, data }: { filial: IFilial, data: FilialCreate }): Promise<IFilial> => {
-  const { data: req_data } = await request.put(`filials/${filial.id}`, data);
-  return req_data;
+  const { data: req_data } = await request.put<IFilial>(`filials/${filial.id}`, data)
+  return req_data
+}
+
+const fetchFilials = async (): Promise<IFilial[]> => {
+  const { data } = await request.get<IFilial[]>('filials')
+  return data
 }
 
 const LocationPicker = ({ location }: { location: { loc_latitude: number, loc_longitude: number } }) => {
-  const position = { lat: location.loc_latitude, lng: location.loc_longitude };
+  const position = { lat: location.loc_latitude, lng: location.loc_longitude }
   return <Marker position={position} />
 }
 
@@ -86,7 +94,7 @@ const FilialTable = ({ filials, onDelete, onEdit }: { filials: IFilial[], onDele
           <TableCell>{filial.name_uz}</TableCell>
           <TableCell>{filial.name_ru}</TableCell>
           <TableCell>
-            <Link className="flex items-center text-blue-500 hover:text-blue-700" href={`https://www.google.com/maps/@${filial.location?.latitude},${filial.location?.longitude},17z`}>
+            <Link className="flex items-center text-blue-500 hover:text-blue-700" href={`https://www.google.com/maps/@${filial.location.latitude},${filial.location.longitude},17z`}>
               <ExternalLink className="h-4 w-4 mr-1" /> Joylashuv
             </Link>
           </TableCell>
@@ -160,41 +168,35 @@ const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
   filial?: IFilial
   mode: 'create' | 'edit'
 }) => {
-  const { register, control, handleSubmit, watch, setValue, reset } = useForm<FilialCreate>();
+  const { register, control, handleSubmit, reset } = useForm<FilialCreate>()
+
+
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
-  })
+  });
 
 
   const mapCenter = useMemo(() => ({
     lat: filial ? filial.location.latitude : 1,
     lng: filial ? filial.location.longitude : 1
-  }), [filial]);
-
+  }), [filial])
 
   useEffect(() => {
     if (filial) {
-
       reset({
         "name_uz": filial.name_uz,
-        "name_ru": filial.name_uz,
-        "loc_latitude": filial.location?.latitude,
-        "loc_longitude": filial.location?.longitude
+        "name_ru": filial.name_ru,
+        "loc_latitude": filial.location.latitude,
+        "loc_longitude": filial.location.longitude
       })
     }
-
-  }, [filial, setValue, reset]);
-
-
-
+  }, [filial, reset])
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-[1000px] max-h-[1000px] bg-white">
         <form onSubmit={handleSubmit(onSubmit)}>
-
-
           <DialogHeader>
             <DialogTitle>{mode === 'create' ? "Yangi filial qo'shish" : "Filialni tahrirlash"}</DialogTitle>
           </DialogHeader>
@@ -206,8 +208,6 @@ const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
               <Input
                 id="name_uz"
                 {...register("name_uz", { required: "Nomi bo'sh bo'lishi mumkin emas." })}
-                // value={filial?.name_uz}
-                // onChange={(e) => setFilial({ ...filial, name_uz: e.target.value })}
                 className="col-span-3"
               />
             </div>
@@ -217,19 +217,16 @@ const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
               </Label>
               <Input
                 id="name_ru"
-                // value={filial.name_ru}
-                // onChange={(e) => setFilial({ ...filial, name_ru: e.target.value })}
                 {...register("name_ru", { required: "Nomi bo'sh bo'lishi mumkin emas." })}
                 className="col-span-3"
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label className="text-right">
-                Location {watch("loc_latitude")} {watch("loc_longitude")}
+                {/* Location {watch("loc_latitude")} {watch("loc_longitude")} */}
               </Label>
               <div className="col-span-3 h-[200px]">
                 {isLoaded && (
-
                   <Controller
                     name="loc_latitude"
                     control={control}
@@ -242,8 +239,8 @@ const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
                             center={mapCenter}
                             zoom={13}
                             onClick={(e: google.maps.MapMouseEvent) => {
-                              latitude.onChange(e.latLng?.lat());
-                              longitude.onChange(e.latLng?.lng());
+                              latitude.onChange(e.latLng?.lat())
+                              longitude.onChange(e.latLng?.lng())
                             }}
                             mapContainerStyle={{ height: '100%', width: '100%' }}
                           >
@@ -253,8 +250,6 @@ const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
                       />
                     )}
                   />
-
-
                 )}
               </div>
             </div>
@@ -269,41 +264,34 @@ const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
 }
 
 function FilialManagement() {
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
-  const [filialToDelete, setFilialToDelete] = useState<IFilial | null>(null);
-  const [isFilialModalOpen, setIsFilialModalOpen] = useState<boolean>(false);
-  const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
+  const [filialToDelete, setFilialToDelete] = useState<IFilial | null>(null)
+  const [isFilialModalOpen, setIsFilialModalOpen] = useState<boolean>(false)
+  const [modalMode, setModalMode] = useState<'create' | 'edit'>('create')
+  const [currentFilial, setCurrentFilial] = useState<IFilial | undefined>()
 
-  const [currentFilial, setCurrentFilial] = useState<IFilial>();
-
-  const { data: filials = [] } = useQuery<IFilial[]>({ queryFn: fetchFilials, queryKey: ['filials'] });
+  const { data: filials, isLoading, isError } = useQuery<IFilial[]>({ queryFn: fetchFilials, queryKey: ['filials'] })
 
   const deleteMutation = useMutation({
     mutationFn: deleteFilialAttachment,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['filials']
-      })
+      queryClient.invalidateQueries({ queryKey: ['filials'] })
     },
-  });
+  })
 
   const createMutation = useMutation({
     mutationFn: createFilial,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['filials']
-      })
+      queryClient.invalidateQueries({ queryKey: ['filials'] })
     },
-  });
+  })
 
   const updateMutation = useMutation({
     mutationFn: updateFilial,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['filials']
-      })
+      queryClient.invalidateQueries({ queryKey: ['filials'] })
     },
-  });
+  })
 
   const handleDelete = (filial: IFilial) => {
     setFilialToDelete(filial)
@@ -319,13 +307,13 @@ function FilialManagement() {
 
   const handleCreate = () => {
     setModalMode('create')
-    setCurrentFilial(undefined);
+    setCurrentFilial(undefined)
     setIsFilialModalOpen(true)
   }
 
   const handleEdit = (filial: IFilial) => {
     setModalMode('edit')
-    setCurrentFilial(filial);
+    setCurrentFilial(filial)
     setIsFilialModalOpen(true)
   }
 
@@ -336,13 +324,33 @@ function FilialManagement() {
           setIsFilialModalOpen(false)
         }
       })
-    } else {
-      updateMutation.mutate({ data: data, filial: currentFilial! }, {
+    } else if (currentFilial) {
+      updateMutation.mutate({ data: data, filial: currentFilial }, {
         onSuccess: () => {
           setIsFilialModalOpen(false)
         }
       })
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto p-4">
+        <div className="flex justify-between items-center mb-6">
+          <Skeleton className="h-8 w-40" />
+          <Skeleton className="h-10 w-40" />
+        </div>
+        <div className="space-y-4">
+          {[...Array(5)].map((_, index) => (
+            <Skeleton key={index} className="h-16 w-full" />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  if (isError) {
+    return <div>Error loading filials</div>
   }
 
   return (
@@ -354,7 +362,7 @@ function FilialManagement() {
         </Button>
       </div>
 
-      <FilialTable filials={filials} onDelete={handleDelete} onEdit={handleEdit} />
+      {filials && <FilialTable filials={filials} onDelete={handleDelete} onEdit={handleEdit} />}
 
       <DeleteModal
         isOpen={isDeleteModalOpen}

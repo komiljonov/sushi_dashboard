@@ -34,7 +34,7 @@ const deleteCategory = async (categoryId: string) => {
 export function Categories() {
     const { toast } = useToast();
     const queryClient = useQueryClient();
-    const { data: categories = [], isLoading } = useQuery({
+    const { data: categories, isLoading } = useQuery({
         queryKey: ["categories"],
         queryFn: fetchCategories,
     });
@@ -124,7 +124,7 @@ export function Categories() {
                 </CreateCategoryModal>
             </div>
             <div className="border rounded-md p-4">
-                {isLoading ? (
+                {isLoading || !categories ? (
                     <SkeletonCategories />
                 ) : (
                     <CategoryList

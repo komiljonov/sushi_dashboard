@@ -9,7 +9,9 @@ import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { Label } from "@/components/ui/Label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { CreditCard, DollarSign, ChevronLeft, ChevronRight } from "lucide-react"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Skeleton } from "@/components/ui/skeleton"
+import { CreditCard, DollarSign, ChevronLeft, ChevronRight, AlertCircle } from "lucide-react"
 import Link from 'next/link'
 import Image from 'next/image'
 import { IPayment } from '@/lib/types'
@@ -104,16 +106,18 @@ function FilterSection({ filters, setFilters }: {
 function EnhancedPaymentListing() {
     const [filteredPayments, setFilteredPayments] = useState<IPayment[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
+
     const [sortColumn, setSortColumn] = useState<keyof IPayment | ''>('');
+
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
-    const [filters, setFilters] = useState({
+    const [filters, setFilters] = useState<Filter>({
         user: '',
         provider: 'all',
         startDate: '',
         endDate: ''
     });
 
-    const { data: payments = [] } = useQuery({
+    const { data: payments, isLoading, error } = useQuery<IPayment[], Error>({
         queryKey: ['payments'],
         queryFn: fetchPayments,
     });
@@ -128,35 +132,39 @@ function EnhancedPaymentListing() {
     }, [sortColumn, sortDirection]);
 
     useEffect(() => {
-        let result = payments
-        if (filters.user) {
-            result = result.filter(payment =>
-                payment.user.name.toLowerCase().includes(filters.user.toLowerCase())
-            )
+        if (payments) {
+            let result = payments
+            if (filters.user) {
+                result = result.filter(payment =>
+                    payment.user.name.toLowerCase().includes(filters.user.toLowerCase())
+                )
+            }
+            if (filters.provider !== 'all') {
+                result = result.filter(payment => payment.provider === filters.provider)
+            }
+            if (filters.startDate) {
+                result = result.filter(payment => new Date(payment.created_at) >= new Date(filters.startDate))
+            }
+            if (filters.endDate) {
+                result = result.filter(payment => new Date(payment.created_at) <= new Date(filters.endDate))
+            }
+            setFilteredPayments(result)
+            setCurrentPage(1)
         }
-        if (filters.provider !== 'all') {
-            result = result.filter(payment => payment.provider === filters.provider)
-        }
-        if (filters.startDate) {
-            result = result.filter(payment => new Date(payment.created_at) >= new Date(filters.startDate))
-        }
-        if (filters.endDate) {
-            result = result.filter(payment => new Date(payment.created_at) <= new Date(filters.endDate))
-        }
-        setFilteredPayments(result)
-        setCurrentPage(1)
     }, [payments, filters]);
 
     useEffect(() => {
-        handleSort(sortColumn as keyof IPayment)
+        if (sortColumn) {
+            handleSort(sortColumn)
+        }
     }, [handleSort, sortColumn]);
 
     const itemsPerPage = 5;
 
     const sortedPayments = [...filteredPayments].sort((a, b) => {
         if (!sortColumn) return 0
-        if ((a[sortColumn] as string) < (b[sortColumn] as string)) return sortDirection === 'asc' ? -1 : 1
-        if ((a[sortColumn] as string) > (b[sortColumn] as string)) return sortDirection === 'asc' ? 1 : -1
+        if (a[sortColumn]! < b[sortColumn]!) return sortDirection === 'asc' ? -1 : 1
+        if (a[sortColumn]! > b[sortColumn]!) return sortDirection === 'asc' ? 1 : -1
         return 0
     });
 
@@ -166,6 +174,38 @@ function EnhancedPaymentListing() {
     );
 
     const totalPages = Math.ceil(sortedPayments.length / itemsPerPage);
+
+    if (isLoading) {
+        return (
+            <Card>
+                <CardContent>
+                    <div className="space-y-4">
+                        {[...Array(5)].map((_, i) => (
+                            <div key={i} className="flex items-center space-x-4">
+                                <Skeleton className="h-12 w-12 rounded-full" />
+                                <div className="space-y-2">
+                                    <Skeleton className="h-4 w-[250px]" />
+                                    <Skeleton className="h-4 w-[200px]" />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </CardContent>
+            </Card>
+        )
+    }
+
+    if (error) {
+        return (
+            <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>
+                    An error occurred while fetching payments: {error.message}
+                </AlertDescription>
+            </Alert>
+        )
+    }
 
     return (
         <div className="container mx-auto py-10">
@@ -206,8 +246,8 @@ function EnhancedPaymentListing() {
                                     </TableCell>
                                     <TableCell>
                                         {payment.order && (
-                                            <Link href={`/orders/info?id=${payment?.order?.id}`} className="hover:underline">
-                                                <Badge variant="outline">#{payment?.order?.order_id}</Badge>
+                                            <Link href={`/orders/info?id=${payment.order.id}`} className="hover:underline">
+                                                <Badge variant="outline">#{payment.order.order_id}</Badge>
                                             </Link>
                                         )}
                                     </TableCell>

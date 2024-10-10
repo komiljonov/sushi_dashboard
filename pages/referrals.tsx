@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { toast } from "@/hooks/use-toast"
-import { Copy, Trash2 } from "lucide-react"
+import { Copy, Trash2, AlertCircle } from "lucide-react"
 import { Layout } from '@/components/Layout'
 import { request } from "@/lib/api"
 import { useMutation, useQuery } from '@tanstack/react-query'
@@ -20,6 +20,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 interface IReferral {
   id: string
@@ -50,7 +52,7 @@ function ReferralLinksCRUD() {
     referralId: null,
   })
 
-  const { data: referrals = [] } = useQuery({
+  const { data: referrals, isLoading, isError } = useQuery({
     queryKey: ["referrals"],
     queryFn: fetchReferrals,
     refetchInterval: 10000
@@ -118,6 +120,18 @@ function ReferralLinksCRUD() {
     setDeleteConfirmation({ isOpen: false, referralId: null })
   }
 
+  if (isError) {
+    return (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertTitle>Xato</AlertTitle>
+        <AlertDescription>
+          Ma'lumotlarni yuklashda xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring.
+        </AlertDescription>
+      </Alert>
+    )
+  }
+
   return (
     <div className="container mx-auto p-4 space-y-8">
       <h1 className="text-2xl font-bold">Referal Havolalarini Boshqarish</h1>
@@ -144,32 +158,47 @@ function ReferralLinksCRUD() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {referrals.map((referral) => (
-            <TableRow key={referral.id}>
-              <TableCell>{referral.name}</TableCell>
-              <TableCell>{referral.users_count}</TableCell>
-              <TableCell>
-                <div className="flex space-x-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleCopyLink(referral)}
-                    title="Referal havolasini nusxalash"
-                  >
-                    <Copy className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    size="icon"
-                    onClick={() => handleDeleteClick(referral.id)}
-                    title="Referal havolasini o&apos;chirish"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
+          {isLoading ? (
+            Array.from({ length: 3 }).map((_, index) => (
+              <TableRow key={index}>
+                <TableCell><Skeleton className="h-4 w-[200px]" /></TableCell>
+                <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
+                <TableCell>
+                  <div className="flex space-x-2">
+                    <Skeleton className="h-8 w-8 rounded" />
+                    <Skeleton className="h-8 w-8 rounded" />
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            referrals?.map((referral) => (
+              <TableRow key={referral.id}>
+                <TableCell>{referral.name}</TableCell>
+                <TableCell>{referral.users_count}</TableCell>
+                <TableCell>
+                  <div className="flex space-x-2">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => handleCopyLink(referral)}
+                      title="Referal havolasini nusxalash"
+                    >
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="icon"
+                      onClick={() => handleDeleteClick(referral.id)}
+                      title="Referal havolasini o&apos;chirish"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
 

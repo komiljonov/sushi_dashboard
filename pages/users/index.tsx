@@ -155,7 +155,7 @@ const fetchUsers = async (): Promise<IUser[]> => {
 }
 
 export default function UsersListPage() {
-    const { data: users = [], isLoading } = useQuery({
+    const { data: users, isLoading } = useQuery({
         queryKey: ['users'],
         queryFn: fetchUsers,
         refetchInterval: 60000
