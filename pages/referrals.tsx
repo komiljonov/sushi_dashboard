@@ -28,6 +28,8 @@ interface IReferral {
   name: string
   users_count: number
   link: string
+  not_ordered_users_count: number;
+  ordered_users_count: number;
 }
 
 const fetchReferrals = async (): Promise<IReferral[]> => {
@@ -154,6 +156,8 @@ function ReferralLinksCRUD() {
           <TableRow>
             <TableHead>Nomi</TableHead>
             <TableHead>Foydalanuvchilar Soni</TableHead>
+            <TableHead>Buyurtma bergan foydalanuvchilar</TableHead>
+            <TableHead>Buyurtma bermagan foydalanuvchilar</TableHead>
             <TableHead>Amallar</TableHead>
           </TableRow>
         </TableHeader>
@@ -176,6 +180,8 @@ function ReferralLinksCRUD() {
               <TableRow key={referral.id}>
                 <TableCell>{referral.name}</TableCell>
                 <TableCell>{referral.users_count}</TableCell>
+                <TableCell>{referral.ordered_users_count}</TableCell>
+                <TableCell>{referral.not_ordered_users_count}</TableCell>
                 <TableCell>
                   <div className="flex space-x-2">
                     <Button
