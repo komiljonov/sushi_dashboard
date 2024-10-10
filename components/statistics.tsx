@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/Button";
 import { Calendar } from "@/components/ui/calendar";
 import { useForm, Controller } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
     Dialog,
     DialogContent,
@@ -20,16 +20,16 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/Label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Download, CalendarIcon } from "lucide-react";
+import { Download } from "lucide-react";
 import { request } from "@/lib/api";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
+import { Input } from "./ui/Input";
+import { fetchFilials } from "@/lib/fetchers";
+import { watch } from "fs";
 
 interface StatisticsFilter {
     filial: string | null | undefined;
-    start_date: Date | null | undefined;
-    end_date: Date | null | undefined;
+    start_date: string;
+    end_date: string;
     delivery_type?: "DELIVERY" | "PICKUP" | null | undefined;
     payment_type?: string | null | undefined;
 }
@@ -59,7 +59,7 @@ const downloadStatistics = async (data: StatisticsFilter) => {
 };
 
 export default function StatisticsModal() {
-    const { control, handleSubmit } = useForm<StatisticsFilter>({
+    const { control, handleSubmit, watch } = useForm<StatisticsFilter>({
         defaultValues: {
             filial: undefined,
             start_date: undefined,
@@ -68,6 +68,15 @@ export default function StatisticsModal() {
             payment_type: undefined,
         },
     });
+
+
+
+
+    const { data: filials } = useQuery({
+        queryKey: ["filials"],
+        queryFn: fetchFilials,
+    })
+
 
     const { mutate, isPending } = useMutation({
         mutationFn: downloadStatistics,
@@ -81,15 +90,61 @@ export default function StatisticsModal() {
     };
 
     return (
-        <Dialog>
+        <Dialog >
             <DialogTrigger asChild>
                 <Button variant="outline">Statistikani ochish</Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px]">
+            <DialogContent className="sm:max-w-[600px] text-black">
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-bold">Statistika</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+
+
+
+                    <div>
+                        <Label htmlFor="start-date">Oraliq boshlanishi</Label>
+
+                        <Controller
+                            name="start_date"
+                            control={control}
+                            render={({ field }) => (
+                                <Input
+                                    id="start-date"
+                                    type="date"
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                />
+                            )}
+                        />
+
+
+                    </div>
+                    <div>
+                        <Label htmlFor="end-date">Oraliq tugashi</Label>
+                        {/* <Input
+                            id="end-date"
+                            type="date"
+                            value={filters.endDate}
+                            onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
+                        /> */}
+
+                        <Controller
+                            name="end_date"
+                            control={control}
+                            render={({ field }) => (
+                                <Input
+                                    id="end_date"
+                                    type="date"
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                />
+                            )}
+                        />
+                    </div>
+
+
+
                     <div className="grid grid-cols-1 gap-4">
                         <div className="space-y-2">
                             <Label htmlFor="filial" className="text-sm font-medium">
@@ -99,21 +154,28 @@ export default function StatisticsModal() {
                                 name="filial"
                                 control={control}
                                 render={({ field }) => (
-                                    <Select {...field} value={field.value || undefined}>
+                                    <Select value={field.value || undefined} onValueChange={(value) => {
+                                        console.log(value);
+                                        field.onChange(value);
+                                    }}>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Filialni tanlang" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="filial1">Filial 1</SelectItem>
-                                            <SelectItem value="filial2">Filial 2</SelectItem>
-                                            <SelectItem value="filial3">Filial 3</SelectItem>
+                                            {
+                                                filials?.map((filial) => {
+                                                    console.log(filial.id);
+                                                    return <SelectItem key={filial.id} value={filial.id}>{filial.name_uz}</SelectItem>
+                                                })
+                                            }
+
                                         </SelectContent>
                                     </Select>
                                 )}
                             />
                         </div>
 
-                        <div className="space-y-2">
+                        {/* <div className="space-y-2">
                             <Label className="text-sm font-medium">Sana oralig&apos;i</Label>
                             <div className="flex flex-wrap gap-4">
                                 <Controller
@@ -173,7 +235,7 @@ export default function StatisticsModal() {
                                     )}
                                 />
                             </div>
-                        </div>
+                        </div> */}
 
                         <div className="space-y-2">
                             <Label className="text-sm font-medium">Yetkazib berish turi</Label>
