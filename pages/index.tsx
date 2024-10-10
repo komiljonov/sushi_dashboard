@@ -12,6 +12,7 @@ import { useQuery } from '@tanstack/react-query'
 import { request } from "@/lib/api"
 import { IOrder } from '@/lib/types'
 import StatisticsModal from '@/components/statistics'
+import { splitToHundreds } from '@/lib/utils'
 
 interface MostProduct {
   product__id: string;
@@ -99,12 +100,6 @@ function TrendingProducts() {
                     <span>{product.product__visits || 0}</span>
                   </Badge>
                 )}
-                {/* {productSort === 'price' && (
-                  <Badge variant="default" className="flex items-center space-x-1">
-                    <DollarSign className="w-3 h-3" />
-                    <span>{product.product__price.toLocaleString()}</span>
-                  </Badge>
-                )} */}
               </div>
             </div>
           ))}
@@ -174,12 +169,12 @@ function EnhancedAnalyticsDashboard() {
                     <p className="text-sm font-medium leading-none">{order.user.name}</p>
                     <div className="flex items-center space-x-2 mt-1">
                       <Badge variant="secondary" className="text-green-600 bg-green-100">
-                        {order.discount_price ? order.discount_price.toFixed(2) : order.price?.toFixed(2)} so'm
+                        {splitToHundreds(order.discount_price)} so'm
                       </Badge>
 
                       {order.promocode && (
                         <span className="text-sm text-muted-foreground line-through">
-                          {order.saving?.toFixed(2)} so'm
+                          {splitToHundreds(order.price)} so'm
                         </span>
                       )}
                     </div>
