@@ -580,7 +580,7 @@ export default function CreateOrderButton() {
                             </div>
                             <div className="space-y-2 col-span-2">
                                 <Label htmlFor="comment">Izoh</Label>
-                                <Textarea id="comment" maxLength={1023} {...register('comment')} placeholder="Izoh kiriting" />
+                                <Textarea id="comment" maxLength={1023} {...register('comment', {required: "Comment yozing"})} placeholder="Izoh kiriting" />
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="promocode">Promokod</Label>
@@ -763,7 +763,7 @@ export default function CreateOrderButton() {
                                     <Badge variant="secondary" className="text-green-600 bg-green-100">
                                         {/* {calculateTotal()} | {calculateDiscount()} | {deliveryPrice} */}
                                         {/* | {(calculateTotal() - calculateDiscount() + deliveryPrice)} | */}
-                                        {splitToHundreds(calculateTotal() - calculateDiscount() + deliveryPrice)}
+                                        {splitToHundreds(calculateTotal() - calculateDiscount() + deliveryPrice)} so'm
                                     </Badge>
                                     {watch('promocode') && (
                                         <span className="text-sm text-muted-foreground line-through">
