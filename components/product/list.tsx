@@ -15,7 +15,7 @@ export function Products({ category }: { category?: ICategoryWithStats }) {
     const products = category ? category.products : []
 
     const [currentPage, setCurrentPage] = useState(1)
-    const itemsPerPage = 10
+    const itemsPerPage = 20
     const totalPages = Math.ceil(products.length / itemsPerPage)
 
     const indexOfLastItem = currentPage * itemsPerPage

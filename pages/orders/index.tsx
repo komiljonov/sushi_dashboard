@@ -38,7 +38,7 @@ function OrderList({ orders }: { orders: IOrder[] }) {
     const [searchTerm, setSearchTerm] = useState("");
     const [dateRange, setDateRange] = useState<{ from?: Date, to?: Date }>({ from: undefined, to: undefined });
     const [currentPage, setCurrentPage] = useState(1);
-    const ordersPerPage = 10;
+    const ordersPerPage = 20;
 
     const { push } = useRouter();
 

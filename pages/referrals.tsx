@@ -1,15 +1,15 @@
 'use client'
 
-import { useState } from 'react'
-import { Button } from "@/components/ui/Button"
-import { Input } from "@/components/ui/Input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { toast } from "@/hooks/use-toast"
-import { Copy, Trash2, AlertCircle } from "lucide-react"
-import { Layout } from '@/components/Layout'
-import { request } from "@/lib/api"
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { queryClient } from '@/lib/query'
+import { useState } from 'react';
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { toast } from "@/hooks/use-toast";
+import { Copy, Trash2, AlertCircle } from "lucide-react";
+import { Layout } from '@/components/Layout';
+import { request } from "@/lib/api";
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { queryClient } from '@/lib/query';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,9 +19,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+} from "@/components/ui/alert-dialog";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface IReferral {
   id: string
@@ -31,26 +31,26 @@ interface IReferral {
 }
 
 const fetchReferrals = async (): Promise<IReferral[]> => {
-  const { data } = await request.get('referrals')
-  return data
+  const { data } = await request.get('referrals');
+  return data;
 }
 
 const createReferral = async (name: string) => {
-  const { data } = await request.post("referrals", { name })
-  return data
+  const { data } = await request.post("referrals", { name });
+  return data;
 }
 
 const deleteReferral = async (id: string) => {
-  const { data } = await request.delete(`referrals/${id}`)
-  return data
+  const { data } = await request.delete(`referrals/${id}`);
+  return data;
 }
 
 function ReferralLinksCRUD() {
-  const [newReferralName, setNewReferralName] = useState('')
+  const [newReferralName, setNewReferralName] = useState('');
   const [deleteConfirmation, setDeleteConfirmation] = useState<{ isOpen: boolean; referralId: string | null }>({
     isOpen: false,
     referralId: null,
-  })
+  });
 
   const { data: referrals, isLoading, isError } = useQuery({
     queryKey: ["referrals"],

@@ -159,7 +159,7 @@ function EnhancedPaymentListing() {
         }
     }, [handleSort, sortColumn]);
 
-    const itemsPerPage = 5;
+    const itemsPerPage = 20;
 
     const sortedPayments = [...filteredPayments].sort((a, b) => {
         if (!sortColumn) return 0
