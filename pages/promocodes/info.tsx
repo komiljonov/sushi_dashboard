@@ -54,7 +54,7 @@ const updatePromocode = async (promocode: IPromocode) => {
 
 const downloadStatistics = async (promocodeId?: string) => {
 
-    if(!promocodeId) return;
+    if (!promocodeId) return;
 
     const response = await request.get(`promocodes/${promocodeId}/xlsx/`, {
         headers: {
