@@ -87,22 +87,24 @@ function TrendingProducts() {
                 </p>
               </div>
               <div className="flex items-center space-x-4">
+
                 <Badge variant="secondary" className="flex items-center space-x-1">
                   <ShoppingCart className="w-3 h-3" />
                   <span>{product.total_count}</span>
                 </Badge>
+
                 {productSort === 'visits' && (
                   <Badge variant="outline" className="flex items-center space-x-1">
                     <Eye className="w-3 h-3" />
                     <span>{product.product__visits || 0}</span>
                   </Badge>
                 )}
-                {productSort === 'price' && (
+                {/* {productSort === 'price' && (
                   <Badge variant="default" className="flex items-center space-x-1">
                     <DollarSign className="w-3 h-3" />
                     <span>{product.product__price.toLocaleString()}</span>
                   </Badge>
-                )}
+                )} */}
               </div>
             </div>
           ))}
