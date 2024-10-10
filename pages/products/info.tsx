@@ -167,6 +167,7 @@ function Products() {
                         <Input
                             id="price"
                             type="number"
+                            className="no-spinner"
                             {...register("price", { required: true, valueAsNumber: true })}
                             placeholder="Mahsulot narxini kiriting."
                         />

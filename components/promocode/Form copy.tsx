@@ -104,6 +104,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                     <Input
                         id="amount"
                         type="number"
+                         className="no-spinner"
                         {...register("amount", {
                             required: "Amount is required",
                             validate: (value) => {
@@ -131,6 +132,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                     <Input
                         id="count"
                         type="number"
+                         className="no-spinner"
                         {...register("count", { required: "Count is required" })}
                         aria-invalid={errors.count ? "true" : "false"}
                     />

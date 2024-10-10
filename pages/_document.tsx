@@ -11,7 +11,7 @@ class MyDocument extends Document {
     return (
       <Html lang="uz">
         <Head>
-          <meta name="description" content="Your app description" />
+          <meta name="description" content="Sushi Yummy Dashboard" />
         </Head>
         <body>
           <Main />

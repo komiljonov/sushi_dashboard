@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { useQuery, useMutation } from "@tanstack/react-query"
 import { request } from '@/lib/api'
 import Link from "next/link"
-import { CalendarIcon, CreditCardIcon, UserIcon } from "lucide-react"
+import { CalendarIcon, CreditCardIcon, UserIcon, DollarSign } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Layout } from "@/components/Layout"
 import { PromocodeForm, PromocodeFormOnSubmitProps } from "@/components/promocode/Form"
@@ -14,6 +14,7 @@ import { IPromocode } from "@/lib/types"
 
 import PromocodeFormSkeleton from "@/components/promocode/Skeleton"
 import { queryClient } from "@/lib/query"
+import { splitToHundreds } from "@/lib/utils"
 
 const getCategoryIdFromUrl = (): string | null => {
     if (typeof window !== 'undefined') {
@@ -102,12 +103,34 @@ function EditPromocode() {
                             onSubmit={handleSave}
                             defaultValues={promocode as Omit<IPromocode, "id">}
                         />}
+                        <Card className="mt-6">
+                            <CardHeader>
+                                <CardTitle>Promokod statistikasi</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div className="border p-4 rounded-lg">
+                                        <h3 className="font-bold mb-2">Jami foydalanishlar</h3>
+                                        <p className="text-4xl font-bold">{promocode?.orders?.length}</p>
+                                    </div>
+                                    <div className="border p-4 rounded-lg">
+                                        <h3 className="font-bold mb-2">Jami tejamlar</h3>
+                                        <p className="text-4xl font-bold">{promocode && splitToHundreds(promocode?.total_savings)} so&apos;m</p>
+                                    </div>
+                                    <div className="border p-4 rounded-lg">
+                                        <h3 className="font-bold mb-2">O&apos;rtacha buyurtma qiymati</h3>
+                                        <p className="text-4xl font-bold">89,990 so&apos;m</p>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
                     </CardContent>
                 </Card>
                 <Card className="w-full max-w-3xl">
                     <CardHeader>
                         <CardTitle className="text-2xl font-bold">Bu promokoddan foydalangan foydalanuvchilar</CardTitle>
                     </CardHeader>
+
                     <CardContent>
                         <div className="space-y-6">
                             {promocode?.orders.map((order) => (
@@ -122,10 +145,10 @@ function EditPromocode() {
                                         </div>
                                         <div className="flex items-center space-x-2">
                                             <Badge variant="secondary" className="text-green-600 bg-green-100">
-                                                {order.discount_price} so&apos;m
+                                                {splitToHundreds(order.discount_price)} so&apos;m
                                             </Badge>
                                             <span className="text-sm text-muted-foreground line-through">
-                                                ${order.price} so&apos;m
+                                                {order.price && splitToHundreds(order.price)} so&apos;m
                                             </span>
                                         </div>
                                     </div>
@@ -138,6 +161,10 @@ function EditPromocode() {
                                             <CreditCardIcon className="mr-1 h-4 w-4" />
                                             <span>Buyurtma #{order.order_id}</span>
                                         </Link>
+                                        <div className="flex items-center text-muted-foreground">
+                                            <DollarSign className="mr-1 h-4 w-4" />
+                                            <span>Tejaldi: {splitToHundreds(order.saving)} </span>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
@@ -145,27 +172,7 @@ function EditPromocode() {
                     </CardContent>
                 </Card>
             </div>
-            <Card className="mt-6">
-                <CardHeader>
-                    <CardTitle>Promokod statistikasi</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="border p-4 rounded-lg">
-                            <h3 className="font-bold mb-2">Jami foydalanishlar</h3>
-                            <p className="text-4xl font-bold">{promocode?.orders?.length}</p>
-                        </div>
-                        <div className="border p-4 rounded-lg">
-                            <h3 className="font-bold mb-2">Jami tejamlar</h3>
-                            <p className="text-4xl font-bold">5,678 so&apos;m</p>
-                        </div>
-                        <div className="border p-4 rounded-lg">
-                            <h3 className="font-bold mb-2">O&apos;rtacha buyurtma qiymati</h3>
-                            <p className="text-4xl font-bold">89,990 so&apos;m</p>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
+
         </div>
     )
 }

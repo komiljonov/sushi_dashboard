@@ -80,9 +80,9 @@ export function CategoryProductModal({ isOpen, onClose, categoryId }: CategoryPr
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[425px] text-black">
                 <DialogHeader>
-                    <DialogTitle>Add Products to Category</DialogTitle>
+                    <DialogTitle >Mahsulot qo'shish</DialogTitle>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                     <Input

@@ -7,7 +7,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 
-export function splitToHundreds(num: number): string {
+export function splitToHundreds(num: number | undefined): string {
+
+  if (!num) {
+    return "";
+  }
   // Convert the number to a string
   const numStr = num.toString();
 

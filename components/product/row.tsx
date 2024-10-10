@@ -57,7 +57,7 @@ export default function ProductInfo({ product }: { product: IProduct }) {
             }, undefined, { shallow: true });
         }
         else {
-            window.open(`/products/info?id=${product.id}`)
+            window.open(`/products/info?id=${product.id}`);
         }
 
     }, [product, router]);
@@ -80,7 +80,7 @@ export default function ProductInfo({ product }: { product: IProduct }) {
 
             <TableCell className="font-medium" onClick={event => handleRowClick(event)}>{product.name_uz}</TableCell>
             <TableCell onClick={event => handleRowClick(event)}>{product.name_ru}</TableCell>
-            <TableCell onClick={event => handleRowClick(event)}>{product.price}</TableCell>
+            <TableCell onClick={event => handleRowClick(event)}>{product.price} so'm</TableCell>
 
             <TableCell>
 

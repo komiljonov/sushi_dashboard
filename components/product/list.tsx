@@ -30,11 +30,6 @@ export function Products({ category }: { category?: ICategoryWithStats }) {
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold">Mahsulotlar</h1>
                 <div className="space-x-2">
-                    {/* <Link href={`/products/create?category=${category?.id}`}>
-                        <Button>
-                            <Plus className="mr-2 h-4 w-4" /> Mahsulot qo&apos;shish
-                        </Button>
-                    </Link> */}
                     <Button onClick={() => setIsModalOpen(true)}>
                         <Plus className="mr-2 h-4 w-4" /> Mavjud mahsulotlarni qo&apos;shish
                     </Button>

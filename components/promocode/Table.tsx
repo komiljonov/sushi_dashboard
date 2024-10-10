@@ -59,7 +59,7 @@ export const PromocodeTable = ({ promocodes, onDelete }: PromocodeTableProps) =>
                         <TableCell>{promo.name}</TableCell>
                         <TableCell>{promo.code}</TableCell>
                         <TableCell>{promo.measurement}</TableCell>
-                        <TableCell>{promo.amount}</TableCell>
+                        <TableCell>{promo.amount}{promo.measurement == "ABSOLUTE" ? " so'm" : "%"}</TableCell>
                         <TableCell>{promo.count}</TableCell>
                         <TableCell>
                             <Link href={`/promocodes/info?id=${promo.id}`}>

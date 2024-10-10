@@ -88,7 +88,7 @@ export function Promocodes() {
   }
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto py-10 text-black">
       <h1 className="text-2xl font-bold mb-5">Promokodlar</h1>
       <div className="flex justify-end mb-5">
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>

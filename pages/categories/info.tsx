@@ -20,6 +20,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Products } from "@/components/product/list";
 import { splitToHundreds } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
+import Link from "next/link";
 // import HierarchyList from '@/components/category/HierarchyList';
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
@@ -46,7 +47,7 @@ const editCategory = async (id: string, edit_data: ICategory): Promise<ICategory
 function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
   const { toast } = useToast();
   const { register, reset, handleSubmit, control } = useForm<ICategory>();
-  
+
 
   useEffect(() => {
     if (category) {
@@ -84,6 +85,8 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
     mutation.mutate(data);
   }
 
+
+
   const pieChartData = {
     labels: category?.products?.map(product => product.name_uz),
     datasets: [
@@ -96,6 +99,8 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
       },
     ],
   };
+
+  console.table(pieChartData)
 
   const barChartData = {
     labels: category?.visits?.map(item => item.date) || [],
@@ -110,18 +115,6 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
     ],
   }
 
-  const barChartDataTime = {
-    labels: category?.average_visit_time?.map(item => item.hour) || [],
-    datasets: [
-      {
-        label: 'Tashrif chastotasi',
-        data: category?.average_visit_time?.map(item => item.visit_count) || [],
-        backgroundColor: 'rgba(59, 130, 246, 0.6)',
-        borderColor: 'rgb(59, 130, 246)',
-        borderWidth: 1,
-      },
-    ],
-  }
 
   const barChartOptions = {
     responsive: true,
@@ -141,6 +134,9 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
           display: true,
           text: 'Tashriflar soni',
         },
+        ticks: {
+          stepSize: 1,
+        }
       },
       x: {
         title: {
@@ -207,48 +203,40 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
       </div>
 
       <div className="grid gap-8 md:grid-cols-2 mt-8">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Eng ko&apos;p sotilgan mahsulotlar ulushi</CardTitle>
-            <ShoppingCart className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px]">
-              <Pie data={pieChartData} />
-            </div>
-            <ul className="mt-4">
-              {category?.products?.map((product, index) => (
-                <li key={index} className="flex items-center justify-between py-2">
-                  <div className="flex items-center">
-                    {product.image && (
-                      <Image
-                        src={(product.image as IFile).file}
-                        alt={product.name_uz}
-                        width={50}
-                        height={50}
-                        className="w-8 h-8 mr-2"
-                      />
-                    )}
-                    <span>{product.name_uz}</span>
-                  </div>
-                  <span>{splitToHundreds(product.price)} so&apos;m</span>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ohirgi yetti kunda eng ko&apos;p tashriflar vaqtlari</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="h-[300px]">
-              {category?.average_visit_time && <Bar options={barChartOptions} data={barChartDataTime} />}
-            </div>
-          </CardContent>
-        </Card>
+        {category?.content_type == "PRODUCT" &&
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Eng ko&apos;p sotilgan mahsulotlar ulushi</CardTitle>
+              <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="w-full">
+                {/* Make the Pie chart full width */}
+                <div className="relative" style={{ width: '100%', }}>
+                  <Pie data={pieChartData} options={{ maintainAspectRatio: false }} />
+                </div>
+              </div>
+              <ul className="mt-4">
+                {category?.products?.map((product, index) => (
+                  <li key={index} className="flex items-center justify-between py-2">
+                    <div className="flex items-center">
+                      {product.image ? (
+                        <Image
+                          src={(product.image as IFile).file}
+                          alt={product.name_uz}
+                          width={50}
+                          height={50}
+                          className="w-8 h-8 mr-2"
+                        />
+                      ) : <div className="w-8 h-8 mr-2"></div>}
+                      <Link href={`/products/info?id=${product.id}`}>{product.name_uz}</Link>
+                    </div>
+                    <span>{splitToHundreds(product.price)} so&apos;m</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>}
       </div>
     </div>
   )
@@ -280,8 +268,8 @@ export default function Page() {
   // If the category is of type "PRODUCT", show the tabs as before.
   return (
     <Layout page="categories">
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full ">
+        <TabsList className="grid w-full grid-cols-2 text-black">
           <TabsTrigger value="category-info">Kategoriya ma&apos;lumotlari</TabsTrigger>
 
           {category?.content_type === "PRODUCT" && (

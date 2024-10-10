@@ -189,6 +189,8 @@ export type IPromocode<T = IOrderArray> = {
     is_limited: boolean;
     is_max_limited: boolean;
 
+    total_savings: number;
+
 
     orders: T;
 }

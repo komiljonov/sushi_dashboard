@@ -302,6 +302,7 @@ function AddItemModal({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (isOp
                             min="1"
                             value={quantity}
                             onChange={(e) => setQuantity(Number(e.target.value))}
+                            className="no-spinner"
                         />
                     </div>
                 </div>

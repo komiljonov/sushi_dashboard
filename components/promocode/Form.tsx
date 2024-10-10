@@ -30,7 +30,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
     const is_max_limited = watch('is_max_limited');
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-black">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                     <Label htmlFor="name">Nomi</Label>
@@ -72,7 +72,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                                     <SelectValue placeholder="O'lchovni tanlang" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="ABSOLUTE">Mutlaq</SelectItem>
+                                    <SelectItem value="ABSOLUTE">Absolute</SelectItem>
                                     <SelectItem value="PERCENT">Foiz</SelectItem>
                                 </SelectContent>
                             </Select>
@@ -89,6 +89,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                     <Input
                         id="amount"
                         type="number"
+                         className="no-spinner"
                         {...register("amount", {
                             required: "Miqdor kiritish shart",
                             validate: (value) => {
@@ -116,6 +117,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                     <Input
                         id="count"
                         type="number"
+                         className="no-spinner"
                         {...register("count", { required: "Son kiritish shart" })}
                         aria-invalid={errors.count ? "true" : "false"}
                     />
@@ -199,8 +201,10 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                     <Input
                         id="min_amount"
                         type="number"
+                        
                         {...register("min_amount", { required: is_limited ? "Minimal miqdorni kiritish shart" : false })}
                         aria-invalid={errors.min_amount ? "true" : "false"}
+                        className="no-spinner"
                     />
                     {errors.min_amount && (
                         <p className="text-red-500 text-sm" id="min-amount-error">
@@ -217,6 +221,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                         type="number"
                         {...register("max_amount", { required: is_limited && is_max_limited ? "Maksimal miqdorni kiritish shart" : false })}
                         aria-invalid={errors.max_amount ? "true" : "false"}
+                        className="no-spinner"
                     />
                     {errors.max_amount && (
                         <p className="text-red-500 text-sm" id="max-amount-error">
