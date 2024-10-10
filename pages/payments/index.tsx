@@ -19,6 +19,7 @@ import { request } from "@/lib/api"
 import { useQuery } from '@tanstack/react-query'
 import { Layout } from '@/components/Layout'
 import { splitToHundreds } from '@/lib/utils'
+import { format } from 'date-fns'
 
 const ProviderIcon = ({ provider }: { provider: IPayment['provider'] }) => {
     switch (provider) {
@@ -66,7 +67,7 @@ function FilterSection({ filters, setFilters }: {
                         />
                     </div>
                     <div>
-                        <Label htmlFor="provider-filter">Provider</Label>
+                        <Label htmlFor="provider-filter">Manba</Label>
                         <Select value={filters.provider} onValueChange={(value) => setFilters({ ...filters, provider: value })}>
                             <SelectTrigger id="provider-filter">
                                 <SelectValue placeholder="Select provider" />
@@ -136,7 +137,7 @@ function EnhancedPaymentListing() {
             let result = payments
             if (filters.user) {
                 result = result.filter(payment =>
-                    payment.user.name.toLowerCase().includes(filters.user.toLowerCase())
+                    payment.user.name.toLowerCase().includes(filters.user.toLowerCase()) || payment.user.number.toLowerCase().includes(filters.user.toLowerCase())
                 )
             }
             if (filters.provider !== 'all') {
@@ -199,7 +200,7 @@ function EnhancedPaymentListing() {
         return (
             <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
+                <AlertTitle>Hatolik</AlertTitle>
                 <AlertDescription>
                     An error occurred while fetching payments: {error.message}
                 </AlertDescription>
@@ -219,7 +220,7 @@ function EnhancedPaymentListing() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="cursor-pointer" onClick={() => handleSort('user')}>Foydalanuvchi</TableHead>
-                                <TableHead className="cursor-pointer" onClick={() => handleSort('provider')}>Provider</TableHead>
+                                <TableHead className="cursor-pointer" onClick={() => handleSort('provider')}>Manba</TableHead>
                                 <TableHead className="cursor-pointer" onClick={() => handleSort('order')}>Buyurtma</TableHead>
                                 <TableHead className="cursor-pointer" onClick={() => handleSort('created_at')}>Vaqti</TableHead>
                                 <TableHead className="cursor-pointer" onClick={() => handleSort('amount')}>Miqdori</TableHead>
@@ -251,7 +252,7 @@ function EnhancedPaymentListing() {
                                             </Link>
                                         )}
                                     </TableCell>
-                                    <TableCell>{payment.created_at}</TableCell>
+                                    <TableCell>{format(new Date(payment.created_at), 'yyyy-MM-dd HH:mm:ss')}</TableCell>
                                     <TableCell>{splitToHundreds(payment.amount / 100)} so&apos;m</TableCell>
                                 </TableRow>
                             ))}

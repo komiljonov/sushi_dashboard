@@ -164,7 +164,7 @@ function OrderList({ orders }: { orders: IOrder[] }) {
                                         format(dateRange.from, "LLL dd, y")
                                     )
                                 ) : (
-                                    <span>Pick a date range</span>
+                                    <span>Oraliqni tanlang</span>
                                 )}
                             </Button>
                         </PopoverTrigger>

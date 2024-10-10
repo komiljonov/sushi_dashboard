@@ -23,7 +23,7 @@ import {
 import { Label } from "@/components/ui/Label"
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api'
 import Link from "next/link"
-import { ExternalLink, Plus, Edit } from "lucide-react"
+import { ExternalLink, Edit } from "lucide-react"
 import { Layout } from "@/components/Layout"
 import { request } from "@/lib/api"
 import { queryClient } from "@/lib/query"
@@ -305,11 +305,11 @@ function FilialManagement() {
     }
   }
 
-  const handleCreate = () => {
-    setModalMode('create')
-    setCurrentFilial(undefined)
-    setIsFilialModalOpen(true)
-  }
+  // const handleCreate = () => {
+  //   setModalMode('create')
+  //   setCurrentFilial(undefined)
+  //   setIsFilialModalOpen(true)
+  // }
 
   const handleEdit = (filial: IFilial) => {
     setModalMode('edit')
@@ -357,9 +357,9 @@ function FilialManagement() {
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Filiallar</h1>
-        <Button onClick={handleCreate}>
+        {/* <Button onClick={handleCreate}>
           <Plus className="mr-2 h-4 w-4" /> Filial qo&apos;shish
-        </Button>
+        </Button> */}
       </div>
 
       {filials && <FilialTable filials={filials} onDelete={handleDelete} onEdit={handleEdit} />}
