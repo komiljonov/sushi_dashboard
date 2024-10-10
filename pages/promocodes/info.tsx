@@ -145,15 +145,15 @@ function EditPromocode() {
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div className="border p-4 rounded-lg">
                                         <h3 className="font-bold mb-2">Jami foydalanishlar</h3>
-                                        <p className="text-4xl font-bold">{promocode?.orders?.length}</p>
+                                        <p className="text-2xl font-bold">{promocode?.orders?.length}</p>
                                     </div>
                                     <div className="border p-4 rounded-lg">
                                         <h3 className="font-bold mb-2">Jami tejamlar</h3>
-                                        <p className="text-4xl font-bold">{promocode && splitToHundreds(promocode?.total_savings)} so&apos;m</p>
+                                        <p className="text-2xl font-bold">{promocode && splitToHundreds(promocode?.total_savings)} so&apos;m</p>
                                     </div>
                                     <div className="border p-4 rounded-lg">
-                                        <h3 className="font-bold mb-2">O&apos;rtacha buyurtma qiymati</h3>
-                                        <p className="text-4xl font-bold">89,990 so&apos;m</p>
+                                        <h3 className="font-bold mb-2">Ja'mi sotuv summasi</h3>
+                                        <p className="text-2xl font-bold">{splitToHundreds(promocode?.total_sold)} so'm</p>
                                     </div>
                                 </div>
                             </CardContent>

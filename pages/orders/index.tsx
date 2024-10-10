@@ -21,11 +21,13 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { IOrder } from '@/lib/types';
 import React from 'react';
 import CreateOrderButton from '@/components/orders/create';
+import { splitToHundreds } from '@/lib/utils';
 
 
 
 const statuses = [
     { value: "ALL", name: "Hammasi", color: "bg-gray-100 hover:bg-gray-200 text-gray-800", border: "border-gray-800" },
+    { value: "PENDING", name: "Kutilmoqda", color: "bg-yellow-100 hover:bg-yellow-200 text-yellow-800", border: "border-yellow-800" },
     { value: "PENDING_KITCHEN", name: "Tayyorlanishi kutilmoqda", color: "bg-yellow-100 hover:bg-yellow-200 text-yellow-800", border: "border-yellow-800" },
     { value: "PREPARING", name: "Tayyorlanmoda", color: "bg-blue-100 hover:bg-blue-200 text-blue-800", border: "border-blue-800" },
     { value: "DELIVERING", name: "Yetkazib berilmoqda", color: "bg-purple-100 hover:bg-purple-200 text-purple-800", border: "border-purple-800" },
@@ -253,11 +255,11 @@ function OrderList({ orders }: { orders: IOrder[] }) {
                                 }}>
                                     <div className="flex items-center space-x-2">
                                         {order.price && <Badge variant="secondary" className="text-green-600 bg-green-100">
-                                            {order.discount_price ? order.discount_price?.toFixed(2) : order.price?.toFixed(2)} so&apos;m
+                                            {splitToHundreds(order.discount_price)} so&apos;m
                                         </Badge>}
                                         {order.promocode && (
                                             <span className="text-sm text-muted-foreground line-through">
-                                                {order.saving?.toFixed(2)} so&apos;m
+                                                {splitToHundreds(order.price)} so&apos;m
                                             </span>
                                         )}
                                     </div>
@@ -285,7 +287,8 @@ function OrderList({ orders }: { orders: IOrder[] }) {
                                         variant="outline"
                                         className={statuses.find((status) => (status.value === order.status))?.color}
                                     >
-                                        {order.status}
+                                        {statuses.find((s) => s.value === order.status)?.name}
+
                                     </Badge>
                                 </TableCell>
                             </TableRow>
