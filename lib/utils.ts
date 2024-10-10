@@ -33,9 +33,9 @@ export function calculate_discount(promocode: IPromocode | null, price: number):
 
   // If the promocode measurement is PERCENT, calculate the discount based on percentage
   if (promocode.measurement === "PERCENT") {
-    return price - ((price / 100) * promocode.amount);
+    return ((price / 100) * promocode.amount);
   }
 
   // For other types of promocode measurement, subtract the amount directly
-  return price - promocode.amount;
+  return promocode.amount;
 }

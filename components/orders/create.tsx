@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react'
 import { useForm, Controller, useFieldArray, FormProvider, useFormContext } from 'react-hook-form'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Check, ChevronsUpDown, Plus, Minus, Trash2, AlertCircle } from "lucide-react"
-import { calculate_discount, cn } from "@/lib/utils"
+import { calculate_discount, cn, splitToHundreds } from "@/lib/utils"
 import { Button } from "@/components/ui/Button"
 import { FixedSizeList as List } from 'react-window'
 import {
@@ -249,7 +249,7 @@ function AddItemModal({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (isOp
                 className={`p-2 cursor-pointer hover:bg-gray-100 ${selectedProductId === product.id ? 'bg-blue-100' : ''}`}
                 onClick={() => setSelectedProductId(product.id)}
             >
-                {product.name_uz} - ${product.price}
+                {product.name_uz} - {splitToHundreds(product.price)} so'm
             </div>
         )
     }
@@ -735,14 +735,14 @@ export default function CreateOrderButton() {
 
                         <div className="space-y-2">
                             <div className="flex justify-between">
-                                <span>Jami:</span>
-                                <span>{calculateTotal().toFixed(2)} so'm</span>
+                                <span>Mahsulotlar:</span>
+                                <span>{splitToHundreds(calculateTotal())} so'm</span>
                             </div>
 
                             {watch('promocode') && (
                                 <div className="flex justify-between text-green-600">
                                     <span>Chegirma:</span>
-                                    <span>-{calculateDiscount().toFixed(2)} so'm</span>
+                                    <span>-{splitToHundreds(calculateDiscount())} so'm</span>
                                 </div>
                             )}
 
@@ -752,7 +752,7 @@ export default function CreateOrderButton() {
                                     {deliveryPriceLoading ? (
                                         <Skeleton className="h-6 w-20" />
                                     ) : (
-                                        <span>{_deliveryPrice?.cost ?? "Hisoblanmoqda..."}</span>
+                                        <span>{splitToHundreds(_deliveryPrice?.cost) ?? "Hisoblanmoqda..."}</span>
                                     )}
                                 </div>
                             )}
@@ -763,11 +763,11 @@ export default function CreateOrderButton() {
                                     <Badge variant="secondary" className="text-green-600 bg-green-100">
                                         {/* {calculateTotal()} | {calculateDiscount()} | {deliveryPrice} */}
                                         {/* | {(calculateTotal() - calculateDiscount() + deliveryPrice)} | */}
-                                        {(calculateTotal() - calculateDiscount() + deliveryPrice).toFixed(2)} so'm
+                                        {splitToHundreds(calculateTotal() - calculateDiscount() + deliveryPrice)}
                                     </Badge>
                                     {watch('promocode') && (
                                         <span className="text-sm text-muted-foreground line-through">
-                                            ${calculateTotal().toFixed(2)}
+                                            {splitToHundreds(calculateTotal())} so'm
                                         </span>
                                     )}
                                 </div>
