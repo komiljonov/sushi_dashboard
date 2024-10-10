@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
-import { Calendar } from "@/components/ui/calendar";
 import { useForm, Controller } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
@@ -24,7 +23,6 @@ import { Download } from "lucide-react";
 import { request } from "@/lib/api";
 import { Input } from "./ui/Input";
 import { fetchFilials } from "@/lib/fetchers";
-import { watch } from "fs";
 
 interface StatisticsFilter {
     filial: string | null | undefined;
@@ -59,7 +57,7 @@ const downloadStatistics = async (data: StatisticsFilter) => {
 };
 
 export default function StatisticsModal() {
-    const { control, handleSubmit, watch } = useForm<StatisticsFilter>({
+    const { control, handleSubmit } = useForm<StatisticsFilter>({
         defaultValues: {
             filial: undefined,
             start_date: undefined,
