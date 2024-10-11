@@ -9,33 +9,28 @@ import { Input } from "@/components/ui/Input"
 import { Label } from "@/components/ui/Label"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { IAdmin } from '@/lib/types'
 import { request } from '@/lib/api'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Skeleton } from "@/components/ui/skeleton"
 import { MoreVertical } from 'lucide-react'
 import { queryClient } from '@/lib/query'
 import React from 'react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { IAdmin, IAdminRole } from '@/lib/types'
 
 
-interface CreateAdminData {
-    first_name: string;
-    last_name: string;
-    username: string;
+
+
+
+interface CreateAdminData extends IAdmin {
     password: string;
     password_repeat: string;
-
-    // role: string;
-    // filial: string;
 }
 
 const fetchAdmins = async (): Promise<IAdmin[]> => {
     const { data } = await request.get('admins/');
     return data;
 }
-
-
-
 
 const AdminsTable = ({ admins }: { admins: IAdmin[] }) => (
     <Table>
@@ -44,7 +39,8 @@ const AdminsTable = ({ admins }: { admins: IAdmin[] }) => (
                 <TableHead>Ismi</TableHead>
                 <TableHead>Familyasi</TableHead>
                 <TableHead>Username</TableHead>
-                {/* <TableHead>Lavozim</TableHead> */}
+                <TableHead>Lavozim</TableHead>
+                <TableHead></TableHead>
             </TableRow>
         </TableHeader>
         <TableBody>
@@ -53,9 +49,7 @@ const AdminsTable = ({ admins }: { admins: IAdmin[] }) => (
                     <TableCell>{admin.first_name}</TableCell>
                     <TableCell>{admin.last_name}</TableCell>
                     <TableCell>{admin.username}</TableCell>
-                    {/* <TableCell>{admin.role}</TableCell> */}
-
-
+                    <TableCell>{admin.role}</TableCell>
                     <TableCell>
                         <UpdateAdminDialog admin={admin} />
                     </TableCell>
@@ -67,9 +61,8 @@ const AdminsTable = ({ admins }: { admins: IAdmin[] }) => (
 
 const CreateAdminDialog = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const { register, handleSubmit, reset, formState: { errors }, watch } = useForm<CreateAdminData>();
+    const { register, handleSubmit, reset, formState: { errors }, watch, setValue } = useForm<CreateAdminData>();
     const password = watch("password");
-
 
     const onSubmit = async (data: CreateAdminData) => {
         try {
@@ -83,21 +76,6 @@ const CreateAdminDialog = () => {
             console.error('Error creating user:', error);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -126,7 +104,6 @@ const CreateAdminDialog = () => {
                         </div>
                     </div>
 
-
                     <div>
                         <Label htmlFor="username">Username</Label>
                         <Input id="username" {...register("username", { required: "Username kiritish shart" })} />
@@ -135,11 +112,22 @@ const CreateAdminDialog = () => {
                         )}
                     </div>
 
-
-
-
-
-
+                    <div>
+                        <Label htmlFor="role">Lavozim</Label>
+                        <Select onValueChange={(value) => setValue('role', value as IAdminRole)}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Lavozimni tanlang" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="ADMIN">Admin</SelectItem>
+                                <SelectItem value="OPERATOR">Operator</SelectItem>
+                                <SelectItem value="CASHIER">Kassir</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        {errors.role && (
+                            <p className="text-red-500 text-sm mt-1">{errors.role.message}</p>
+                        )}
+                    </div>
 
                     <div>
                         <Label htmlFor="password">Parol</Label>
@@ -162,7 +150,6 @@ const CreateAdminDialog = () => {
                             <p className="text-red-500 text-sm mt-1">{errors.password_repeat.message}</p>
                         )}
                     </div>
-
 
                     <Button type="submit">Qo&apos;shish</Button>
                 </form>
@@ -195,24 +182,20 @@ const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-    const { register, handleSubmit, reset, formState: { errors }, watch } = useForm<CreateAdminData>();
-
+    const { register, handleSubmit, reset, formState: { errors }, watch, setValue } = useForm<CreateAdminData>();
 
     useEffect(() => {
         reset({
             first_name: admin.first_name,
             last_name: admin.last_name,
-            username: admin.username
+            username: admin.username,
+            role: admin.role
         })
     }, [admin, reset]);
 
     const updateAdminMutation = useMutation({
         mutationFn: (data: CreateAdminData) => request.put(`admins/${admin.id}/`, data),
         onSuccess: () => {
-            // queryClient.invalidateQueries({
-            //     queryKey: ['admins'],
-            // });
-
             queryClient.refetchQueries({ queryKey: ['admins'] });
             setIsOpen(false);
             reset();
@@ -245,7 +228,6 @@ const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
 
     const password = watch("password");
 
-
     return (
         <>
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -260,7 +242,6 @@ const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
                         <DialogTitle>Update User</DialogTitle>
                     </DialogHeader>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-
                         <div className='flex space-x-6'>
                             <div className='w-[50%]'>
                                 <Label htmlFor="first_name">Ism</Label>
@@ -278,7 +259,6 @@ const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
                             </div>
                         </div>
 
-
                         <div>
                             <Label htmlFor="username">Username</Label>
                             <Input id="username" {...register("username", { required: "Username kiritish shart" })} />
@@ -287,8 +267,22 @@ const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
                             )}
                         </div>
 
-
-
+                        <div>
+                            <Label htmlFor="role">Lavozim</Label>
+                            <Select onValueChange={(value) => setValue('role', value as IAdminRole)} defaultValue={admin.role}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Lavozimni tanlang" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="ADMIN">Admin</SelectItem>
+                                    <SelectItem value="OPERATOR">Operator</SelectItem>
+                                    <SelectItem value="CASHIER">Kassir</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            {errors.role && (
+                                <p className="text-red-500 text-sm mt-1">{errors.role.message}</p>
+                            )}
+                        </div>
 
                         <div>
                             <Label htmlFor="password">Parol</Label>
@@ -353,8 +347,11 @@ const LoadingSkeleton = () => (
         <div className="space-y-4">
             {[...Array(5)].map((_, i) => (
                 <div key={i} className="flex space-x-4">
-                    <Skeleton className="h-12 w-1/2" />
-                    <Skeleton className="h-12 w-1/2" />
+
+                    <Skeleton className="h-12 w-1/4" />
+                    <Skeleton className="h-12 w-1/4" />
+                    <Skeleton className="h-12 w-1/4" />
+                    <Skeleton className="h-12 w-1/4" />
                 </div>
             ))}
         </div>

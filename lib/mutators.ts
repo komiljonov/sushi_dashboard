@@ -1,4 +1,4 @@
-import { CreateOrderForm } from "@/components/orders/types";
+import { CreateOrderForm } from "@/components/orders/create/types";
 import { request } from '@/lib/api'
 
 

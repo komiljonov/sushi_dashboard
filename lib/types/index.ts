@@ -58,6 +58,9 @@ export interface ICategoryWithStats extends ICategory {
 
 
 
+export type IAdminRole = "ADMIN" | "OPERATOR" | "CASHIER";
+
+
 export interface IAdmin {
     id: number;
     first_name: string;
@@ -65,8 +68,7 @@ export interface IAdmin {
     username: string;
     fullname: string;
     is_staff: boolean;
-    filial: string;
-    role: string;
+    role: IAdminRole;
 }
 
 
@@ -229,4 +231,12 @@ export interface ITaxi {
 export interface DeliveryPrice {
     address: string;
     cost: number;
+}
+
+
+
+
+export interface IPhoneNumber {
+    id: string;
+    number: string;
 }

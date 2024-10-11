@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { IPromocode } from "./types";
+import { addHours, format } from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -39,3 +40,20 @@ export function calculate_discount(promocode: IPromocode | null, price: number):
   // For other types of promocode measurement, subtract the amount directly
   return promocode.amount;
 }
+
+
+export const generateTimeOptions = () => {
+  const now = new Date();
+  const options: { value: string | null; label: string; }[] = [{
+    value: null,
+    label: "Iloji boricha tez"
+  }];
+  for (let i = 0; i < 5; i++) {
+    const time = addHours(now, i + .5);
+    options.push({
+      value: format(time, 'HH:mm'),
+      label: format(time, 'h:mm a')
+    });
+  }
+  return options;
+};

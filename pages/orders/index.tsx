@@ -20,7 +20,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { IOrder } from '@/lib/types';
 import React from 'react';
-import CreateOrderButton from '@/components/orders/create';
 import { splitToHundreds } from '@/lib/utils';
 
 
@@ -36,6 +35,7 @@ const statuses = [
 ]
 
 function OrderList({ orders }: { orders: IOrder[] }) {
+    const router = useRouter();
     const [selectedStatus, setSelectedStatus] = useState("ALL");
     const [searchTerm, setSearchTerm] = useState("");
     const [dateRange, setDateRange] = useState<{ from?: Date, to?: Date }>({ from: undefined, to: undefined });
@@ -142,7 +142,10 @@ function OrderList({ orders }: { orders: IOrder[] }) {
         <div className="container mx-auto py-10">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold">Buyurtmalar</h1>
-                <CreateOrderButton />
+                {/* <CreateOrderButton /> */}
+                {/* <Button ></Button> */}
+
+                <Button variant="default" onClick={() => router.push("/orders/create")}>Buyurtma yaratish</Button>
             </div>
 
             <div className="flex flex-col space-y-4 mb-6">

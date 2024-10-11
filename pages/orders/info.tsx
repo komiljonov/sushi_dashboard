@@ -24,9 +24,9 @@ import { format } from "date-fns"
 import React from "react"
 import { TaxiInfoCard } from "@/components/orders/taxiInfo"
 import { splitToHundreds } from "@/lib/utils"
-// import { queryClient } from "@/lib/query"
-// import { Button } from "@/components/ui/Button"
-// import { useLoading } from "@/lib/context/Loading"
+
+
+
 
 function UserInformationCard({ order, order: { user, comment } }: { order: IOrder }) {
     return (
@@ -127,12 +127,6 @@ function OrderDetailsCard({ order }: { order: IOrder }) {
                     </div>
                 </div>
 
-                {/* {order.payment && <div className="flex items-center space-x-2">
-                    <CreditCardIcon className="h-4 w-4" />
-                    <Label>To&apos;lov:</Label>
-                    <Link href={`payments/info?id=${order?.payment?.id}`} className="hover:underline text-blue-600">{order.payment.amount} so&apos;m</Link>
-                </div>} */}
-
 
 
 
@@ -157,7 +151,6 @@ function OrderDetailsCard({ order }: { order: IOrder }) {
 
                 {order.location && <div className="flex space-x-2">
                     <Label>Joylashuv:</Label>
-                    {/* <Badge variant="outline">{order.location.address}</Badge> */}
                     <p className="text-sm" >{order.location.address}</p>
                 </div>}
 
@@ -199,48 +192,8 @@ function ProductListCard({ order: { items: items } }: { order: IOrder }) {
 }
 
 
-// const callTaxi = async (id: string): Promise<void> => {
-//     await request.get(`orders/${id}/call_taxi`)
-// }
-
-
-
 
 function OrderInfo({ order }: { order: IOrder }) {
-    // const { setLoading, loading } = useLoading();
-
-    // const mutation = useMutation({
-    //     mutationFn: callTaxi,
-    //     onMutate: () => {
-    //         setLoading(true)
-    //         // You can implement your loading screen here
-    //         // For example: router.push('/loading')
-    //         queryClient.invalidateQueries({
-    //             queryKey: ['orders', order.id]
-    //         });
-
-    //     },
-    //     onSuccess: () => {
-    //         queryClient.invalidateQueries({
-    //             queryKey: ['orders', order.id]
-    //         });
-    //     },
-    //     onError: () => {
-    //         setLoading(false);
-    //     },
-    //     onSettled: () => {
-    //         setLoading(false)
-    //         queryClient.invalidateQueries({
-    //             queryKey: ['orders', order.id]
-    //         });
-    //         // You can remove your loading screen here
-    //         // For example: router.back()
-    //     },
-    // })
-
-    // const handleCallTaxi = () => {
-    //     mutation.mutate(order.id);
-    // }
 
 
     if (!order) {
@@ -251,18 +204,16 @@ function OrderInfo({ order }: { order: IOrder }) {
         <div className="container mx-auto p-4">
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-bold">Buyurtma ma'lumotlari</h1>
-                {/* <Button
-                    onClick={handleCallTaxi}
-                    disabled={loading || !!order.taxi}
-                >
-                    {loading ? 'Calling Taxi...' : 'Call Taxi'}
-                </Button> */}
             </div>
             <div className="grid gap-4 md:grid-cols-2">
                 <UserInformationCard order={order} />
                 <OrderDetailsCard order={order} />
+                {
+                    order.taxi && <TaxiInfoCard taxi={order.taxi} />
+                }
+
                 <ProductListCard order={order} />
-                <TaxiInfoCard taxi={order.taxi} />
+
             </div>
         </div>
     )

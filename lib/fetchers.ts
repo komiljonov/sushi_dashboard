@@ -1,5 +1,5 @@
 import { request } from "./api"
-import { DeliveryPrice, IFilial, IProduct, IPromocode, IUser } from "./types"
+import { DeliveryPrice, IFilial, IPhoneNumber, IProduct, IPromocode, IUser } from "./types"
 
 
 
@@ -30,5 +30,11 @@ export const getDeliveryPrice = async (loc_data: { latitude: number; longitude: 
 
 export const fetchUsers = async (): Promise<IUser[]> => {
     const { data } = await request.get(`/users`);
+    return data;
+}
+
+
+export const fetchNumbers = async (): Promise<IPhoneNumber[]> => {
+    const { data } = await request.get(`/numbers`);
     return data;
 }

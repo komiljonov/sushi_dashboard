@@ -14,6 +14,7 @@ export type CreateOrderForm = {
     promocode?: string;
     delivery: 'PICKUP' | 'DELIVERY';
     filial: string;
+    phone_number: string;
     time: string | null;
     location: {
         latitude: number,
