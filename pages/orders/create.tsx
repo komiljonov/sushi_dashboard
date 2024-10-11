@@ -110,7 +110,7 @@ function CreateOrderPage() {
                                             <Label htmlFor="pickup">Olib ketish</Label>
                                         </div>
                                         <div className="flex items-center space-x-2">
-                                            <RadioGroupItem value="DELIVERY" id="delivery" />
+                                            <RadioGroupItem value="DELIVER" id="delivery" />
                                             <Label htmlFor="delivery">Yetkazib berish</Label>
                                         </div>
                                     </RadioGroup>

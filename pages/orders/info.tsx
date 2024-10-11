@@ -256,16 +256,14 @@ function ConfirmationButtons({ order }: { order: IOrder }) {
     )
 
     const handleConfirm = () => {
-        // Add your confirmation logic here
-        // console.log("Confirmed")
+
         confirm(order.id);
-        setOpenConfirm(false)
+        setOpenConfirm(false);
     }
 
     const handleCancel = () => {
-        // Add your cancellation logic here
         cancel(order.id);
-        setOpenCancel(false)
+        setOpenCancel(false);
     }
 
     return (

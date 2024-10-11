@@ -64,7 +64,7 @@ export default function TotalPrices({ _deliveryPrice, deliveryPriceLoading, prom
                 </div>
             )}
 
-            {deliveryMethod == "DELIVERY" && (
+            {deliveryMethod == "DELIVER" && (
                 <div className="flex justify-between">
                     <span>Yetkazib berish:</span>
                     {deliveryPriceLoading ? (

@@ -28,7 +28,7 @@ interface StatisticsFilter {
     filial: string | null | undefined;
     start_date: string;
     end_date: string;
-    delivery_type?: "DELIVERY" | "PICKUP" | null | undefined;
+    delivery_type?: "DELIVER" | "PICKUP" | null | undefined;
     payment_type?: string | null | undefined;
 }
 
@@ -255,7 +255,7 @@ export default function StatisticsModal() {
                                             <Label htmlFor="olib_ketish">Olib ketish</Label>
                                         </div>
                                         <div className="flex items-center space-x-2">
-                                            <RadioGroupItem value="DELIVERY" id="yetkazib_berish" />
+                                            <RadioGroupItem value="DELIVER" id="yetkazib_berish" />
                                             <Label htmlFor="yetkazib_berish">Yetkazib berish</Label>
                                         </div>
                                     </RadioGroup>

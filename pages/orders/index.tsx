@@ -52,6 +52,7 @@ function OrderList({ orders }: { orders: IOrder[] }) {
             (
                 order.user?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 order.order_id?.toString().includes(searchTerm) ||
+                order.iiko_order_id?.toString().includes(searchTerm) ||
                 order.phone_number?.toLowerCase().includes(searchTerm)
             ) &&
             isInDateRange
@@ -389,7 +390,7 @@ export default function Page() {
     const { data: orders, isLoading, error } = useQuery({
         queryKey: ['orders'],
         queryFn: fetchOrders,
-        refetchInterval: 10000,
+        refetchInterval: 3000,
         refetchOnWindowFocus: true
     });
 
