@@ -41,6 +41,7 @@ interface IFilial {
   id: string
   name_uz: string
   name_ru: string
+  phone_number: string;
   location: ILocation
 }
 
@@ -84,6 +85,7 @@ const FilialTable = ({ filials, onDelete, onEdit }: { filials: IFilial[], onDele
       <TableRow>
         <TableHead>Nomi (UZ)</TableHead>
         <TableHead>Nomi (RU)</TableHead>
+        <TableHead>Telefon raqami</TableHead>
         <TableHead>Joylashuv</TableHead>
         <TableHead>Harakatlar</TableHead>
       </TableRow>
@@ -93,6 +95,7 @@ const FilialTable = ({ filials, onDelete, onEdit }: { filials: IFilial[], onDele
         <TableRow key={filial.id}>
           <TableCell>{filial.name_uz}</TableCell>
           <TableCell>{filial.name_ru}</TableCell>
+          <TableCell>{filial.phone_number}</TableCell>
           <TableCell>
             <Link className="flex items-center text-blue-500 hover:text-blue-700" href={`https://www.google.com/maps/@${filial.location.latitude},${filial.location.longitude},17z`}>
               <ExternalLink className="h-4 w-4 mr-1" /> Joylashuv
@@ -174,6 +177,7 @@ const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
+    libraries: ['places']
   });
 
 
@@ -187,6 +191,7 @@ const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
       reset({
         "name_uz": filial.name_uz,
         "name_ru": filial.name_ru,
+        "phone_number": filial.phone_number,
         "loc_latitude": filial.location.latitude,
         "loc_longitude": filial.location.longitude
       })
@@ -211,6 +216,8 @@ const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
                 className="col-span-3"
               />
             </div>
+
+
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name_ru" className="text-right">
                 Nomi (RU)
@@ -221,6 +228,19 @@ const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
                 className="col-span-3"
               />
             </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="phone_number" className="text-right">
+                Telefon raqam
+              </Label>
+              <Input
+                id="phone_number"
+                {...register("phone_number", { required: "Telefon raqam bo'sh bo'lmasligi kerak." })}
+                className="col-span-3"
+              />
+            </div>
+
+
+
             <div className="grid grid-cols-4 items-center gap-4">
               <Label className="text-right">
                 {/* Location {watch("loc_latitude")} {watch("loc_longitude")} */}
@@ -304,12 +324,6 @@ function FilialManagement() {
       setIsDeleteModalOpen(false)
     }
   }
-
-  // const handleCreate = () => {
-  //   setModalMode('create')
-  //   setCurrentFilial(undefined)
-  //   setIsFilialModalOpen(true)
-  // }
 
   const handleEdit = (filial: IFilial) => {
     setModalMode('edit')

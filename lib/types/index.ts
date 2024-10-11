@@ -148,7 +148,8 @@ export type IOrder = {
     saving: number;
     id: string;
     order_id?: number;
-    user: IUser;
+    iiko_order_id?: number;
+    user?: IUser;
     phone_number?: string;
     products_count?: number;
     promocode?: IPromocode;

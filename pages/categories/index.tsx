@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect, useCallback } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/Button";
-import { Plus, ChevronDown, ChevronRight, Trash2, Edit } from "lucide-react";
+import { Plus, ChevronDown, ChevronRight, Trash2, Edit, RefreshCcw } from "lucide-react";
 import { request } from "@/lib/api";
 import { Layout } from "@/components/Layout";
 import CreateCategoryModal from "@/components/category/create";
@@ -21,6 +21,8 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { requestSync } from "@/lib/mutators";
+import { useLoading } from "@/lib/context/Loading";
 
 const fetchCategories = async (): Promise<ICategory[]> => {
     const { data } = await request.get("categories");
@@ -32,6 +34,8 @@ const deleteCategory = async (categoryId: string) => {
 };
 
 export function Categories() {
+    const { setLoading, setInfo } = useLoading();
+
     const { toast } = useToast();
     const queryClient = useQueryClient();
     const { data: categories, isLoading } = useQuery({
@@ -113,15 +117,53 @@ export function Categories() {
         };
     }, [handleKeyPress]);
 
+
+    const { mutate: request_sync } = useMutation({
+        mutationFn: requestSync,
+        onMutate: () => {
+            setInfo({
+                title: "Mahsulotlar sinxronlanmoqda",
+                description: "Iltimos biroz kuting"
+            })
+            setLoading(true);
+        },
+        onSuccess: () => {
+            setLoading(false);
+
+            toast({
+                title: "Mahsulotlar sinxronlandi."
+            })
+        },
+        onError: () => {
+            setLoading(false);
+            toast({
+                title: "Hatolik yuz berdi."
+            })
+        }
+    });
+
+
+    const sync = () => {
+
+        request_sync();
+    }
+
     return (
         <div className="container mx-auto py-10">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold">Kategoriyalar</h1>
-                <CreateCategoryModal parent={selectedCategory}>
-                    <Button>
-                        <Plus className="mr-2 h-4 w-4" />Kategoriya qo&apos;shish
+                <div className="flex gap-2">
+
+                    <Button onClick={sync}>
+                        <RefreshCcw className="mr-2 h-4 w-4" />Sinhronlash
                     </Button>
-                </CreateCategoryModal>
+
+                    <CreateCategoryModal parent={selectedCategory}>
+                        <Button>
+                            <Plus className="mr-2 h-4 w-4" />Kategoriya qo&apos;shish
+                        </Button>
+                    </CreateCategoryModal>
+                </div>
             </div>
             <div className="border rounded-md p-4">
                 {isLoading || !categories ? (

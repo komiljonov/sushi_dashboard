@@ -39,14 +39,17 @@ function UserInformationCard({ order, order: { user, comment } }: { order: IOrde
                 <div className="flex items-center space-x-2">
                     <UserIcon className="h-4 w-4" />
                     <Label>Ismi:</Label>
-                    <span>{user.name}</span>
+                    <span>{user?.name ?? "Anonym foydalanuvchi"}</span>
                 </div>
+
                 <div className="flex items-center space-x-2">
                     <PhoneCallIcon className="h-4 w-4" />
                     <Label>Telefon raqamlari:</Label>
-                    <Link href={`tel:${order.phone_number}`} className="text-blue-500 hover:text-blue-700">{order.phone_number} </Link> &nbsp; <Link href={`tel:${user.number}`} className="text-blue-500 hover:text-blue-700" >{user.number}</Link>
+                    <Link href={`tel:${order.phone_number}`} className="text-blue-500 hover:text-blue-700">{order.phone_number} </Link>
                 </div>
-                <div className="flex items-center space-x-2">
+
+
+                {user && <div className="flex items-center space-x-2">
                     <MessageCircle className="h-4 w-4" />
                     <Label>Telegram:</Label>
 
@@ -54,13 +57,13 @@ function UserInformationCard({ order, order: { user, comment } }: { order: IOrde
                         {user.tg_name || user.name} <ExternalLink className="h-4 w-4 mr-1" />
                     </Link>
 
-                </div>
+                </div>}
 
-                <div className="flex items-center space-x-2">
+                {user && <div className="flex items-center space-x-2">
                     <Languages className="h-4 w-4" />
                     <Label>Tili:</Label>
                     <span>{user.lang}</span>
-                </div>
+                </div>}
 
 
                 <div className="flex items-center space-x-2">

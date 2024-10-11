@@ -166,7 +166,7 @@ function EnhancedAnalyticsDashboard() {
               {statistics?.recent_orders.map((order) => (
                 <div key={order.id} className="flex items-center justify-between py-2">
                   <div>
-                    <p className="text-sm font-medium leading-none">{order.user.name}</p>
+                    <p className="text-sm font-medium leading-none">{order.user?.name ?? "Anonym foydalanuvchi"}</p>
                     <div className="flex items-center space-x-2 mt-1">
                       <Badge variant="secondary" className="text-green-600 bg-green-100">
                         {splitToHundreds(order.discount_price)} so'm

@@ -50,7 +50,7 @@ function OrderList({ orders }: { orders: IOrder[] }) {
             (!dateRange.to || orderDate <= dateRange.to)
         return (selectedStatus === "ALL" || order.status === selectedStatus) &&
             (
-                order.user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                order.user?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 order.order_id?.toString().includes(searchTerm) ||
                 order.phone_number?.toLowerCase().includes(searchTerm)
             ) &&
@@ -231,6 +231,7 @@ function OrderList({ orders }: { orders: IOrder[] }) {
                     <TableHeader>
                         <TableRow>
                             <TableHead>ID</TableHead>
+                            <TableHead>Iiko ID</TableHead>
                             <TableHead>Mijoz</TableHead>
                             <TableHead>Telefon raqami</TableHead>
                             <TableHead>Narxi</TableHead>
@@ -244,12 +245,19 @@ function OrderList({ orders }: { orders: IOrder[] }) {
                     <TableBody>
                         {currentOrders.map((order) => (
                             <TableRow key={order.id} className='cursor-pointer'>
+
                                 <TableCell onClick={() => {
                                     push(`orders/info?id=${order.id}`)
                                 }}>{order.order_id}</TableCell>
+
                                 <TableCell onClick={() => {
                                     push(`orders/info?id=${order.id}`)
-                                }}>{order.user.name}</TableCell>
+                                }}>{order.iiko_order_id}</TableCell>
+
+
+                                <TableCell onClick={() => {
+                                    push(`orders/info?id=${order.id}`)
+                                }}>{order.user?.name ?? "Call center orqali"}</TableCell>
                                 <TableCell onClick={() => {
                                     push(`orders/info?id=${order.id}`)
                                 }}>{order.phone_number}</TableCell>

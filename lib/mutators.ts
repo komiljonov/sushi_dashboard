@@ -11,3 +11,9 @@ export const CreateOrder = async (data: CreateOrderForm) => {
     const { data: res_data } = await request.post('orders/create', data);
     return res_data;
 }
+
+
+
+export const requestSync = async () => {
+    await request.get('sync')
+}
