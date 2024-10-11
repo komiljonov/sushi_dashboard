@@ -17,13 +17,28 @@ import {
 import { Layout } from "@/components/Layout"
 import { useState } from "react"
 import { request } from "@/lib/api"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { IFile, IOrder } from "@/lib/types"
 import Link from "next/link"
 import { format } from "date-fns"
 import React from "react"
 import { TaxiInfoCard } from "@/components/orders/taxiInfo"
 import { splitToHundreds } from "@/lib/utils"
+import { Button } from "@/components/ui/Button"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { acceptOrder, cancelOrder } from "@/lib/mutators"
+import { queryClient } from "@/lib/query"
+import { useToast } from "@/hooks/use-toast"
 
 
 
@@ -99,6 +114,11 @@ function OrderDetailsCard({ order }: { order: IOrder }) {
                     <Hash className="h-4 w-4" />
                     <Label>Buyrtma ID:</Label>
                     <span>#{order.order_id}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <Hash className="h-4 w-4" />
+                    <Label>Iiko ID:</Label>
+                    <span>#{order.iiko_order_id}</span>
                 </div>
                 {
                     order.filial && <div className="flex items-center space-x-2">
@@ -195,6 +215,106 @@ function ProductListCard({ order: { items: items } }: { order: IOrder }) {
 
 
 
+
+
+function ConfirmationButtons({ order }: { order: IOrder }) {
+
+    const { toast } = useToast();
+
+    const [openConfirm, setOpenConfirm] = useState(false);
+    const [openCancel, setOpenCancel] = useState(false);
+
+
+
+    const { mutate: cancel, isPending: cancelPending } = useMutation(
+        {
+            mutationFn: cancelOrder,
+            onSuccess: () => {
+                queryClient.invalidateQueries({ queryKey: ['orders', order.id] });
+            },
+            onError: () => {
+                toast({
+                    title: "Nimadur noto'g'ri ketdi.",
+                    description: "Buyurtmani bekor qilishni iloji bo'lmadi. Tizimda hatolik."
+                })
+            }
+        }
+    )
+    const { mutate: confirm, isPending: confirmPending } = useMutation(
+        {
+            mutationFn: acceptOrder,
+            onSuccess: () => {
+                queryClient.invalidateQueries({ queryKey: ['orders', order.id] });
+            },
+            onError: () => {
+                toast({
+                    title: "Nimadur noto'g'ri ketdi.",
+                    description: "Buyurtmani tasdiqlashni iloji bo'lmadi. Tizimda hatolik."
+                })
+            }
+        }
+    )
+
+    const handleConfirm = () => {
+        // Add your confirmation logic here
+        // console.log("Confirmed")
+        confirm(order.id);
+        setOpenConfirm(false)
+    }
+
+    const handleCancel = () => {
+        // Add your cancellation logic here
+        cancel(order.id);
+        setOpenCancel(false)
+    }
+
+    return (
+        <div className="flex gap-2">
+            <AlertDialog open={openConfirm} onOpenChange={setOpenConfirm}>
+                <AlertDialogTrigger asChild>
+                    <Button className="bg-green-500 hover:bg-green-600 text-white" disabled={confirmPending || order.status != "PENDING"}>
+                        Tasdiqlash
+                    </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Tasdiqlaysizmi?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Bu amalni bajarishni xohlayotganingizga ishonchingiz komilmi?
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => setOpenConfirm(false)}>Yo'q</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleConfirm}>Ha</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
+            <AlertDialog open={openCancel} onOpenChange={setOpenCancel}>
+                <AlertDialogTrigger asChild>
+                    <Button className="bg-red-500 hover:bg-red-600 text-white" disabled={cancelPending || order.status != "PENDING"}>
+                        Bekor qilish
+                    </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Bekor qilishni tasdiqlaysizmi?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Haqiqatan ham bu amalni bekor qilmoqchimisiz?
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => setOpenCancel(false)}>Yo'q</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleCancel}>Ha</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </div>
+    )
+}
+
+
+
 function OrderInfo({ order }: { order: IOrder }) {
 
 
@@ -206,6 +326,11 @@ function OrderInfo({ order }: { order: IOrder }) {
         <div className="container mx-auto p-4">
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-bold">Buyurtma ma'lumotlari</h1>
+
+                <ConfirmationButtons order={order} />
+
+
+
             </div>
             <div className="grid gap-4 md:grid-cols-2">
                 <UserInformationCard order={order} />

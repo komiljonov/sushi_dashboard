@@ -17,3 +17,17 @@ export const CreateOrder = async (data: CreateOrderForm) => {
 export const requestSync = async () => {
     await request.get('sync')
 }
+
+
+
+
+export const cancelOrder = async (orderId: string) => {
+    return await request.get(`orders/${orderId}/cancel`);
+}
+
+
+export const acceptOrder = async (orderId: string) => {
+    return await request.get(`orders/${orderId}/accept`);
+}
+
+
