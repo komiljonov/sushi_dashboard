@@ -118,7 +118,7 @@ function CreateOrderPage() {
                             />
                         </div>
                     </div>
-                    {deliveryMethod == 'DELIVERY' && <div className={`space-y-2 `}>
+                    {deliveryMethod == 'DELIVER' && <div className={`space-y-2 `}>
                         <Label>Yetkazib berish joyi</Label>
 
                         <DeliveryMap />

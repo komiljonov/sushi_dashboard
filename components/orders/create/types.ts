@@ -8,7 +8,7 @@ export type OrderItem = {
 }
 
 export type CreateOrderForm = {
-    user: string;
+    user: string | null;
     phone: string;
     comment: string;
     promocode?: string;

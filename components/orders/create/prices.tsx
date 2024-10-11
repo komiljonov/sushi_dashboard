@@ -26,7 +26,7 @@ export default function TotalPrices({ _deliveryPrice, deliveryPriceLoading, prom
 
 
 
-    const deliveryPrice = deliveryMethod === 'DELIVERY' ? (_deliveryPrice?.cost || 0) : 0;
+    const deliveryPrice = deliveryMethod === 'DELIVER' ? (_deliveryPrice?.cost || 0) : 0;
 
 
     const calculateTotal = () => {

@@ -46,7 +46,7 @@ export default function UserSelect({ users }: { users?: IUser[] }) {
                             aria-expanded={open}
                             className="w-full justify-between"
                         >
-                            {watch("user") == "anonym" ? "Anony foydalanuvchi" : (watch('user') ? users?.find((user) => user.id === watch('user'))?.name : "Foydalanuvchini tanlang...")}
+                            {watch("user") == null ? "Anony foydalanuvchi" : (watch('user') ? users?.find((user) => user.id === watch('user'))?.name : "Foydalanuvchini tanlang...")}
                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                     </PopoverTrigger>
@@ -58,7 +58,7 @@ export default function UserSelect({ users }: { users?: IUser[] }) {
                                 <CommandGroup>
                                     <CommandItem
                                         onSelect={() => {
-                                            setValue('user', "anonym");
+                                            setValue('user', null);
                                             setValue('phone', '');
                                             setOpen(false);
                                         }}
@@ -66,7 +66,8 @@ export default function UserSelect({ users }: { users?: IUser[] }) {
                                         <Check
                                             className={cn(
                                                 "mr-2 h-4 w-4",
-                                                watch('user') === 'anonym' ? "opacity-100" : "opacity-0"
+                                                watch('user') === null ? "opacity-100" : "opacity-0"
+
                                             )}
                                         />
                                         Anonym foydalanuvchi

@@ -113,12 +113,12 @@ function OrderDetailsCard({ order }: { order: IOrder }) {
                 <div className="flex items-center space-x-2">
                     <Hash className="h-4 w-4" />
                     <Label>Buyrtma ID:</Label>
-                    <span>#{order.order_id}</span>
+                    <Badge variant="outline">#{order.order_id}</Badge>
                 </div>
                 <div className="flex items-center space-x-2">
                     <Hash className="h-4 w-4" />
                     <Label>Iiko ID:</Label>
-                    <span>#{order.iiko_order_id}</span>
+                    <Badge variant="outline">#{order.iiko_order_id}</Badge>
                 </div>
                 {
                     order.filial && <div className="flex items-center space-x-2">
@@ -130,7 +130,8 @@ function OrderDetailsCard({ order }: { order: IOrder }) {
                 <div className="flex items-center space-x-2">
                     <PackageIcon className="h-4 w-4" />
                     <Label>Mahsulotlar soni:</Label>
-                    <span>{order.items?.reduce((sum, product) => sum + product.count, 0)}</span>
+                    {/* <span>{order.items?.reduce((sum, product) => sum + product.count, 0)}</span> */}
+                    <Badge variant="outline">{order.items?.reduce((sum, product) => sum + product.count, 0)}</Badge>
                 </div>
                 <div className="flex items-center space-x-2">
                     <CreditCardIcon className="h-4 w-4" />
@@ -139,7 +140,8 @@ function OrderDetailsCard({ order }: { order: IOrder }) {
                         <Badge variant="secondary" className="text-green-600 bg-green-100">
                             {splitToHundreds(order.discount_price)} so&apos;m
                         </Badge>
-                        {order.discount_price && (
+
+                        {order.promocode && (
                             <>
                                 <span className="text-sm text-muted-foreground line-through">{splitToHundreds(order.price)} so&apos;m  </span>
                                 {[1, 2].map(() => <>&nbsp;</>)}
@@ -175,8 +177,6 @@ function OrderDetailsCard({ order }: { order: IOrder }) {
                     <Label>Joylashuv:</Label>
                     <p className="text-sm" >{order.location.address}</p>
                 </div>}
-
-
 
             </CardContent>
         </Card>
