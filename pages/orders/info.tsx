@@ -45,7 +45,6 @@ function UserInformationCard({ order, order: { user, comment } }: { order: IOrde
                     <PhoneCallIcon className="h-4 w-4" />
                     <Label>Telefon raqamlari:</Label>
                     <Link href={`tel:${order.phone_number}`} className="text-blue-500 hover:text-blue-700">{order.phone_number} </Link> &nbsp; <Link href={`tel:${user.number}`} className="text-blue-500 hover:text-blue-700" >{user.number}</Link>
-                    {/* <span>{user.number}</span> */}
                 </div>
                 <div className="flex items-center space-x-2">
                     <MessageCircle className="h-4 w-4" />
@@ -211,7 +210,6 @@ function OrderInfo({ order }: { order: IOrder }) {
                 {
                     order.taxi && <TaxiInfoCard taxi={order.taxi} />
                 }
-
                 <ProductListCard order={order} />
 
             </div>
