@@ -241,3 +241,14 @@ export interface IPhoneNumber {
     id: string;
     number: string;
 }
+
+
+export interface IMainAnalytics {
+    filials: {
+        filial: string,
+        count: number
+    }[],
+
+    sales: number[],
+    sales_year: number[]
+}

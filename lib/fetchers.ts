@@ -1,5 +1,5 @@
 import { request } from "./api"
-import { DeliveryPrice, IFilial, IPhoneNumber, IProduct, IPromocode, IUser } from "./types"
+import { DeliveryPrice, IFilial, IMainAnalytics, IPhoneNumber, IProduct, IPromocode, IUser } from "./types"
 
 
 
@@ -36,5 +36,11 @@ export const fetchUsers = async (): Promise<IUser[]> => {
 
 export const fetchNumbers = async (): Promise<IPhoneNumber[]> => {
     const { data } = await request.get(`/numbers`);
+    return data;
+}
+
+
+export const fetchDateAnalytics = async (): Promise<IMainAnalytics> => {
+    const { data } = await request.get(`/yearly_statistics`);
     return data;
 }

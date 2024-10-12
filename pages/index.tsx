@@ -13,6 +13,7 @@ import { request } from "@/lib/api"
 import { IOrder } from '@/lib/types'
 import StatisticsModal from '@/components/statistics'
 import { splitToHundreds } from '@/lib/utils'
+import Charts from '@/components/analytics'
 
 interface MostProduct {
   product__id: string;
@@ -88,12 +89,10 @@ function TrendingProducts() {
                 </p>
               </div>
               <div className="flex items-center space-x-4">
-
                 <Badge variant="secondary" className="flex items-center space-x-1">
                   <ShoppingCart className="w-3 h-3" />
                   <span>{product.total_count}</span>
                 </Badge>
-
                 {productSort === 'visits' && (
                   <Badge variant="outline" className="flex items-center space-x-1">
                     <Eye className="w-3 h-3" />
@@ -171,7 +170,6 @@ function EnhancedAnalyticsDashboard() {
                       <Badge variant="secondary" className="text-green-600 bg-green-100">
                         {splitToHundreds(order.discount_price)} so'm
                       </Badge>
-
                       {order.promocode && (
                         <span className="text-sm text-muted-foreground line-through">
                           {splitToHundreds(order.price)} so'm
@@ -190,14 +188,25 @@ function EnhancedAnalyticsDashboard() {
 
         <TrendingProducts />
       </div>
+
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle>Analytics</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Charts />
+        </CardContent>
+      </Card>
     </div>
   )
 }
 
 const Home: NextPage = () => {
-  return <Layout page='home'>
-    <EnhancedAnalyticsDashboard />
-  </Layout>
+  return (
+    <Layout page='home'>
+      <EnhancedAnalyticsDashboard />
+    </Layout>
+  )
 }
 
 export default Home;
