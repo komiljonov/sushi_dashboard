@@ -33,32 +33,52 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-black">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <Label htmlFor="name">Nomi</Label>
+                    <Label htmlFor="name_uz">Nomi</Label>
                     <Input
-                        id="name"
-                        {...register("name", { required: "Nom kiritish shart" })}
-                        aria-invalid={errors.name ? "true" : "false"}
+                        id="name_uz"
+                        {...register("name_uz", { required: "Nom kiritish shart" })}
+                        aria-invalid={errors.name_uz ? "true" : "false"}
                     />
-                    {errors.name && (
+                    {errors.name_uz && (
                         <p className="text-red-500 text-sm" id="name-error">
-                            {errors.name.message}
+                            {errors.name_uz.message}
                         </p>
                     )}
                 </div>
                 <div className="space-y-2">
-                    <Label htmlFor="code">Kod</Label>
+                    <Label htmlFor="name_ru">Nomi</Label>
                     <Input
-                        id="code"
-                        {...register("code", { required: "Kod kiritish shart" })}
-                        aria-invalid={errors.code ? "true" : "false"}
+                        id="name_ru"
+                        {...register("name_ru", { required: "Nom kiritish shart" })}
+                        aria-invalid={errors.name_ru ? "true" : "false"}
                     />
-                    {errors.code && (
-                        <p className="text-red-500 text-sm" id="code-error">
-                            {errors.code.message}
+                    {errors.name_ru && (
+                        <p className="text-red-500 text-sm" id="name-error">
+                            {errors.name_ru.message}
                         </p>
                     )}
                 </div>
+
+
             </div>
+
+
+            <div className="space-y-2">
+                <Label htmlFor="code">Kod</Label>
+                <Input
+                    id="code"
+                    {...register("code", { required: "Kod kiritish shart" })}
+                    aria-invalid={errors.code ? "true" : "false"}
+                />
+                {errors.code && (
+                    <p className="text-red-500 text-sm" id="code-error">
+                        {errors.code.message}
+                    </p>
+                )}
+            </div>
+
+
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                     <Label htmlFor="measurement">O&apos;lchov</Label>
@@ -89,7 +109,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                     <Input
                         id="amount"
                         type="number"
-                         className="no-spinner"
+                        className="no-spinner"
                         {...register("amount", {
                             required: "Miqdor kiritish shart",
                             validate: (value) => {
@@ -117,7 +137,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                     <Input
                         id="count"
                         type="number"
-                         className="no-spinner"
+                        className="no-spinner"
                         {...register("count", { required: "Son kiritish shart" })}
                         aria-invalid={errors.count ? "true" : "false"}
                     />
@@ -201,7 +221,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                     <Input
                         id="min_amount"
                         type="number"
-                        
+
                         {...register("min_amount", { required: is_limited ? "Minimal miqdorni kiritish shart" : false })}
                         aria-invalid={errors.min_amount ? "true" : "false"}
                         className="no-spinner"

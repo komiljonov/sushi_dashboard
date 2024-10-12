@@ -15,7 +15,8 @@ export const PromocodeTable = ({ promocodes, onDelete }: PromocodeTableProps) =>
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead>Nomi</TableHead>
+                        <TableHead>Nomi (UZ)</TableHead>
+                        <TableHead>Nomi (RU)</TableHead>
                         <TableHead>kod</TableHead>
                         {/* <TableHead>Summa yoki foyiz</TableHead> */}
                         <TableHead>Chegirma</TableHead>
@@ -45,8 +46,8 @@ export const PromocodeTable = ({ promocodes, onDelete }: PromocodeTableProps) =>
         <Table>
             <TableHeader>
                 <TableRow>
-                    <TableHead>Nomi</TableHead>
-                    <TableHead>kod</TableHead>
+                    <TableHead>Nomi (UZ)</TableHead>
+                    <TableHead>Nomi (RU)</TableHead>
                     {/* <TableHead>Summa yoki foyiz</TableHead> */}
                     <TableHead>Chegirma</TableHead>
                     <TableHead>Soni</TableHead>
@@ -56,7 +57,8 @@ export const PromocodeTable = ({ promocodes, onDelete }: PromocodeTableProps) =>
             <TableBody>
                 {promocodes.map((promo) => (
                     <TableRow key={promo.id}>
-                        <TableCell>{promo.name}</TableCell>
+                        <TableCell>{promo.name_uz}</TableCell>
+                        <TableCell>{promo.name_ru}</TableCell>
                         <TableCell>{promo.code}</TableCell>
                         {/* <TableCell>{promo.measurement}</TableCell> */}
                         <TableCell>{promo.amount}{promo.measurement == "ABSOLUTE" ? " so'm" : "%"}</TableCell>

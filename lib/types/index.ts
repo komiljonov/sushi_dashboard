@@ -179,7 +179,8 @@ type IOrderArray = Array<IOrder>;
 
 export type IPromocode<T = IOrderArray> = {
     id: string;
-    name: string;
+    name_uz: string;
+    name_ru: string;
     code: string;
     measurement: "ABSOLUTE" | "PERCENT";
     amount: number;
