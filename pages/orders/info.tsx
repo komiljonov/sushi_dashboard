@@ -161,7 +161,7 @@ function OrderDetailsCard({ order }: { order: IOrder }) {
                     <Ticket className="h-4 w-4" />
                     <Label>Promokod:</Label>
                     <div className="text-sm">
-                        <Badge variant="outline" className="mr-2">{order.promocode?.name}</Badge>
+                        <Badge variant="outline" className="mr-2">{order.promocode?.name_uz}</Badge>
                         <span>
                             {order.promocode?.amount}
                             {order.promocode?.measurement === "PERCENT" ? "% chegirma" : " so'm chegirma"}

@@ -285,7 +285,7 @@ function OrderList({ orders }: { orders: IOrder[] }) {
                                             href={`/promocodes/info?id=${order.promocode?.id}`}
                                             className="flex items-center text-blue-500 hover:text-blue-700"
                                         >
-                                            <ExternalLink className="h-4 w-4 mr-1" /> {order.promocode?.name}</Link>
+                                            <ExternalLink className="h-4 w-4 mr-1" /> {order.promocode?.name_uz}</Link>
                                         : '-'}
                                 </TableCell>
                                 <TableCell onClick={() => {

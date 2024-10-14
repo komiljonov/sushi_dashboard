@@ -33,7 +33,7 @@ export default function PromocodeSelect({ promocodes }: { promocodes?: IPromocod
                         <SelectItem value="null" >Promokodni tanlang</SelectItem>
                         {
                             promocodes.map((promocode) => (
-                                <SelectItem key={promocode.id} value={promocode.id}>{promocode.name}</SelectItem>
+                                <SelectItem key={promocode.id} value={promocode.id}>{promocode.name_uz}</SelectItem>
                             ))
                         }
                     </SelectContent>
