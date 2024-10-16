@@ -17,7 +17,7 @@ interface FormattedInputProps {
 }
 
 export function FormattedInput({ id, label, placeholder, always_show_preview = false }: FormattedInputProps) {
-    const { register, setValue, getValues, watch } = useFormContext();
+    const { register, setValue, getValues, watch, formState } = useFormContext();
     const [isFocused, setIsFocused] = useState(false);
     const [isValidHTML, setIsValidHTML] = useState(true);
 
@@ -25,7 +25,7 @@ export function FormattedInput({ id, label, placeholder, always_show_preview = f
 
 
     const { ref: registerRef, ...rest } = register(id, {
-        required: true,
+        required: "Iltimos to'ldiring",
         maxLength: 950,
         validate: (value) => value.length <= 950 || "Maximum length exceeded!",
         onBlur: () => setIsFocused(false),
@@ -143,6 +143,8 @@ export function FormattedInput({ id, label, placeholder, always_show_preview = f
             <p className="text-sm text-muted-foreground">
                 Characters: {value ? value.length : 0} / 950
             </p>
+
+            {formState?.errors[id] && <p className="text-sm text-red-500"> {formState?.errors[id].message as string} </p>}
         </div>
     )
 }
