@@ -87,7 +87,8 @@ function Products() {
                 return editProduct(data);
             }
             return Promise.reject(new Error('Category ID is null'));
-        }
+        },
+        onSuccess: () => location.reload()
     });
 
 
