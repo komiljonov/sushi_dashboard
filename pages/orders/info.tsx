@@ -156,7 +156,11 @@ function OrderDetailsCard({ order }: { order: IOrder }) {
                     <CreditCard className="h-4 w-4" />
                     <Label>To'lov turi:</Label>
                     {/* <span>{order.items?.reduce((sum, product) => sum + product.count, 0)}</span> */}
-                    <Badge variant="outline">{order.payment?.provider}</Badge>
+                    <Badge variant="outline">{order.payment?.provider && {
+                        "CASH": "Naqd",
+                        "PAYME": "Payme",
+                        "CLICK": "Click"
+                    }[order.payment?.provider]}</Badge>
                 </div>
 
 
