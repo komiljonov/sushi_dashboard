@@ -242,7 +242,11 @@ function EnhancedPaymentListing() {
                                     <TableCell>
                                         <div className="flex items-center space-x-2">
                                             <ProviderIcon provider={payment.provider} />
-                                            <span className="capitalize">{payment.provider}</span>
+                                            <span className="capitalize">{payment.provider && {
+                                                "CASH": "Naqd",
+                                                "PAYME": "Payme",
+                                                "CLICK": "Click"
+                                            }[payment?.provider]}</span>
                                         </div>
                                     </TableCell>
                                     <TableCell>
