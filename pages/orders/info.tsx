@@ -12,7 +12,8 @@ import {
     Timer,
     MapPin,
     Hash,
-    Ticket, Languages, MessageCircle
+    Ticket, Languages, MessageCircle,
+    CreditCard
 } from "lucide-react"
 import { Layout } from "@/components/Layout"
 import { useState } from "react"
@@ -151,7 +152,12 @@ function OrderDetailsCard({ order }: { order: IOrder }) {
                     </div>
                 </div>
 
-
+                <div className="flex items-center space-x-2">
+                    <CreditCard className="h-4 w-4" />
+                    <Label>To'lov turi:</Label>
+                    {/* <span>{order.items?.reduce((sum, product) => sum + product.count, 0)}</span> */}
+                    <Badge variant="outline">{order.payment?.provider}</Badge>
+                </div>
 
 
 
