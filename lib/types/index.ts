@@ -120,7 +120,7 @@ export interface IUser {
     name: string;
     number: string;
     tg_name: string;
-    username: string;
+    username: string|null;
     lang: string;
     has_order: boolean;
 
