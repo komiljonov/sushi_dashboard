@@ -170,12 +170,12 @@ function EditPromocode() {
                             {promocode?.orders.map((order) => (
                                 <div key={order.order_id} className="flex items-center space-x-4 p-4 rounded-lg border bg-card text-card-foreground shadow-sm">
                                     <div className="flex-1 space-y-1">
-                                        <Link href={`/users/info?id=${order.id}`} className="font-semibold hover:underline">
-                                            {(order.user?.name || order.user?.tg_name) ?? "Anonym foydalanuvchi"}
+                                        <Link href={`/orders/info?id=${order.id}`} className="font-semibold hover:underline">
+                                            {order.user ?? "Anonym foydalanuvchi"}
                                         </Link>
                                         <div className="flex items-center text-sm text-muted-foreground">
                                             <UserIcon className="mr-1 h-4 w-4" />
-                                            <span>{(order.user?.name || order.user?.tg_name) ?? "Anonym foydalanuvchi"}</span>
+                                            <span>{order.user ?? "Anonym foydalanuvchi"}</span>
                                         </div>
                                         <div className="flex items-center space-x-2">
                                             <Badge variant="secondary" className="text-green-600 bg-green-100">

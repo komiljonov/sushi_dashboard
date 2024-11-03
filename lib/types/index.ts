@@ -92,7 +92,9 @@ export interface IPayment {
     provider: string;
     status: string;
     user: IUser;
-    order?: IOrder;
+    // order?: IOrder;
+    order: string;
+    order_id: string;
 
     created_at: string;
 
@@ -209,7 +211,7 @@ export type IOrderList = {
 
 
 
-type IOrderArray = Array<IOrder>;
+type IOrderArray = Array<IOrderList>;
 
 
 export type IPromocode<T = IOrderArray> = {

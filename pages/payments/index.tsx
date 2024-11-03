@@ -251,8 +251,8 @@ function EnhancedPaymentListing() {
                                     </TableCell>
                                     <TableCell>
                                         {payment.order && (
-                                            <Link href={`/orders/info?id=${payment.order.id}`} className="hover:underline">
-                                                <Badge variant="outline">#{payment.order.order_id}</Badge>
+                                            <Link href={`/orders/info?id=${payment.order_id}`} className="hover:underline">
+                                                <Badge variant="outline">#{payment.order}</Badge>
                                             </Link>
                                         )}
                                     </TableCell>
