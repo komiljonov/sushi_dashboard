@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: ["api.sushi.sectorsoft.uz"],
+        domains: ["api.yummy.sectorsoft.uz"],
         remotePatterns: [
             {
                 protocol: 'http',
@@ -11,13 +11,13 @@ const nextConfig = {
             },
             {
                 protocol: 'https',
-                hostname: 'api.sushi.sectorsoft.uz',
+                hostname: 'api.yummy.sectorsoft.uz',
                 port: "443",
                 pathname: '/media/**'
             },
             {
                 protocol: 'http',
-                hostname: 'api.sushi.sectorsoft.uz',
+                hostname: 'api.yummy.sectorsoft.uz',
                 port: "80",
                 pathname: '/media/**'
             }

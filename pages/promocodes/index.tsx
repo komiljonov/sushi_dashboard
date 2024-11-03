@@ -111,12 +111,12 @@ export function Promocodes() {
         setIsDeleteDialogOpen(true);
       }} />
       {/* <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}> */}
-        <DeleteDialog
-          open={isDeleteDialogOpen}
-          onOpenChange={setIsDeleteDialogOpen}
-          promocode={promocodeToDelete}
-          onDelete={handleDeletePromocode}
-        />
+      <DeleteDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        promocode={promocodeToDelete}
+        onDelete={handleDeletePromocode}
+      />
       {/* </Dialog> */}
     </div>
   )
