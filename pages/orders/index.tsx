@@ -18,7 +18,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { IOrder } from '@/lib/types';
+import { IOrderList } from '@/lib/types';
 import React from 'react';
 import { splitToHundreds } from '@/lib/utils';
 
@@ -34,7 +34,7 @@ const statuses = [
     { value: "CANCELLED", name: "Bekor qilingan", color: "bg-red-100 hover:bg-red-200 text-red-800", border: "border-red-800" },
 ]
 
-function OrderList({ orders }: { orders: IOrder[] }) {
+function OrderList({ orders }: { orders: IOrderList[] }) {
     const router = useRouter();
     const [selectedStatus, setSelectedStatus] = useState("ALL");
     const [searchTerm, setSearchTerm] = useState("");
@@ -50,7 +50,7 @@ function OrderList({ orders }: { orders: IOrder[] }) {
             (!dateRange.to || orderDate <= dateRange.to)
         return (selectedStatus === "ALL" || order.status === selectedStatus) &&
             (
-                order.user?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                order.user?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 order.order_id?.toString().includes(searchTerm) ||
                 order.iiko_order_id?.toString().includes(searchTerm) ||
                 order.phone_number?.toLowerCase().includes(searchTerm)
@@ -258,7 +258,7 @@ function OrderList({ orders }: { orders: IOrder[] }) {
 
                                 <TableCell onClick={() => {
                                     push(`orders/info?id=${order.id}`)
-                                }}>{order.user?.name ?? "Call center orqali"}</TableCell>
+                                }}>{order.user }</TableCell>
                                 <TableCell onClick={() => {
                                     push(`orders/info?id=${order.id}`)
                                 }}>{order.phone_number}</TableCell>
@@ -342,7 +342,7 @@ function OrderList({ orders }: { orders: IOrder[] }) {
 
 
 
-const fetchOrders = async (): Promise<IOrder[]> => {
+const fetchOrders = async (): Promise<IOrderList[]> => {
 
 
     const { data } = await request.get('orders');

@@ -120,7 +120,7 @@ export interface IUser {
     name: string;
     number: string;
     tg_name: string;
-    username: string|null;
+    username: string | null;
     lang: string;
     has_order: boolean;
 
@@ -149,7 +149,42 @@ export type IOrder = {
     id: string;
     order_id?: number;
     iiko_order_id?: number;
+
     user?: IUser;
+
+    phone_number?: string;
+    products_count?: number;
+    promocode?: IPromocode;
+    order_time: Date;
+    time?: Date | null;
+    status: string;
+    price?: number;
+    discount_price: number;
+    payment?: IPayment;
+    filial?: IFilial;
+
+    location?: ILocation;
+
+    delivery: "DELIVER" | "TAKEAWAY"
+
+    comment: string;
+
+    taxi: ITaxi | null | undefined;
+
+    items: IOrderItem[]
+}
+
+
+
+
+export type IOrderList = {
+    saving: number;
+    id: string;
+    order_id?: number;
+    iiko_order_id?: number;
+
+    user: string;
+
     phone_number?: string;
     products_count?: number;
     promocode?: IPromocode;
