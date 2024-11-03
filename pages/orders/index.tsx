@@ -30,7 +30,7 @@ const statuses = [
     { value: "PENDING_KITCHEN", name: "Tayyorlanishi kutilmoqda", color: "bg-yellow-100 hover:bg-yellow-200 text-yellow-800", border: "border-yellow-800" },
     { value: "PREPARING", name: "Tayyorlanmoda", color: "bg-blue-100 hover:bg-blue-200 text-blue-800", border: "border-blue-800" },
     { value: "DELIVERING", name: "Yetkazib berilmoqda", color: "bg-purple-100 hover:bg-purple-200 text-purple-800", border: "border-purple-800" },
-    { value: "COMPLETED", name: "Yakunlangan", color: "bg-green-100 hover:bg-green-200 text-green-800", border: "border-green-800" },
+    { value: "DONE", name: "Yakunlangan", color: "bg-green-100 hover:bg-green-200 text-green-800", border: "border-green-800" },
     { value: "CANCELLED", name: "Bekor qilingan", color: "bg-red-100 hover:bg-red-200 text-red-800", border: "border-red-800" },
 ]
 
@@ -258,7 +258,7 @@ function OrderList({ orders }: { orders: IOrderList[] }) {
 
                                 <TableCell onClick={() => {
                                     push(`orders/info?id=${order.id}`)
-                                }}>{order.user }</TableCell>
+                                }}>{order.user}</TableCell>
                                 <TableCell onClick={() => {
                                     push(`orders/info?id=${order.id}`)
                                 }}>{order.phone_number}</TableCell>
