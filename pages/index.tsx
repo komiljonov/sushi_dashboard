@@ -130,7 +130,7 @@ function EnhancedAnalyticsDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{statistics?.user_count.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">Bugun {statistics?.user_delta && (statistics?.user_delta > 0 ? '+' : '-')}{statistics?.user_delta}</p>
+            {/* <p className="text-xs text-muted-foreground">Bugun {statistics?.user_delta && (statistics?.user_delta > 0 ? '+' : '-')}{statistics?.user_delta}</p> */}
           </CardContent>
         </Card>
         <Card>
@@ -140,7 +140,7 @@ function EnhancedAnalyticsDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{statistics?.orders_count}</div>
-            <p className="text-xs text-muted-foreground">Kechagidan +{statistics?.orders_delta}</p>
+            {/* <p className="text-xs text-muted-foreground">Kechagidan +{statistics?.orders_delta}</p> */}
           </CardContent>
         </Card>
         <Card>
@@ -150,7 +150,7 @@ function EnhancedAnalyticsDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{statistics?.today_revenue.toLocaleString()} so'm</div>
-            <p className="text-xs text-muted-foreground">Kechagidan {statistics?.revenue_delta_percent}%</p>
+            {/* <p className="text-xs text-muted-foreground">Kechagidan {statistics?.revenue_delta_percent}%</p> */}
           </CardContent>
         </Card>
       </div>
