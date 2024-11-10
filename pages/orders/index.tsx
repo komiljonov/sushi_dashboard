@@ -240,6 +240,8 @@ function OrderList({ orders }: { orders: IOrderList[] }) {
                             <TableHead>Promokod</TableHead>
                             <TableHead>Buyurtma vaqti</TableHead>
                             <TableHead>Yetkazish/Olib ketish</TableHead>
+                            <TableHead>Buyurtma berilgan vaqt</TableHead>
+
                             <TableHead>Holati</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -292,6 +294,9 @@ function OrderList({ orders }: { orders: IOrderList[] }) {
                                     push(`orders/info?id=${order.id}`);
                                 }}>{order.time ? new Date(order.time).toLocaleString() : "Iloji boricha tez"}</TableCell>
                                 <TableCell>{order.delivery == "DELIVER" ? "Yetkazib berish" : "Olib ketish"}</TableCell>
+                                <TableCell>{String(order.order_time)}</TableCell>
+                                
+                                
                                 <TableCell onClick={() => {
                                     push(`orders/info?id=${order.id}`)
                                 }}>

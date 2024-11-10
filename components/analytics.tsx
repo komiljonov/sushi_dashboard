@@ -45,6 +45,9 @@ const Charts = () => {
     }
 
     // Pie chart data based on filial counts
+    console.log("analytics", analytics);
+
+
     const pieData = {
         labels: analytics.filials.map(f => f.filial),
         datasets: [
