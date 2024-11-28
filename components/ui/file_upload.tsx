@@ -56,12 +56,13 @@ export function UploadField({ onFileUpload, setFileUploading, preview }: UploadF
 
     return (
         <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="picture">Product Image</Label>
-            <Input id="picture" type="file" onChange={handleFileChange} disabled={mutation.status == "pending"} />
+            <Label htmlFor="picture">Mahsulot rasmni</Label>
+            <Label htmlFor="picture" className='w-full border h-[36px] border-gray-400 rounded-md flex items-center px-3 cursor-pointer'>Mahsulot rasmini tanlang + </Label>
+            <Input id="picture" type="file" className='hidden' onChange={handleFileChange} disabled={mutation.status == "pending"} />
             {mutation.status == "pending" && (
                 <div className="flex items-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Uploading...</span>
+                    <span>Yuklanmoqda...</span>
                 </div>
             )}
             {fileName && <p className="text-sm text-gray-500">File: {fileName}</p>}

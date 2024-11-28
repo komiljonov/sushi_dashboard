@@ -83,25 +83,25 @@ function Products() {
     }
 
     return (
-        <div className="w-full max-w-4xl p-6">
+        <div className="w-full p-6">
             <h1 className="text-2xl font-bold mb-6">Mahsulot qo&apos;shish</h1>
             <form onSubmit={handleSubmit(handleCreateProduct)} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <Label htmlFor="name_uz">Name (Uzbek)</Label>
+                        <Label htmlFor="name_uz">Nomi (O'z)</Label>
                         <Input
                             id="name_uz"
 
                             {...register("name_uz", { required: true })}
-                            placeholder="Enter product name in Uzbek"
+                            placeholder="Mahsulot nomini o'zbek tilida kiriting..."
                         />
                     </div>
                     <div>
-                        <Label htmlFor="name_ru">Name (Russian)</Label>
+                        <Label htmlFor="name_ru">Nomi (Ru)</Label>
                         <Input
                             id="name_ru"
                             {...register("name_ru", { required: true })}
-                            placeholder="Enter product name in Russian"
+                            placeholder="Mahsulot nomini rus tilida kiriting..."
                         />
                     </div>
                 </div>
@@ -110,13 +110,13 @@ function Products() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <FormattedInput
                             id="caption_uz"
-                            label="Caption (Uzbek)"
-                            placeholder="Enter product caption in Uzbek"
+                            label="Tavsif (O'z)"
+                            placeholder="Mahsulot tavsifini o'zbek tilida kiriting..."
                         />
                         <FormattedInput
                             id="caption_ru"
-                            label="Caption (Russian)"
-                            placeholder="Enter product caption in Russian"
+                            label="Tavsif (Ru)"
+                            placeholder="Mahsulot tavsifini rus tilida kiriting..."
                         />
                     </div>
                 </FormProvider>
@@ -124,13 +124,13 @@ function Products() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <UploadField onFileUpload={onFileUpload} setFileUploading={setFileUploading}  preview={preview} />
                     <div>
-                        <Label htmlFor="price">Price</Label>
+                        <Label htmlFor="price">Narx</Label>
                         <Input
                             id="price"
                             type="number"
                              className="no-spinner"
                             {...register("price", { required: true, valueAsNumber: true })}
-                            placeholder="Enter product price"
+                            placeholder="Mahsulot narxini kiriting"
                         />
                     </div>
 

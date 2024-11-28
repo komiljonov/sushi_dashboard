@@ -1,15 +1,24 @@
-'use client';
+"use client";
 
 import { Layout } from "@/components/Layout";
 import { useEffect, useState } from "react";
-import { Bar, Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js';
+import { Bar, Pie } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+} from "chart.js";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import { Button } from "@/components/ui/Button";
-import { ShoppingCart, TrendingUp } from 'lucide-react';
-import { request } from '@/lib/api';
+import { ShoppingCart, TrendingUp } from "lucide-react";
+import { request } from "@/lib/api";
 import { ICategory, ICategoryWithStats, IFile } from "@/lib/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Controller, useForm } from "react-hook-form";
@@ -23,38 +32,48 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 // import HierarchyList from '@/components/category/HierarchyList';
 
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title
+);
 
 const getCategoryIdFromUrl = (): string | null => {
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     const url = new URL(window.location.href);
     const queryParams = new URLSearchParams(url.search);
-    return queryParams.get('id');
+    return queryParams.get("id");
   }
   return null;
-}
+};
 
 const fetchCategoryData = async (id: string): Promise<ICategoryWithStats> => {
   const { data } = await request.get(`categories/${id}/stats`);
   return data;
-}
+};
 
-const editCategory = async (id: string, edit_data: ICategory): Promise<ICategory> => {
+const editCategory = async (
+  id: string,
+  edit_data: ICategory
+): Promise<ICategory> => {
   const { data } = await request.patch(`categories/${id}`, edit_data);
   return data;
-}
+};
 
 function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
   const { toast } = useToast();
   const { register, reset, handleSubmit, control } = useForm<ICategory>();
-
 
   useEffect(() => {
     if (category) {
       reset({
         name_uz: category.name_uz,
         name_ru: category.name_ru,
-        active: category.active
+        active: category.active,
       });
     }
   }, [category, reset]);
@@ -64,64 +83,69 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
       if (category) {
         return editCategory(category.id, data);
       }
-      return Promise.reject(new Error('Kategoriya ID null'));
+      return Promise.reject(new Error("Kategoriya ID null"));
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['category', category?.id] });
+      queryClient.invalidateQueries({ queryKey: ["category", category?.id] });
       toast({
-        title: 'Saqlandi'
+        title: "Saqlandi",
       });
     },
     onError: (error) => {
-      console.error('Kategoriya yaratishda xatolik:', error);
+      console.error("Kategoriya yaratishda xatolik:", error);
       toast({
-        title: 'Xatolik yuz berdi',
-        variant: 'destructive'
+        title: "Xatolik yuz berdi",
+        variant: "destructive",
       });
-    }
+    },
   });
 
   const handleSave = (data: ICategory) => {
     mutation.mutate(data);
-  }
-
-
+  };
 
   const pieChartData = {
-    labels: category?.products?.map(product => product.name_uz),
+    labels: category?.products?.map((product) => product.name_uz),
     datasets: [
       {
         data: category?.products?.map((product) => product.sale_count),
         backgroundColor: [
-          '#FF6B6B', '#FFD93D', '#6BCB77', '#4D96FF', '#6F42C1',
-          '#F03E3E', '#FFD33D', '#4BBF73', '#3B82F6', '#5F3F8D'
+          "#FF6B6B",
+          "#FFD93D",
+          "#6BCB77",
+          "#4D96FF",
+          "#6F42C1",
+          "#F03E3E",
+          "#FFD33D",
+          "#4BBF73",
+          "#3B82F6",
+          "#5F3F8D",
         ],
       },
     ],
   };
 
-  console.table(pieChartData)
+  console.table(pieChartData);
 
   const barChartData = {
-    labels: category?.visits?.map(item => item.date) || [],
+    labels: category?.visits?.map((item) => item.date) || [],
     datasets: [
       {
-        label: 'Tashrif chastotasi',
-        data: category?.visits?.map(item => item.visits) || [],
-        backgroundColor: 'rgba(59, 130, 246, 0.6)',
-        borderColor: 'rgb(59, 130, 246)',
+        label: "Tashrif chastotasi",
+        data: category?.visits?.map((item) => item.visits) || [],
+        backgroundColor: "rgba(59, 130, 246, 0.6)",
+        borderColor: "rgb(59, 130, 246)",
         borderWidth: 1,
       },
     ],
-  }
-
+  };
 
   const barChartOptions = {
     responsive: true,
     plugins: {
       title: {
         display: true,
-        text: 'Tashrif chastotasi',
+        text: "Tashrif chastotasi",
       },
       legend: {
         display: false,
@@ -132,20 +156,20 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
         beginAtZero: true,
         title: {
           display: true,
-          text: 'Tashriflar soni',
+          text: "Tashriflar soni",
         },
         ticks: {
           stepSize: 1,
-        }
+        },
       },
       x: {
         title: {
           display: true,
-          text: 'Sana',
+          text: "Sana",
         },
       },
     },
-  }
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -163,11 +187,17 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
               <div className="grid gap-4">
                 <div>
                   <Label htmlFor="name_uz">Nomi (O&apos;zbek)</Label>
-                  <Input id="name_uz" {...register('name_uz', { required: true })} />
+                  <Input
+                    id="name_uz"
+                    {...register("name_uz", { required: true })}
+                  />
                 </div>
                 <div>
                   <Label htmlFor="name_ru">Nomi (Rus)</Label>
-                  <Input id="name_ru" {...register('name_ru', { required: true })} />
+                  <Input
+                    id="name_ru"
+                    {...register("name_ru", { required: true })}
+                  />
                 </div>
                 <div className="flex items-center space-x-2">
                   <Controller
@@ -181,7 +211,7 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
                       />
                     )}
                   />
-                  <Label htmlFor="active">Active</Label>
+                  <Label htmlFor="active">Faol</Label>
                 </div>
                 <Button type="submit">Saqlash</Button>
               </div>
@@ -191,34 +221,36 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Tashrif chastotasi</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Tashrif chastotasi
+            </CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
-              {category?.visits && <Bar options={barChartOptions} data={barChartData} />}
+              {category?.visits && (
+                <Bar options={barChartOptions} data={barChartData} />
+              )}
             </div>
           </CardContent>
         </Card>
       </div>
 
       <div className="grid gap-8 md:grid-cols-2 mt-8">
-        {category?.content_type == "PRODUCT" &&
+        {category?.content_type == "PRODUCT" && (
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Eng ko&apos;p sotilgan mahsulotlar ulushi</CardTitle>
-              <ShoppingCart className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
             <CardContent>
-              <div className="w-full">
-                {/* Make the Pie chart full width */}
-                <div className="relative" style={{ width: '100%', }}>
+              {/* <div className="w-full">
+                <div className="relative" style={{ width: '500px', height: "" }}>
                   <Pie data={pieChartData} options={{ maintainAspectRatio: false }} />
                 </div>
-              </div>
+              </div> */}
               <ul className="mt-4">
                 {category?.products?.map((product, index) => (
-                  <li key={index} className="flex items-center justify-between py-2">
+                  <li
+                    key={index}
+                    className="flex items-center justify-between py-2"
+                  >
                     <div className="flex items-center">
                       {product.image ? (
                         <Image
@@ -228,30 +260,61 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
                           height={50}
                           className="w-8 h-8 mr-2"
                         />
-                      ) : <div className="w-8 h-8 mr-2"></div>}
-                      <Link href={`/products/info?id=${product.id}`}>{product.name_uz}</Link>
+                      ) : (
+                        <div className="w-8 h-8 mr-2"></div>
+                      )}
+                      <Link href={`/products/info?id=${product.id}`}>
+                        {product.name_uz}
+                      </Link>
                     </div>
                     <span>{splitToHundreds(product.price)} so&apos;m</span>
                   </li>
                 ))}
               </ul>
             </CardContent>
-          </Card>}
+          </Card>
+        )}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Eng ko&apos;p sotilgan mahsulotlar ulushi
+            </CardTitle>
+            <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="w-full">
+              {/* Make the Pie chart full width */}
+              <div
+                className="relative"
+                style={{ maxWidth: "550px", width: "100%", height: "700px" }}
+              >
+                <Pie
+                  data={pieChartData}
+                  options={{
+                    maintainAspectRatio: false,
+                  }}
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
+
+      <div></div>
     </div>
-  )
+  );
 }
 export default function Page() {
   const [activeTab, setActiveTab] = useState("category-info");
   const categoryId = getCategoryIdFromUrl();
 
   const { data: category } = useQuery({
-    queryKey: ['category', categoryId],
+    queryKey: ["category", categoryId],
     queryFn: () => {
       if (categoryId !== null) {
         return fetchCategoryData(categoryId);
       }
-      return Promise.reject(new Error('Kategoriya ID null'));
+      return Promise.reject(new Error("Kategoriya ID null"));
     },
     enabled: categoryId !== null,
   });
@@ -270,10 +333,14 @@ export default function Page() {
     <Layout page="categories">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full ">
         <TabsList className="grid w-full grid-cols-2 text-black">
-          <TabsTrigger value="category-info">Kategoriya ma&apos;lumotlari</TabsTrigger>
+          <TabsTrigger value="category-info">
+            Kategoriya ma&apos;lumotlari
+          </TabsTrigger>
 
           {category?.content_type === "PRODUCT" && (
-            <TabsTrigger value="products-list">Mahsulotlar ro&apos;yxati</TabsTrigger>
+            <TabsTrigger value="products-list">
+              Mahsulotlar ro&apos;yxati
+            </TabsTrigger>
           )}
         </TabsList>
 

@@ -10,6 +10,7 @@ import { useMutation } from '@tanstack/react-query';
 import { queryClient } from '@/lib/query';
 import { DeleteModalComponent } from './delete';
 import { request } from '@/lib/api';
+import { splitToHundreds } from '@/lib/utils';
 
 
 
@@ -80,14 +81,14 @@ export default function ProductInfo({ product }: { product: IProduct }) {
 
             <TableCell className="font-medium" onClick={event => handleRowClick(event)}>{product.name_uz}</TableCell>
             <TableCell onClick={event => handleRowClick(event)}>{product.name_ru}</TableCell>
-            <TableCell onClick={event => handleRowClick(event)}>{product.price} so'm</TableCell>
+            <TableCell onClick={event => handleRowClick(event)}>{splitToHundreds(product.price)} so'm</TableCell>
 
             <TableCell>
 
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
+                            <span className="sr-only">Menyuni ochish</span>
                             <MoreVertical className="h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>

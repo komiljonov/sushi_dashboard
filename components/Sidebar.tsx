@@ -26,7 +26,7 @@ export function Sidebar({ collapsed, page }: SidebarProps) {
 
     return (
         <aside className={cn(
-            "bg-white text-black border-r border-gray-200 transition-all duration-300 ease-in-out", // Ensured light mode adaptation
+            "bg-white text-black border-r border-gray-200 transition-all duration-300 ease-in-out fixed top-0 h-screen", // Ensured light mode adaptation
             collapsed ? "w-16" : "w-64"
         )}>
             <div className="flex flex-col h-full">
@@ -48,14 +48,14 @@ export function Sidebar({ collapsed, page }: SidebarProps) {
                 </div>
                 <nav className="flex flex-col gap-2 p-2">
                     <NavItem href="/" icon={<Home className="h-4 w-4" />} label="Bosh menu" collapsed={collapsed} isSelected={page == 'home'} />
-                    <NavItem href="/admins" icon={<FingerprintIcon className="h-4 w-4" />} label="Hodimlar" collapsed={collapsed} isSelected={page == 'admins'} />
+                    <NavItem href="/admins" icon={<FingerprintIcon className="h-4 w-4" />} label="Xodimlar" collapsed={collapsed} isSelected={page == 'admins'} />
                     <NavItem href="/categories" icon={<Box className="h-4 w-4" />} label="Kategoriyalar" collapsed={collapsed} isSelected={page == 'categories'} />
-                    <NavItem href="/promocodes" icon={<Ticket className="h-4 w-4" />} label="Promocodelar" collapsed={collapsed} isSelected={page == 'promocodes'} />
+                    <NavItem href="/promocodes" icon={<Ticket className="h-4 w-4" />} label="Promokodlar" collapsed={collapsed} isSelected={page == 'promocodes'} />
                     <NavItem href="/users" icon={<Users className="h-4 w-4" />} label="Foydalanuvchilar" collapsed={collapsed} isSelected={page == 'users'} />
                     <NavItem href="/orders" icon={<ShoppingCartIcon className="h-4 w-4" />} label="Buyurtmalar" collapsed={collapsed} isSelected={page == 'orders'} />
                     <NavItem href="/filials" icon={<MapPin className="h-4 w-4" />} label="Filiallar" collapsed={collapsed} isSelected={page == 'filials'} />
                     <NavItem href="/payments" icon={<CreditCard className="h-4 w-4" />} label="To'lovlar" collapsed={collapsed} isSelected={page == 'payments'} />
-                    <NavItem href="/referrals" icon={<LinkIcon className="h-4 w-4" />} label="Referrals" collapsed={collapsed} isSelected={page == 'referrals'} />
+                    <NavItem href="/referrals" icon={<LinkIcon className="h-4 w-4" />} label="Referallar" collapsed={collapsed} isSelected={page == 'referrals'} />
                 </nav>
                 <div className="p-2 mt-auto">
                     <Button

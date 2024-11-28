@@ -191,7 +191,7 @@ function EnhancedAnalyticsDashboard() {
 
       <Card className="mt-6">
         <CardHeader>
-          <CardTitle>Analytics</CardTitle>
+          <CardTitle>Analitika</CardTitle>
         </CardHeader>
         <CardContent>
           <Charts />

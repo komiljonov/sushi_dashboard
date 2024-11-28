@@ -155,7 +155,7 @@ export function Categories() {
                 <div className="flex gap-2">
 
                     <Button onClick={sync}>
-                        <RefreshCcw className="mr-2 h-4 w-4" />Sinhronlash
+                        <RefreshCcw className="mr-2 h-4 w-4" />Sinxronlash
                     </Button>
 
                     <CreateCategoryModal parent={selectedCategory}>
@@ -231,6 +231,12 @@ function CategoryList({
 
     return (
         <div className="space-y-2">
+            <div className="grid grid-cols-4 w-full items-center p-2 hover:bg-green-100 rounded-md cursor-pointer">
+                <div className="text-left">Mahsulot nomi (O'z)</div>
+                <div className="text-left">Mahsulot nomi (RU)</div>
+                <div className="text-left">Mahsulot soni</div>
+                <div className="text-left">Bugungi tashriflar</div>
+            </div>
             {categories.map((category) => (
                 <div key={category.id}>
                     <div
@@ -255,6 +261,18 @@ function CategoryList({
                                 </span>
                             )}
                             <span>{category.name_uz}</span>
+                        </div>
+                        <div className="flex-1 flex items-center">
+                            {category.content_type === "CATEGORY" && (
+                                <span className="mr-2 cursor-pointer">
+                                    {expandedCategories.includes(category.id) ? (
+                                        <ChevronDown className="h-4 w-4" />
+                                    ) : (
+                                        <ChevronRight className="h-4 w-4" />
+                                    )}
+                                </span>
+                            )}
+                            <span>{category.name_ru}</span>
                         </div>
                         <div className="flex-1">Mahsulotlar soni: {category.products_count}</div>
                         <div className="flex-1">Bugungi tashriflar: {category.today_visits}</div>

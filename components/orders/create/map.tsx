@@ -46,7 +46,7 @@ export default function DeliveryMap() {
         <div className="h-80 bg-gray-100 flex flex-col items-center justify-center rounded-md">
             {isLoaded ? (
                 <>
-                    <p className="text-sm text-gray-700 mb-2">Select a location by clicking on the map</p>
+                    <p className="text-sm text-gray-700 mb-2">Xaritani bosish orqali joylashuvni belgilang</p>
                     <Controller
                         name="location.latitude"
                         control={control}
@@ -77,7 +77,7 @@ export default function DeliveryMap() {
                             />
                         )}
                     />
-                    <p className="text-xs text-gray-500 mt-2">Click on the map to select a delivery location</p>
+                    <p className="text-xs text-gray-500 mt-2">Yetkazib berish joyini tanlash uchun xaritani bosing</p>
                 </>
             ) : (
                 <Skeleton className="w-full h-full" />

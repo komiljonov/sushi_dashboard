@@ -10,6 +10,7 @@ interface PromocodeTableProps {
 }
 
 export const PromocodeTable = ({ promocodes, onDelete }: PromocodeTableProps) => {
+    const sortedPromoCodes = promocodes?.sort((a, b)=> b?.count - a?.count )
     if (promocodes === undefined) {
         return (
             <Table>
@@ -52,10 +53,11 @@ export const PromocodeTable = ({ promocodes, onDelete }: PromocodeTableProps) =>
                     <TableHead>Chegirma</TableHead>
                     <TableHead>Soni</TableHead>
                     <TableHead>Amallar</TableHead>
+                    <TableHead></TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {promocodes.map((promo) => (
+                {sortedPromoCodes?.map((promo) => (
                     <TableRow key={promo.id}>
                         <TableCell>{promo.name_uz}</TableCell>
                         <TableCell>{promo.name_ru}</TableCell>

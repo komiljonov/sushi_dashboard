@@ -37,7 +37,7 @@ const Charts = () => {
     });
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <div>Yuklanmoqda...</div>;
     }
 
     if (isError || !analytics) {
@@ -135,20 +135,20 @@ const Charts = () => {
         <div className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="bg-white p-4 rounded-lg shadow">
-                    <h2 className="text-xl font-semibold mb-4">Pie Chart</h2>
+                    <h2 className="text-xl font-semibold mb-4">Pirog diagrammasi</h2>
                     <div className="h-64">
                         <Pie data={pieData} options={pieOptions} />
                     </div>
                 </div>
                 <div className="bg-white p-4 rounded-lg shadow">
-                    <h2 className="text-xl font-semibold mb-4">Bar Chart</h2>
+                    <h2 className="text-xl font-semibold mb-4">Ustunli diagramma</h2>
                     <div className="h-64">
                         <Bar data={barData} options={options} />
                     </div>
                 </div>
             </div>
             <div className="bg-white p-4 rounded-lg shadow">
-                <h2 className="text-xl font-semibold mb-4">Line Chart</h2>
+                <h2 className="text-xl font-semibold mb-4">Chiziqli diagramma</h2>
                 <div className="h-64">
                     <Line data={lineData} options={options} />
                 </div>

@@ -67,16 +67,16 @@ export default function CreateCategoryModal({ children, parent }: CreateCategory
 
             <DialogContent className="sm:max-w-[425px] bg-white">
                 <DialogHeader>
-                    <DialogTitle>Create Category</DialogTitle>
+                    <DialogTitle>Kategoriya yaratish</DialogTitle>
                     <DialogDescription>
                         {parent
-                            ? `Create a new subcategory under`
-                            : 'Create a new top-level category'}
+                            ? `Yangi pastki kategoriya yarating`
+                            : 'Yangi yuqori darajadagi kategoriya yarating'}
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit(_handleSubmit)} className="space-y-4">
                     <div className="space-y-2">
-                        <Label htmlFor="name_uz">Name (UZ)</Label>
+                        <Label htmlFor="name_uz">Nomi (UZ)</Label>
                         <Input
                             id="name_uz"
                             className="w-full border-gray-300"
@@ -85,7 +85,7 @@ export default function CreateCategoryModal({ children, parent }: CreateCategory
                         {errors.name_uz && <p className="text-sm text-red-500">{errors.name_uz.message}</p>}
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="name_ru">Name (RU)</Label>
+                        <Label htmlFor="name_ru">Nomi (RU)</Label>
                         <Input
                             id="name_ru"
                             className="w-full border-gray-300"
@@ -94,7 +94,7 @@ export default function CreateCategoryModal({ children, parent }: CreateCategory
                         {errors.name_ru && <p className="text-sm text-red-500">{errors.name_ru.message}</p>}
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="content_type">Content Type</Label>
+                        <Label htmlFor="content_type">Kontent turi</Label>
                         <Controller
                             control={control}
                             name="content_type"
@@ -102,7 +102,7 @@ export default function CreateCategoryModal({ children, parent }: CreateCategory
                             render={({ field }) => (
                                 <Select onValueChange={field.onChange} value={field.value}>
                                     <SelectTrigger id="content_type" className="w-full">
-                                        <SelectValue placeholder="Select content type" />
+                                        <SelectValue placeholder="Kontent turini tanlang" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="CATEGORY">Kategoriya</SelectItem>
@@ -114,7 +114,7 @@ export default function CreateCategoryModal({ children, parent }: CreateCategory
                         {errors.content_type && <p className="text-sm text-red-500">{errors.content_type.message}</p>}
                     </div>
                     <Button type="submit" className="w-full" disabled={mutation.isPending}>
-                        {mutation.isPending ? 'Creating...' : 'Create Category'}
+                        {mutation.isPending ? 'Yaratilmoqda...' : 'Kategoriya yaratish'}
                     </Button>
                 </form>
             </DialogContent>

@@ -92,7 +92,7 @@ export function CategoryProductModal({ isOpen, onClose, categoryId }: CategoryPr
                     />
                     <ScrollArea className="h-[300px] w-full rounded-md border p-4">
                         {isLoading ? (
-                            <div>Loading...</div>
+                            <div>Yuklanmoqda...</div>
                         ) : (
                             products?.map((product) => (
                                 <div key={product.id} className="flex items-center space-x-2 py-2">
@@ -111,7 +111,7 @@ export function CategoryProductModal({ isOpen, onClose, categoryId }: CategoryPr
                 </div>
                 <DialogFooter>
                     <Button onClick={handleAddProducts} disabled={addProductsMutation.isPending}>
-                        {addProductsMutation.isPending ? 'Adding...' : 'Add Selected Products'}
+                        {addProductsMutation.isPending ? 'Qo`shilmoqda...' : 'Tanlangan mahsulotlarni qo`shish'}
                     </Button>
                 </DialogFooter>
             </DialogContent>

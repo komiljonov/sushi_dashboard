@@ -141,7 +141,7 @@ export function FormattedInput({ id, label, placeholder, always_show_preview = f
                 </div>
             )}
             <p className="text-sm text-muted-foreground">
-                Characters: {value ? value.length : 0} / 950
+            Belgilar: {value ? value.length : 0} / 950
             </p>
 
             {formState?.errors[id] && <p className="text-sm text-red-500"> {formState?.errors[id].message as string} </p>}

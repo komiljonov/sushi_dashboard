@@ -122,11 +122,11 @@ function Products() {
 
     return (
         <div className="w-full max-w-4xl p-6">
-            <h1 className="text-2xl font-bold mb-6">Add New Product</h1>
+            <h1 className="text-2xl font-bold mb-6">Yangi mahsulot qo&apos;shish</h1>
             <form onSubmit={handleSubmit(handleCreateProduct)} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <Label htmlFor="name_uz">Name (Uzbek)</Label>
+                        <Label htmlFor="name_uz">Nomi (O&apos;zbekcha)</Label>
                         <Input
                             id="name_uz"
 
@@ -135,7 +135,7 @@ function Products() {
                         />
                     </div>
                     <div>
-                        <Label htmlFor="name_ru">Name (Russian)</Label>
+                        <Label htmlFor="name_ru">Nomi (Ruscha)</Label>
                         <Input
                             id="name_ru"
                             {...register("name_ru", { required: true })}
@@ -162,12 +162,15 @@ function Products() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                    <UploadField onFileUpload={onFileUpload} setFileUploading={setFileUploading} preview={image || ''} />
+                    <div className='mt-1'>
+                        <UploadField onFileUpload={onFileUpload} setFileUploading={setFileUploading} preview={image || ''} />
+                    </div>
                     <div>
                         <Label htmlFor="price">Narxi</Label>
                         <Input
                             id="price"
                             type="number"
+                            disabled
                             className="no-spinner"
                             {...register("price", { required: true, valueAsNumber: true })}
                             placeholder="Mahsulot narxini kiriting."

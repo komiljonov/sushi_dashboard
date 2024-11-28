@@ -125,7 +125,7 @@ function ReferralLinksCRUD() {
   if (isError) {
     return (
       <Alert variant="destructive">
-        <AlertCircle className="h-4 w-4" />
+        <AlertCircle />
         <AlertTitle>Xato</AlertTitle>
         <AlertDescription>
           Ma'lumotlarni yuklashda xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring.

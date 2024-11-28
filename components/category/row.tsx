@@ -92,16 +92,16 @@ export default function CategoryInfo({ category }: { category: ICategory }) {
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
+                            <span className="sr-only">Menuni ochish</span>
                             <MoreVertical className="h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
 
                     <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuLabel>Amallar</DropdownMenuLabel>
 
                         <DropdownMenuItem onClick={event => handleRowClick(event)} >
-                            <span>Edit</span>
+                            <span>Tahrirlash</span>
                         </DropdownMenuItem>
 
                         {/* <DropdownMenuItem>
@@ -109,7 +109,7 @@ export default function CategoryInfo({ category }: { category: ICategory }) {
                         </DropdownMenuItem> */}
 
                         <DropdownMenuItem onClick={event => handleRowClick(event, true)}>
-                            <span>Open in New Tab</span>
+                            <span>Yangi oynada ochish</span>
                         </DropdownMenuItem>
 
                         <DropdownMenuSeparator />
@@ -117,7 +117,7 @@ export default function CategoryInfo({ category }: { category: ICategory }) {
 
 
                         <DropdownMenuItem className="text-red-600" onClick={() => { setOpen(true) }} >
-                            <span>Delete</span>
+                            <span>O`chirish</span>
                         </DropdownMenuItem>
 
 

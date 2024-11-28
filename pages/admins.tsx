@@ -80,11 +80,11 @@ const CreateAdminDialog = () => {
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button>Hodim qo'shish</Button>
+                <Button>Xodim qo'shish</Button>
             </DialogTrigger>
             <DialogContent className='bg-white'>
                 <DialogHeader>
-                    <DialogTitle>Hodim qo'shish</DialogTitle>
+                    <DialogTitle>Xodim qo'shish</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     <div className='flex space-x-6'>
@@ -105,7 +105,7 @@ const CreateAdminDialog = () => {
                     </div>
 
                     <div>
-                        <Label htmlFor="username">Username</Label>
+                        <Label htmlFor="username">Foydalanuvchi nomi</Label>
                         <Input id="username" {...register("username", { required: "Username kiritish shart" })} />
                         {errors.username && (
                             <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>
@@ -233,7 +233,7 @@ const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogTrigger asChild>
                     <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
-                        <span className="sr-only">Open menu</span>
+                        <span className="sr-only">Menyuni ochish</span>
                         <MoreVertical className="h-4 w-4" />
                     </Button>
                 </DialogTrigger>

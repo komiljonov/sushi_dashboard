@@ -79,7 +79,7 @@ export function Header({ collapsed, }: HeaderProps) {
   }
 
   return (
-    <header className="bg-white text-black border-b border-gray-200 h-16 flex items-center justify-between px-4">
+    <header className="bg-white py-4 text-black border-b border-gray-200 h-16 flex items-center justify-between px-4">
 
       <div className="flex items-center">
         <Button

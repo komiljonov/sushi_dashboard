@@ -13,7 +13,7 @@ class MyDocument extends Document {
         <Head>
           <meta name="description" content="Sushi Yummy Dashboard" />
         </Head>
-        <body>
+        <body className='bg-white'>
           <Main />
           <NextScript />
         </body>

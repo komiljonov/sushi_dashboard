@@ -32,7 +32,7 @@ export const LoadingProvider = ({ children }: ILoadingProviderProps) => {
     const [loading, setLoading] = useState<boolean>(false);
 
     const [info, setInfo] = useState<ILoadingInfo>({
-        title: "Loading...",
+        title: "Yuklanmoqda...",
         description: "Yuklanmoqda"
     });
 
