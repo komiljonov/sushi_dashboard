@@ -20,7 +20,7 @@ export function Layout({
     >
       {" "}
       {/* Ensures light background */}
-      <div className="w-[255px]">
+      <div className="min-w-[255px]">
         <Sidebar collapsed={sidebarCollapsed} page={page} />
       </div>
       <div className="flex-1 flex flex-col ">

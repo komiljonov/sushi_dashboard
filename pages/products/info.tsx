@@ -118,11 +118,9 @@ function Products() {
         setImage(file.file);
     }
 
-
-
     return (
         <div className="w-full max-w-4xl p-6">
-            <h1 className="text-2xl font-bold mb-6">Yangi mahsulot qo&apos;shish</h1>
+            <h1 className="text-2xl font-bold mb-6">Mahsulotni tahrirlash</h1>
             <form onSubmit={handleSubmit(handleCreateProduct)} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>

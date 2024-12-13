@@ -33,12 +33,13 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { IPayment } from "@/lib/types";
+import { IPayment, PaginatedPaymentResponse } from "@/lib/types";
 import { request } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import { Layout } from "@/components/Layout";
 import { splitToHundreds } from "@/lib/utils";
 import { format } from "date-fns";
+import { queryClient } from "@/lib/query";
 
 const ProviderIcon = ({ provider }: { provider: IPayment["provider"] }) => {
   switch (provider) {
@@ -69,8 +70,8 @@ const ProviderIcon = ({ provider }: { provider: IPayment["provider"] }) => {
   }
 };
 
-const fetchPayments = async (): Promise<IPayment[]> => {
-  const { data } = await request.get("payments");
+const fetchPayments = async (page: number, type: string): Promise<PaginatedPaymentResponse> => {
+  const { data } = await request.get(`payments/paginated?page=${page}&type=${type}`);
   return data;
 };
 
@@ -123,7 +124,7 @@ function FilterSection({
               </SelectContent>
             </Select>
           </div>
-          <div>
+          {/* <div>
             <Label htmlFor="start-date">Oraliq boshlanishi</Label>
             <Input
               id="start-date"
@@ -144,7 +145,7 @@ function FilterSection({
                 setFilters({ ...filters, endDate: e.target.value })
               }
             />
-          </div>
+          </div> */}
         </div>
       </CardContent>
     </Card>
@@ -152,11 +153,8 @@ function FilterSection({
 }
 
 function EnhancedPaymentListing() {
-  const [filteredPayments, setFilteredPayments] = useState<IPayment[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-
   const [sortColumn, setSortColumn] = useState<keyof IPayment | "">("");
-
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [filters, setFilters] = useState<Filter>({
     user: "",
@@ -164,16 +162,27 @@ function EnhancedPaymentListing() {
     startDate: "",
     endDate: "",
   });
+  const itemsPerPage = 10;
+  const indexOfLastOrder = currentPage * itemsPerPage;
+  const indexOfFirstOrder = (currentPage - 1) * itemsPerPage;
+
 
   const {
     data: payments,
     isLoading,
     error,
-  } = useQuery<IPayment[], Error>({
-    queryKey: ["payments"],
-    queryFn: fetchPayments,
+  } = useQuery<PaginatedPaymentResponse, Error>({
+    queryKey: ["payments", currentPage, filters?.provider],
+    queryFn:()=> fetchPayments (currentPage, filters?.provider),
   });
-
+  useEffect(() => {
+    if (payments?.current_page) {
+      queryClient.prefetchQuery({
+        queryKey: ["payments", currentPage + 1, filters?.provider],
+        queryFn: () => fetchPayments(currentPage + 1, filters?.provider), // Ensure the function returns the promise
+      });
+    }
+  }, [payments, currentPage, filters]);
   const handleSort = useCallback(
     (column: keyof IPayment) => {
       if (column === sortColumn) {
@@ -186,64 +195,65 @@ function EnhancedPaymentListing() {
     [sortColumn, sortDirection]
   );
 
-  useEffect(() => {
-    if (payments) {
-      let result = payments;
-      if (filters.user) {
-        result = result.filter(
-          (payment) =>
-            payment.user.name
-              ?.toLowerCase()
-              ?.includes(filters.user?.toLowerCase()) ||
-            payment.user.number
-              ?.toLowerCase()
-              ?.includes(filters.user?.toLowerCase())
-        );
-      }
-      if (filters.provider !== "all") {
-        result = result.filter(
-          (payment) => payment.provider === filters.provider
-        );
-      }
-      if (filters.startDate) {
-        result = result.filter(
-          (payment) =>
-            new Date(payment.created_at) >= new Date(filters.startDate)
-        );
-      }
-      if (filters.endDate) {
-        result = result.filter(
-          (payment) => new Date(payment.created_at) <= new Date(filters.endDate)
-        );
-      }
-      setFilteredPayments(result);
-      setCurrentPage(1);
-    }
-  }, [payments, filters]);
+  // useEffect(() => {
+  //   if (payments?.results && Array.isArray(payments?.results)) {
+  //     let result = payments?.results;
+  //     if (filters.user) {
+  //       result = result.filter(
+  //         (payment) =>
+  //           payment.user.name
+  //             ?.toLowerCase()
+  //             ?.includes(filters.user?.toLowerCase()) ||
+  //           payment.user.number
+  //             ?.toLowerCase()
+  //             ?.includes(filters.user?.toLowerCase())
+  //       );
+  //     }
+  //     if (filters.provider !== "all") {
+  //       result = result.filter(
+  //         (payment) => payment.provider === filters.provider
+  //       );
+  //     }
+  //     if (filters.startDate) {
+  //       result = result.filter(
+  //         (payment) =>
+  //           new Date(payment.created_at) >= new Date(filters.startDate)
+  //       );
+  //     }
+  //     if (filters.endDate) {
+  //       result = result.filter(
+  //         (payment) =>
+  //           new Date(payment.created_at) <= new Date(filters.endDate)
+  //       );
+  //     }
+  //     setFilteredPayments(result);
+  //   } else {
+  //     setFilteredPayments([]); // Set an empty array if no payments
+  //   }
+  // }, [payments, filters]);
+  // useEffect(() => {
+  //   if (sortColumn) {
+  //     handleSort(sortColumn);
+  //   }
+  // }, [handleSort, sortColumn]);
 
-  useEffect(() => {
-    if (sortColumn) {
-      handleSort(sortColumn);
-    }
-  }, [handleSort, sortColumn]);
 
-  const itemsPerPage = 20;
+  // const sortedPayments = [...filteredPayments]
+  // ?.sort((a, b) => {
+  //   if (!sortColumn) return 0;
+  //   if (a[sortColumn]! < b[sortColumn]!)
+  //     return sortDirection === "asc" ? -1 : 1;
+  //   if (a[sortColumn]! > b[sortColumn]!)
+  //     return sortDirection === "asc" ? 1 : -1;
+  //   return 0;
+  // });
 
-  const sortedPayments = [...filteredPayments].sort((a, b) => {
-    if (!sortColumn) return 0;
-    if (a[sortColumn]! < b[sortColumn]!)
-      return sortDirection === "asc" ? -1 : 1;
-    if (a[sortColumn]! > b[sortColumn]!)
-      return sortDirection === "asc" ? 1 : -1;
-    return 0;
-  });
+  // const paginatedPayments = sortedPayments.slice(
+  //   (currentPage - 1) * itemsPerPage,
+  //   currentPage * itemsPerPage
+  // );
 
-  const paginatedPayments = sortedPayments.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  const totalPages = Math.ceil(sortedPayments.length / itemsPerPage);
+  const totalPages = Math.ceil(payments?.count as number / itemsPerPage);
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   const getPaginationButtons = () => {
@@ -308,7 +318,7 @@ function EnhancedPaymentListing() {
 
   return (
     <div className="container mx-auto py-10">
-      <h1 className="text-3xl font-bold mb-6">Buyurtmalar</h1>
+      <h1 className="text-3xl font-bold mb-6">To&apos;lovlar</h1>
 
       <FilterSection filters={filters} setFilters={setFilters} />
 
@@ -350,7 +360,7 @@ function EnhancedPaymentListing() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {paginatedPayments.map((payment) => (
+              {payments?.results?.map((payment) => (
                 <TableRow key={payment.id}>
                   <TableCell>
                     <div className="flex items-center space-x-3">
@@ -402,8 +412,8 @@ function EnhancedPaymentListing() {
           </Table>
           <div className="mt-4 flex justify-between items-center">
         <div>
-          {/* {orders?.count} ta buyurtmalardan {indexOfFirstOrder + 1} dan{" "}
-          {Math.min(indexOfLastOrder)} gacha */}
+          {payments?.count} ta to&apos;lovlardan {indexOfFirstOrder + 1} dan{" "}
+          {Math.min(indexOfLastOrder)} gacha
         </div>
         <div className="flex space-x-2 items-center">
           <Button
@@ -449,31 +459,6 @@ function EnhancedPaymentListing() {
           </Button>
         </div>
       </div>
-          {/* <div className="flex items-center justify-between space-x-2 py-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-            >
-              <ChevronLeft className="h-4 w-4 mr-2" />
-              Oldingi
-            </Button>
-            <div className="text-sm text-muted-foreground">
-              Page {currentPage} of {totalPages}
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              disabled={currentPage === totalPages}
-            >
-              Keyingi
-              <ChevronRight className="h-4 w-4 ml-2" />
-            </Button>
-          </div> */}
         </CardContent>
       </Card>
     </div>

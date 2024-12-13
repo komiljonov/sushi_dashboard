@@ -85,6 +85,15 @@ export interface IPayment {
   created_at: string;
 }
 
+export type PaginatedPaymentResponse = {
+  count: number; // Total number of orders
+  current_page: number; // Current page number
+  next: string | null; // URL for the next page
+  previous: string | null; // URL for the previous page
+  page_size: number; // Number of items per page
+  results: IPayment[]; // List of orders for the current page
+};
+
 export interface ICart {
   id: string;
   location: ILocation;

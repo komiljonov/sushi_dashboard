@@ -3,14 +3,14 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/Button";
-import { Calendar } from "@/components/ui/calendar";
+// import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+// import {
+//   // Popover,
+//   // PopoverContent,
+//   // PopoverTrigger,
+// } from "@/components/ui/popover";
 import {
   Table,
   TableBody,
@@ -20,20 +20,20 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  CalendarIcon,
+  // CalendarIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   ExternalLink,
 } from "lucide-react";
-import { format } from "date-fns";
-import { DateRange } from "react-day-picker";
+// import { format } from "date-fns";
+// import { DateRange } from "react-day-picker";
 import { Layout } from "@/components/Layout";
 import { request } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+// import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { PaginatedOrderResponse } from "@/lib/types";
 import React from "react";
 import { splitToHundreds } from "@/lib/utils";
@@ -41,7 +41,7 @@ import { queryClient } from "@/lib/query";
 
 const statuses = [
   {
-    value: "ALL",
+    value: "",
     name: "Hammasi",
     color: "bg-gray-100 hover:bg-gray-200 text-gray-800",
     border: "border-gray-800",
@@ -87,19 +87,29 @@ const statuses = [
 function OrderList({
   orders,
   setCurrentPage,
+  setSearchTerm,
+  searchTerm,
+  // dateRange,
+  setSelectedStatus,
+  selectedStatus,
+  // setDateRange,
   currentPage,
+  isLoading
 }: {
   orders: PaginatedOrderResponse;
   setCurrentPage: Dispatch<SetStateAction<number>>;
+  // setDateRange: Dispatch<SetStateAction<{ from?: Date; to?: Date }>>;
+  setSelectedStatus: Dispatch<SetStateAction<string>>;
+  setSearchTerm: Dispatch<SetStateAction<string>>;
   currentPage: number;
+  selectedStatus: string;
+  searchTerm: string;
+  // dateRange: { from?: Date; to?: Date }
+  isLoading: boolean
 }) {
   const router = useRouter();
-  const [selectedStatus, setSelectedStatus] = useState("ALL");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({
-    from: undefined,
-    to: undefined,
-  });
+ 
+  
   const ordersPerPage = 10;
   const totalPages = Math.ceil(orders?.count / ordersPerPage);
   const { push } = useRouter();
@@ -135,7 +145,6 @@ function OrderList({
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= orders?.count) {
       setCurrentPage(page);
-      fetchOrders(page);
     }
   };
 
@@ -152,7 +161,7 @@ function OrderList({
       </div>
 
       <div className="flex flex-col space-y-4 mb-6">
-        <div className="flex items-center space-x-4">
+        {/* <div className="flex items-center space-x-4">
           <Label>Vaqt bo&apos;yicha filter:</Label>
           <Popover>
             <PopoverTrigger asChild>
@@ -204,7 +213,7 @@ function OrderList({
           >
             Tozalash
           </Button>
-        </div>
+        </div> */}
         <div className="flex flex-wrap gap-2">
           <Label className="flex items-center mr-2">
             Holat bo&apos;yicha saralash:
@@ -236,7 +245,7 @@ function OrderList({
         </div>
       </div>
       <div className="border rounded-md">
-        <Table>
+        {isLoading ? <OrderSkeleton/> : <Table>
           <TableHeader>
             <TableRow>
               <TableHead>ID</TableHead>
@@ -361,7 +370,7 @@ function OrderList({
               </TableRow>
             ))}
           </TableBody>
-        </Table>
+        </Table>}
       </div>
       <div className="mt-4 flex justify-between items-center">
         <div>
@@ -373,7 +382,6 @@ function OrderList({
             variant="outline"
             onClick={() => {
               paginate(currentPage - 1);
-              fetchOrders(currentPage);
             }}
             disabled={currentPage === 1}
             className="w-10 h-10 p-0"
@@ -391,7 +399,6 @@ function OrderList({
                 key={index}
                 onClick={() => {
                   handlePageChange(button as number);
-                  fetchOrders(currentPage);
                 }}
                 disabled={button === currentPage}
                 className={button === currentPage ? "" : "border"}
@@ -405,7 +412,6 @@ function OrderList({
             variant="outline"
             onClick={() => {
               paginate(currentPage + 1);
-              fetchOrders(currentPage);
             }}
             // disabled={currentPage === totalPages}
             className="w-10 h-10 p-0"
@@ -419,18 +425,18 @@ function OrderList({
   );
 }
 
-const fetchOrders = async (page: number): Promise<PaginatedOrderResponse> => {
-  const { data } = await request.get(`orders/pagination?page=${page}`);
+const fetchOrders = async (page: number, status: string, search: string): Promise<PaginatedOrderResponse> => {
+  const { data } = await request.get(`orders/pagination?page=${page}&status=${status}&q=${search}`);
   return data;
 };
 
 function OrderSkeleton() {
   return (
     <div className="space-y-4">
-      <Skeleton className="h-10 w-1/4" />
+      {/* <Skeleton className="h-10 w-1/4" />
       <Skeleton className="h-12 w-full" />
       <Skeleton className="h-12 w-full" />
-      <Skeleton className="h-12 w-full" />
+      <Skeleton className="h-12 w-full" /> */}
       <div className="border rounded-md">
         <Table>
           <TableHeader>
@@ -461,45 +467,67 @@ function OrderSkeleton() {
 
 export default function Page() {
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
+
+  // const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({
+  //   from: undefined,
+  //   to: undefined,
+  // });
+   // const startDate = dateRange?.from instanceof Date && !isNaN(dateRange.from.getTime())
+  // ? format(dateRange.from, "yyyy-MM-dd")
+  // : 'Invalid Date';
+  // const endDate = dateRange?.to instanceof Date && !isNaN(dateRange.to.getTime())
+  // ? format(dateRange.to, "yyyy-MM-dd")
+  // : 'Invalid Date';
   const {
     data: orders,
     isLoading,
-    error,
+    // error,
   } = useQuery<PaginatedOrderResponse>({
-    queryKey: ["orders", currentPage],
-    queryFn: () => fetchOrders(currentPage),
+    queryKey: ["orders", currentPage, selectedStatus, searchTerm],
+    queryFn: () => fetchOrders(currentPage, selectedStatus, searchTerm),
     refetchInterval: 3000,
     refetchOnWindowFocus: true,
   });
   useEffect(() => {
     if (orders?.current_page) {
       queryClient.prefetchQuery({
-        queryKey: ["orders", currentPage + 1],
-        queryFn: () => fetchOrders(currentPage + 1), // Ensure the function returns the promise
+        queryKey: ["orders", currentPage + 1, selectedStatus, searchTerm],
+        queryFn: () => fetchOrders(currentPage + 1, selectedStatus, searchTerm), // Ensure the function returns the promise
       });
     }
-  }, [orders, currentPage]);
+  }, [orders, currentPage, selectedStatus, searchTerm]);
 
   return (
     <Layout page="orders">
-      {isLoading ? (
-        <OrderSkeleton />
-      ) : error ? (
-        <Alert variant="destructive">
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>
-            {error instanceof Error
-              ? error.message
-              : "An error occurred while fetching orders."}
-          </AlertDescription>
-        </Alert>
-      ) : orders ? (
+      {
+      // error ? (
+      //   <Alert variant="destructive">
+      //     <AlertTitle>Error</AlertTitle>
+      //     <AlertDescription>
+      //       {error instanceof Error
+      //         ? error.message
+      //         : "An error occurred while fetching orders."}
+      //     </AlertDescription>
+      //   </Alert>
+      // ) :
+      //  orders ? (
         <OrderList
-          orders={orders}
+          orders={orders as PaginatedOrderResponse}
           setCurrentPage={setCurrentPage}
+          setSelectedStatus={setSelectedStatus}
+          selectedStatus={selectedStatus}
+          setSearchTerm={setSearchTerm}
+          searchTerm={searchTerm}
+          // setDateRange={setDateRange}
+          // dateRange={dateRange}
           currentPage={currentPage}
+          isLoading={isLoading}
         />
-      ) : null}
+      // ) : null
+      }
     </Layout>
   );
 }
+

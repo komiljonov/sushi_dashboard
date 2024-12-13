@@ -178,6 +178,7 @@ export function Categories() {
                         handleDoubleClick={handleDoubleClick}
                         handleDeleteCategory={handleDeleteCategory}
                         handleEditCategory={handleEditCategory}
+                        isParent={true}
                     />
                 )}
             </div>
@@ -214,6 +215,7 @@ interface CategoryListProps {
     handleDeleteCategory: (categoryId: string) => void;
     handleEditCategory: (categoryId: string) => void;
     level?: number;
+    isParent: boolean;
 }
 
 function CategoryList({
@@ -226,17 +228,19 @@ function CategoryList({
     handleDeleteCategory,
     handleEditCategory,
     level = 0,
+    isParent
 }: CategoryListProps) {
     const indent = level * 24;
-
+    console.log(categories);
+    
     return (
         <div className="space-y-2">
-            <div className="grid grid-cols-4 w-full items-center p-2 hover:bg-green-100 rounded-md cursor-pointer">
+            {isParent && <div className="grid grid-cols-4 w-full items-center p-2 hover:bg-green-100 rounded-md cursor-pointer">
                 <div className="text-left">Mahsulot nomi (O'z)</div>
                 <div className="text-left">Mahsulot nomi (RU)</div>
                 <div className="text-left">Mahsulot soni</div>
                 <div className="text-left">Bugungi tashriflar</div>
-            </div>
+            </div> }
             {categories.map((category) => (
                 <div key={category.id}>
                     <div
@@ -311,6 +315,7 @@ function CategoryList({
                             handleDeleteCategory={handleDeleteCategory}
                             handleEditCategory={handleEditCategory}
                             level={level + 1}
+                            isParent={false}
                         />
                     )}
                 </div>

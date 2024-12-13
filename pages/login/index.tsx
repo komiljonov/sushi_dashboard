@@ -68,26 +68,26 @@ const LoginPage: React.FC & { authRequired?: boolean } = () => {
                 <CardContent>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="username">Username</Label>
+                            <Label htmlFor="username">Foydalanuvchi nomi</Label>
                             <Input
                                 id="username"
                                 {...register('username', { required: true })}
-                                placeholder="Enter your username"
+                                placeholder="Foydalanuvchi nomini kiriting"
                             />
                             {errors.username && <p className="text-sm text-red-500">{errors.username.message}</p>}
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="password">Password</Label>
+                            <Label htmlFor="password">Parol</Label>
                             <Input
                                 id="password"
                                 type="password"
-                                placeholder="Enter your password"
+                                placeholder="Parolni kiriting"
                                 {...register('password', { required: true })}
                             />
                             {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
                         </div>
                         <Button type="submit" className="w-full bg-black text-white hover:bg-gray-800">
-                            Login
+                            Kirish
                         </Button>
                     </form>
                 </CardContent>
