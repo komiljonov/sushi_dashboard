@@ -330,7 +330,7 @@ const Admins: NextPage = () => {
     return (
         <div className="container mx-auto py-10">
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold">Foydalanuvchilar</h1>
+                <h1 className="text-3xl font-bold">Xodimlar</h1>
                 <CreateAdminDialog />
             </div>
             <AdminsTable admins={admins} />

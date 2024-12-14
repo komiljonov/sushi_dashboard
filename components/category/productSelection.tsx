@@ -39,7 +39,7 @@ export function CategoryProductModal({ isOpen, onClose, categoryId }: CategoryPr
             return data;
         },
     });
-
+    
     useEffect(() => {
         if (query.data) {
             setSelectedProducts(query.data.data);

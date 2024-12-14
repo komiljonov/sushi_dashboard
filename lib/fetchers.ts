@@ -19,6 +19,11 @@ export const fetchProducts = async (): Promise<IProduct[]> => {
     return data;
 }
 
+export const fetchCatProducts = async (id: string) => {
+    const { data } = await request.get(`categories/${id}/stats`);
+    return data;
+  };
+
 
 
 export const getDeliveryPrice = async (loc_data: { latitude: number; longitude: number }): Promise<DeliveryPrice> => {

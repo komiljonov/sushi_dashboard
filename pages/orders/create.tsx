@@ -26,7 +26,6 @@ import { useRouter } from 'next/router'
 function CreateOrderPage() {
     const router = useRouter();
     const [isAddItemOpen, setIsAddItemOpen] = useState(false)
-
     const { filials, promocodes, phone_numbers, users, products } = useFetchData()
 
     const methods = useForm<CreateOrderForm>({
@@ -132,7 +131,6 @@ function CreateOrderPage() {
                     <OrderItems setIsAddItemOpen={setIsAddItemOpen} />
 
                     <AddItemModal isOpen={isAddItemOpen} setIsOpen={setIsAddItemOpen} products={products} />
-
                     <TotalPrices _deliveryPrice={_deliveryPrice} deliveryPriceLoading={deliveryPriceLoading} promocodes={promocodes} />
 
                     <div className="flex justify-end space-x-4">

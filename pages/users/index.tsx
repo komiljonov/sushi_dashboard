@@ -272,7 +272,7 @@ export default function UsersListPage() {
   const [filterUser, setFilterUser] = useState<string>("")
   const [searchUser, setSearchUser] = useState<string>("")
   const { data: users, isLoading } = useQuery({
-    queryKey: ["users", currentPage],
+    queryKey: ["users", currentPage, filterUser],
     queryFn: () => fetchUsers(currentPage, searchUser, filterUser),
     refetchInterval: 60000,
     refetchOnWindowFocus: true,
@@ -281,7 +281,7 @@ export default function UsersListPage() {
   useEffect(() => {
     if (users?.current_page) {
       queryClient.prefetchQuery({
-        queryKey: ["users", currentPage + 1],
+        queryKey: ["users", currentPage + 1, filterUser],
         queryFn: () => fetchUsers(currentPage + 1, searchUser, filterUser), // Ensure the function returns the promise
       });
     }

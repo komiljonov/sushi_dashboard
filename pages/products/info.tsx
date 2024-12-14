@@ -188,8 +188,6 @@ function Products() {
 
 
 
-
-
 export default function Page() {
     return (
         <Layout page='categories'>

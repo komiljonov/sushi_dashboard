@@ -284,25 +284,11 @@ function EnhancedPaymentListing() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <Card>
-        <CardContent>
-          <div className="space-y-4">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="flex items-center space-x-4">
-                <Skeleton className="h-12 w-12 rounded-full" />
-                <div className="space-y-2">
-                  <Skeleton className="h-4 w-[250px]" />
-                  <Skeleton className="h-4 w-[200px]" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+      
+  //   );
+  // }
 
   if (error) {
     return (
@@ -324,7 +310,7 @@ function EnhancedPaymentListing() {
 
       <Card>
         <CardContent>
-          <Table>
+          {isLoading ? <PaymentSkeleton/> : <Table>
             <TableHeader>
               <TableRow>
                 <TableHead
@@ -409,7 +395,7 @@ function EnhancedPaymentListing() {
                 </TableRow>
               ))}
             </TableBody>
-          </Table>
+          </Table>}
           <div className="mt-4 flex justify-between items-center">
         <div>
           {payments?.count} ta to&apos;lovlardan {indexOfFirstOrder + 1} dan{" "}
@@ -471,4 +457,20 @@ export default function Page() {
       <EnhancedPaymentListing />
     </Layout>
   );
+}
+
+const PaymentSkeleton = () => {
+  return (
+          <div className="space-y-4 pt-5">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="flex items-center space-x-4">
+                <Skeleton className="h-12 w-12 rounded-full" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-[250px]" />
+                  <Skeleton className="h-4 w-[200px]" />
+                </div>
+              </div>
+            ))}
+          </div>
+  )
 }

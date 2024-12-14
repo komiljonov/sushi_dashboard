@@ -46,12 +46,11 @@ export function useFetchData(): IFetchData {
         queryFn: fetchProducts
     });
 
-
     return {
         filials: filials,
         promocodes: promocodes,
         phone_numbers: phone_numbers,
         users: users,
-        products: products
+        products: products,
     }
 }

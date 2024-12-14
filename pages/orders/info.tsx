@@ -79,13 +79,14 @@ function UserInformationCard({
           </Link>
         </div>
 
-        {user && (
+        {user && user.username && (
           <div className="flex items-center space-x-2">
             <MessageCircle className="h-4 w-4" />
             <Label>Telegram:</Label>
-
+          
             <Link
-              href={`https://t.me/${user.username?.substring(1)}`}
+              href={`https://t.me/${user.username}`}
+              target="_blank"
               className="flex items-center text-blue-500 hover:text-blue-700"
             >
               {user.tg_name || user.name}{" "}
