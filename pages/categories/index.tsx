@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect, useCallback } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/Button";
-import { Plus, ChevronDown, ChevronRight, Trash2, Edit, RefreshCcw } from "lucide-react";
+import { Plus, RefreshCcw } from "lucide-react";
 import { request } from "@/lib/api";
 import { Layout } from "@/components/Layout";
 import CreateCategoryModal from "@/components/category/create";
@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { requestSync } from "@/lib/mutators";
 import { useLoading } from "@/lib/context/Loading";
+import CategoryManager from "../../components/category/category-manager";
 
 const fetchCategories = async (): Promise<ICategory[]> => {
     const { data } = await request.get("categories");
@@ -43,7 +44,7 @@ export function Categories() {
         queryFn: fetchCategories,
     });
 
-    const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
+    // const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const router = useRouter();
@@ -66,19 +67,19 @@ export function Categories() {
         },
     });
 
-    const toggleCategory = useCallback((categoryId: string) => {
-        setExpandedCategories((prev) =>
-            prev.includes(categoryId)
-                ? prev.filter((id) => id !== categoryId)
-                : [...prev, categoryId]
-        );
-    }, []);
+    // const toggleCategory = useCallback((categoryId: string) => {
+    //     setExpandedCategories((prev) =>
+    //         prev.includes(categoryId)
+    //             ? prev.filter((id) => id !== categoryId)
+    //             : [...prev, categoryId]
+    //     );
+    // }, []);
 
-    const handleCategoryClick = useCallback((category: ICategory) => {
-        if (category.content_type == "CATEGORY") {
-            setSelectedCategory(category.id);
-        }
-    }, []);
+    // const handleCategoryClick = useCallback((category: ICategory) => {
+    //     if (category.content_type == "CATEGORY") {
+    //         setSelectedCategory(category.id);
+    //     }
+    // }, []);
 
     const handleDoubleClick = useCallback((categoryId: string) => {
         router.push(`/categories/info?id=${categoryId}`);
@@ -169,17 +170,20 @@ export function Categories() {
                 {isLoading || !categories ? (
                     <SkeletonCategories />
                 ) : (
-                    <CategoryList
-                        categories={categories}
-                        expandedCategories={expandedCategories}
-                        toggleCategory={toggleCategory}
-                        selectedCategory={selectedCategory}
-                        handleCategoryClick={handleCategoryClick}
-                        handleDoubleClick={handleDoubleClick}
-                        handleDeleteCategory={handleDeleteCategory}
-                        handleEditCategory={handleEditCategory}
-                        isParent={true}
-                    />
+                    <CategoryManager handleDoubleClick={handleDoubleClick}
+                            handleDeleteCategory={handleDeleteCategory}
+                            handleEditCategory={handleEditCategory}/>
+                    // <CategoryList
+                    //     categories={categories}
+                    //     expandedCategories={expandedCategories}
+                    //     toggleCategory={toggleCategory}
+                    //     selectedCategory={selectedCategory}
+                    //     handleCategoryClick={handleCategoryClick}
+                    //     handleDoubleClick={handleDoubleClick}
+                    //     handleDeleteCategory={handleDeleteCategory}
+                    //     handleEditCategory={handleEditCategory}
+                    //     isParent={true}
+                    // />
                 )}
             </div>
             <AlertDialog
@@ -205,124 +209,124 @@ export function Categories() {
     );
 }
 
-interface CategoryListProps {
-    categories: ICategory[];
-    expandedCategories: string[];
-    toggleCategory: (categoryId: string) => void;
-    selectedCategory: string | null;
-    handleCategoryClick: (category: ICategory) => void;
-    handleDoubleClick: (categoryId: string) => void;
-    handleDeleteCategory: (categoryId: string) => void;
-    handleEditCategory: (categoryId: string) => void;
-    level?: number;
-    isParent: boolean;
-}
+// interface CategoryListProps {
+//     categories: ICategory[];
+//     expandedCategories: string[];
+//     toggleCategory: (categoryId: string) => void;
+//     selectedCategory: string | null;
+//     handleCategoryClick: (category: ICategory) => void;
+//     handleDoubleClick: (categoryId: string) => void;
+//     handleDeleteCategory: (categoryId: string) => void;
+//     handleEditCategory: (categoryId: string) => void;
+//     level?: number;
+//     isParent: boolean;
+// }
 
-function CategoryList({
-    categories,
-    expandedCategories,
-    toggleCategory,
-    selectedCategory,
-    handleCategoryClick,
-    handleDoubleClick,
-    handleDeleteCategory,
-    handleEditCategory,
-    level = 0,
-    isParent
-}: CategoryListProps) {
-    const indent = level * 24;
-    console.log(categories);
+// function CategoryList({
+//     categories,
+//     expandedCategories,
+//     toggleCategory,
+//     selectedCategory,
+//     handleCategoryClick,
+//     handleDoubleClick,
+//     handleDeleteCategory,
+//     handleEditCategory,
+//     level = 0,
+//     isParent
+// }: CategoryListProps) {
+//     const indent = level * 24;
+//     console.log(categories);
     
-    return (
-        <div className="space-y-2">
-            {isParent && <div className="grid grid-cols-4 w-full items-center p-2 hover:bg-green-100 rounded-md cursor-pointer">
-                <div className="text-left">Mahsulot nomi (O'z)</div>
-                <div className="text-left">Mahsulot nomi (RU)</div>
-                <div className="text-left">Mahsulot soni</div>
-                <div className="text-left">Bugungi tashriflar</div>
-            </div> }
-            {categories.map((category) => (
-                <div key={category.id}>
-                    <div
-                        className={`flex items-center p-2 hover:bg-green-100 rounded-md cursor-pointer ${selectedCategory === category.id ? "bg-green-200" : ""
-                            }`}
-                        style={{ marginLeft: `${indent}px` }}
-                        onClick={(e) => {
-                            handleCategoryClick(category);
-                            e.stopPropagation();
-                            toggleCategory(category.id);
-                        }}
-                        onDoubleClick={() => handleDoubleClick(category.id)}
-                    >
-                        <div className="flex-1 flex items-center">
-                            {category.content_type === "CATEGORY" && (
-                                <span className="mr-2 cursor-pointer">
-                                    {expandedCategories.includes(category.id) ? (
-                                        <ChevronDown className="h-4 w-4" />
-                                    ) : (
-                                        <ChevronRight className="h-4 w-4" />
-                                    )}
-                                </span>
-                            )}
-                            <span>{category.name_uz}</span>
-                        </div>
-                        <div className="flex-1 flex items-center">
-                            {category.content_type === "CATEGORY" && (
-                                <span className="mr-2 cursor-pointer">
-                                    {expandedCategories.includes(category.id) ? (
-                                        <ChevronDown className="h-4 w-4" />
-                                    ) : (
-                                        <ChevronRight className="h-4 w-4" />
-                                    )}
-                                </span>
-                            )}
-                            <span>{category.name_ru}</span>
-                        </div>
-                        <div className="flex-1">Mahsulotlar soni: {category.products_count}</div>
-                        <div className="flex-1">Bugungi tashriflar: {category.today_visits}</div>
-                        <div className="flex items-center space-x-2">
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleEditCategory(category.id);
-                                }}
-                            >
-                                <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDeleteCategory(category.id);
-                                }}
-                            >
-                                <Trash2 className="h-4 w-4" />
-                            </Button>
-                        </div>
-                    </div>
+//     return (
+//         <div className="space-y-2">
+//             {isParent && <div className="grid grid-cols-4 w-full items-center p-2 hover:bg-green-100 rounded-md cursor-pointer">
+//                 <div className="text-left">Mahsulot nomi (O'z)</div>
+//                 <div className="text-left">Mahsulot nomi (RU)</div>
+//                 <div className="text-left">Mahsulot soni</div>
+//                 <div className="text-left">Bugungi tashriflar</div>
+//             </div> }
+//             {categories.map((category) => (
+//                 <div key={category.id}>
+//                     <div
+//                         className={`flex items-center p-2 hover:bg-green-100 rounded-md cursor-pointer ${selectedCategory === category.id ? "bg-green-200" : ""
+//                             }`}
+//                         style={{ marginLeft: `${indent}px` }}
+//                         onClick={(e) => {
+//                             handleCategoryClick(category);
+//                             e.stopPropagation();
+//                             toggleCategory(category.id);
+//                         }}
+//                         onDoubleClick={() => handleDoubleClick(category.id)}
+//                     >
+//                         <div className="flex-1 flex items-center">
+//                             {category.content_type === "CATEGORY" && (
+//                                 <span className="mr-2 cursor-pointer">
+//                                     {expandedCategories.includes(category.id) ? (
+//                                         <ChevronDown className="h-4 w-4" />
+//                                     ) : (
+//                                         <ChevronRight className="h-4 w-4" />
+//                                     )}
+//                                 </span>
+//                             )}
+//                             <span>{category.name_uz}</span>
+//                         </div>
+//                         <div className="flex-1 flex items-center">
+//                             {category.content_type === "CATEGORY" && (
+//                                 <span className="mr-2 cursor-pointer">
+//                                     {expandedCategories.includes(category.id) ? (
+//                                         <ChevronDown className="h-4 w-4" />
+//                                     ) : (
+//                                         <ChevronRight className="h-4 w-4" />
+//                                     )}
+//                                 </span>
+//                             )}
+//                             <span>{category.name_ru}</span>
+//                         </div>
+//                         <div className="flex-1">Mahsulotlar soni: {category.products_count}</div>
+//                         <div className="flex-1">Bugungi tashriflar: {category.today_visits}</div>
+//                         <div className="flex items-center space-x-2">
+//                             <Button
+//                                 variant="ghost"
+//                                 size="sm"
+//                                 onClick={(e) => {
+//                                     e.stopPropagation();
+//                                     handleEditCategory(category.id);
+//                                 }}
+//                             >
+//                                 <Edit className="h-4 w-4" />
+//                             </Button>
+//                             <Button
+//                                 variant="ghost"
+//                                 size="sm"
+//                                 onClick={(e) => {
+//                                     e.stopPropagation();
+//                                     handleDeleteCategory(category.id);
+//                                 }}
+//                             >
+//                                 <Trash2 className="h-4 w-4" />
+//                             </Button>
+//                         </div>
+//                     </div>
 
-                    {expandedCategories.includes(category.id) && category.children.length > 0 && (
-                        <CategoryList
-                            categories={category.children}
-                            expandedCategories={expandedCategories}
-                            toggleCategory={toggleCategory}
-                            selectedCategory={selectedCategory}
-                            handleCategoryClick={handleCategoryClick}
-                            handleDoubleClick={handleDoubleClick}
-                            handleDeleteCategory={handleDeleteCategory}
-                            handleEditCategory={handleEditCategory}
-                            level={level + 1}
-                            isParent={false}
-                        />
-                    )}
-                </div>
-            ))}
-        </div>
-    );
-}
+//                     {expandedCategories.includes(category.id) && category.children.length > 0 && (
+//                         <CategoryList
+//                             categories={category.children}
+//                             expandedCategories={expandedCategories}
+//                             toggleCategory={toggleCategory}
+//                             selectedCategory={selectedCategory}
+//                             handleCategoryClick={handleCategoryClick}
+//                             handleDoubleClick={handleDoubleClick}
+//                             handleDeleteCategory={handleDeleteCategory}
+//                             handleEditCategory={handleEditCategory}
+//                             level={level + 1}
+//                             isParent={false}
+//                         />
+//                     )}
+//                 </div>
+//             ))}
+//         </div>
+//     );
+// }
 
 function SkeletonCategories() {
     return (
