@@ -76,7 +76,7 @@ const CategoryList: React.FC<CategoryListProps> = ({
   );
 
   const renderCategory = (category: ICategory) => (
-    <div className="w-full bg-white">
+    <div className={`ml-5 w-full bg-white`}>
       <div
         className={`flex items-center w-full p-2 hover:bg-green-100 rounded-md cursor-pointer ${
           selectedCategory === category.id ? "bg-green-200" : ""

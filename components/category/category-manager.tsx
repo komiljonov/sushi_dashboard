@@ -2,7 +2,7 @@
 
 import CategoryList from '@/components/category/categoryList';
 import { ICategory } from '@/lib/types';
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 
 
 
@@ -10,12 +10,13 @@ type CategoryProps = {
     handleDoubleClick: (categoryId: string) => void;
     handleDeleteCategory: (categoryId: string) => void;
     handleEditCategory: (categoryId: string) => void;
+    selectedCategory: string | null
+    setSelectedCategory: Dispatch<SetStateAction<string | null>>
 }
 
-const CategoryManager: React.FC<CategoryProps> = ({handleDeleteCategory, handleDoubleClick, handleEditCategory}) => {
+const CategoryManager: React.FC<CategoryProps> = ({handleDeleteCategory, handleDoubleClick, handleEditCategory, setSelectedCategory, selectedCategory}) => {
     
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const toggleCategory = (id: string) => {
     setExpandedCategories((prev) =>
       prev.includes(id) ? prev.filter((catId) => catId !== id) : [...prev, id]

@@ -172,6 +172,8 @@ export function Categories() {
                 ) : (
                     <CategoryManager handleDoubleClick={handleDoubleClick}
                             handleDeleteCategory={handleDeleteCategory}
+                            selectedCategory={selectedCategory}
+                            setSelectedCategory={setSelectedCategory}
                             handleEditCategory={handleEditCategory}/>
                     // <CategoryList
                     //     categories={categories}
