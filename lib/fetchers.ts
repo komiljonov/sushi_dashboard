@@ -33,6 +33,11 @@ export const fetchUsers = async (): Promise<IUser[]> => {
     return data;
 }
 
+export const fetchUsersMin = async (): Promise<IUser[]> => {
+    const { data } = await request.get(`/users/min`);
+    return data;
+}
+
 
 export const fetchNumbers = async (): Promise<IPhoneNumber[]> => {
     const { data } = await request.get(`/numbers`);
