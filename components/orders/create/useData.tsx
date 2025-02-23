@@ -1,4 +1,4 @@
-import { fetchFilials, fetchNumbers, fetchProducts, fetchPromocodes, fetchUsers,fetchUsersMin } from "@/lib/fetchers";
+import { fetchFilials, fetchNumbers, fetchProducts, fetchPromocodes, fetchUsersMin } from "@/lib/fetchers";
 import { IFilial, IPhoneNumber, IProduct, IPromocode, IUser } from "@/lib/types"
 import { useQuery } from "@tanstack/react-query";
 
