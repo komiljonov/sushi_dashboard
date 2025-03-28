@@ -3,12 +3,12 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { fetchPaginatedUsers } from "@/lib/fetchers";
 import { useQueryClient } from "@tanstack/react-query";
-import { Skeleton } from "@/components/ui/skeleton";
 import { IUser } from "@/lib/types";
 import { useFormContext } from "react-hook-form";
 import { CreateOrderForm } from "./types";
 import { Label } from "@/components/ui/Label";
 import { Input } from "@/components/ui/Input";
+import { Loader2 } from "lucide-react";
 
 export default function UserSelect() {
   const [users, setUsers] = useState<IUser[]>([]);
@@ -114,11 +114,12 @@ export default function UserSelect() {
       {listStatus && (
         <div
           ref={listRef}
-          className="border p-2 rounded absolute bg-white top-[62px] z-20 max-h-64 overflow-y-auto"
+          className="border p-2 rounded w-full absolute bg-white top-[62px] z-20 max-h-64 overflow-y-auto"
           onMouseDown={(e) => e.preventDefault()} // 🟢 `onBlur` ni oldini olish
         >
-          {users.length === 0 && isFetching ? (
-            <Skeleton className="h-10 w-full" />
+          { isFetching ? (
+            <div className="w-full flex justify-center">
+            <Loader2 className="animate-spin" /></div>
           ) : (
             users.map((user, index) => (
               <div
@@ -136,8 +137,6 @@ export default function UserSelect() {
               </div>
             ))
           )}
-
-          {isFetching && <Skeleton className="h-10 w-full" />} {/* Loader */}
         </div>
       )}
     </div>
