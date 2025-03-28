@@ -27,7 +27,7 @@ function CreateOrderPage() {
     const router = useRouter();
     const [isAddItemOpen, setIsAddItemOpen] = useState(false)
 
-    const { filials, promocodes, phone_numbers, users, products } = useFetchData()
+    const { filials, promocodes, phone_numbers, products } = useFetchData()
 
     const methods = useForm<CreateOrderForm>({
         defaultValues: {
@@ -76,7 +76,7 @@ function CreateOrderPage() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <FormProvider {...methods}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <UserSelect users={users} />
+                        <UserSelect />
                         <div className="space-y-2">
                             <Label htmlFor="phone">Telefon raqam</Label>
                             <Input id="phone" {...register('phone', { required: 'Telefon raqamni kiritish majburiy.' })} placeholder="Telefon raqamni kiriting" />

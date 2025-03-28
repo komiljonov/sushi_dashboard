@@ -40,6 +40,12 @@ export const fetchUsersMin = async (): Promise<IUser[]> => {
 }
 
 
+export const fetchPaginatedUsers = async (page: number, q: string) => {
+    const { data } = await request.get(`/users/min2?page=${page}&q=${q}`);
+    return data;
+}
+
+
 export const fetchNumbers = async (): Promise<IPhoneNumber[]> => {
     const { data } = await request.get(`/numbers`);
     return data;

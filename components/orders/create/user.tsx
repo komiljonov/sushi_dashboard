@@ -1,101 +1,145 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react'
-import { Check, ChevronsUpDown } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/Button"
-import { Label } from "@/components/ui/Label"
-import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-} from "@/components/ui/command"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
-import { Skeleton } from '@/components/ui/skeleton'
-import { useFormContext } from 'react-hook-form'
-import { CreateOrderForm } from './types'
-import { IUser } from '@/lib/types'
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { fetchPaginatedUsers } from "@/lib/fetchers";
+import { useQueryClient } from "@tanstack/react-query";
+import { Skeleton } from "@/components/ui/skeleton";
+import { IUser } from "@/lib/types";
+import { useFormContext } from "react-hook-form";
+import { CreateOrderForm } from "./types";
+import { Label } from "@/components/ui/Label";
+import { Input } from "@/components/ui/Input";
 
+export default function UserSelect() {
+  const [users, setUsers] = useState<IUser[]>([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const [isFetching, setIsFetching] = useState(false);
+  const [listStatus, setListStatus] = useState(false);
+    const [selectedUser, setSelectedUser] = useState<string>("");
+  const pageRef = useRef(1);
+  const listRef = useRef<HTMLDivElement | null>(null);
+  const queryClient = useQueryClient();
 
+  // 1️⃣ Faqat birinchi sahifani fetch qiladi
+  useEffect(() => {
+    const fetchFirstPage = async () => {
+      setIsFetching(true);
+      pageRef.current = 1;
+      const data = await fetchPaginatedUsers(1, searchValue);
+      setUsers(data?.results || []);
+      setHasNextPage(!!data?.next);
+      setIsFetching(false);
+    };
 
-export default function UserSelect({ users }: { users?: IUser[] }) {
-    const [open, setOpen] = useState(false);
+    fetchFirstPage();
+  }, [searchValue]);
 
+  // 2️⃣ Yangi sahifa yuklash funksiyasi
+  const loadMoreUsers = useCallback(async () => {
+    if (!hasNextPage || isFetching) return;
 
-    const { watch, setValue } = useFormContext<CreateOrderForm>();
+    setIsFetching(true);
+    const nextPage = pageRef.current + 1;
 
+    try {
+      const nextData = await queryClient.fetchQuery({
+        queryKey: ["users-pg", nextPage, searchValue],
+        queryFn: () => fetchPaginatedUsers(nextPage, searchValue),
+      });
 
-    return (
-        <div className="space-y-2">
-            <Label htmlFor="user">Foydalanuvchi</Label>
-            {!users ? (
-                <Skeleton className="h-10 w-full" />
-            ) : (
-                <Popover open={open} onOpenChange={setOpen}>
-                    <PopoverTrigger asChild>
-                        <Button
-                            variant="outline"
-                            role="combobox"
-                            aria-expanded={open}
-                            className="w-full justify-between"
-                        >
-                            {watch("user") == null ? "Anony foydalanuvchi" : (watch('user') ? users?.find((user) => user.id === watch('user'))?.name : "Foydalanuvchini tanlang...")}
-                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[300px] p-0">
-                        <Command>
-                            <CommandInput placeholder="Foydalanuvchilarni qidirish..." />
-                            <CommandList>
-                                <CommandEmpty>Foydalanuvchi topilmadi.</CommandEmpty>
-                                <CommandGroup>
-                                    <CommandItem
-                                        onSelect={() => {
-                                            setValue('user', null);
-                                            setValue('phone', '');
-                                            setOpen(false);
-                                        }}
-                                    >
-                                        <Check
-                                            className={cn(
-                                                "mr-2 h-4 w-4",
-                                                watch('user') === null ? "opacity-100" : "opacity-0"
+      if (nextData?.results) {
+        setUsers((prev) => [...prev, ...nextData.results]);
+        pageRef.current = nextPage; // Sahifani oshiramiz
+        setHasNextPage(!!nextData.next);
+      }
+    } catch (error) {
+      console.error("Error fetching next page:", error);
+    }
 
-                                            )}
-                                        />
-                                        Anonym foydalanuvchi
-                                    </CommandItem>
-                                    {users && users?.map((user) => (
-                                        <CommandItem
-                                            key={user.id}
-                                            onSelect={() => {
-                                                setValue('user', user.id);
-                                                setValue('phone', user.number);
-                                                setOpen(false);
-                                            }}
-                                        >
-                                            <Check
-                                                className={cn(
-                                                    "mr-2 h-4 w-4",
-                                                    watch('user') === user.id ? "opacity-100" : "opacity-0"
-                                                )}
-                                            />
-                                            {user.name} ({user.number})
-                                        </CommandItem>
-                                    ))}
-                                </CommandGroup>
-                            </CommandList>
-                        </Command>
-                    </PopoverContent>
-                </Popover>
-            )}
+    setIsFetching(false);
+  }, [hasNextPage, isFetching, queryClient, searchValue]);
+
+  // 3️⃣ Scroll event orqali yuklash
+  useEffect(() => {
+    const container = listRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const isBottom =
+        container.scrollTop + container.clientHeight >= container.scrollHeight - 5;
+
+      if (isBottom && hasNextPage && !isFetching) {
+        loadMoreUsers();
+      }
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [hasNextPage, isFetching, searchValue, loadMoreUsers]);
+
+  const { setValue } = useFormContext<CreateOrderForm>();
+
+  return (
+    <div className="space-y-2 relative w-full flex justify-center items-start">
+      <div className="space-y-2 w-full">
+        <Label htmlFor="user">Foydalanuvchi</Label>
+        {listStatus ? <Input
+          type="text"
+          placeholder="Foydalanuvchilarni qidirish..."
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          className="w-full"
+          onFocus={() => setListStatus(true)}
+          onBlur={() => {
+            setTimeout(() => {
+              if (!listRef.current?.contains(document.activeElement)) {
+                setListStatus(false);
+              }
+            }, 100);
+          }}
+        /> :
+        <Input
+          type="text"
+          placeholder="Foydalanuvchilarni qidirish..."
+          value={selectedUser}
+          onClick={() => {
+            // setValue('user', "");
+            // setValue('phone', "");
+            setListStatus(true)}}
+          readOnly
+        />}
+      </div>
+
+      {listStatus && (
+        <div
+          ref={listRef}
+          className="border p-2 rounded absolute bg-white top-[62px] z-20 max-h-64 overflow-y-auto"
+          onMouseDown={(e) => e.preventDefault()} // 🟢 `onBlur` ni oldini olish
+        >
+          {users.length === 0 && isFetching ? (
+            <Skeleton className="h-10 w-full" />
+          ) : (
+            users.map((user, index) => (
+              <div
+                key={index}
+                className="p-2 border-b cursor-pointer hover:bg-gray-100"
+                onClick={() => {
+                  setValue("user", user.id);
+                  setValue('phone', user.number);
+                  setSelectedUser(user.name);
+                  setListStatus(false);
+                  setSearchValue("");
+                }}
+              >
+                {user.name} ({user.number})
+              </div>
+            ))
+          )}
+
+          {isFetching && <Skeleton className="h-10 w-full" />} {/* Loader */}
         </div>
-    )
+      )}
+    </div>
+  );
 }
