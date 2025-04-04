@@ -19,7 +19,6 @@ import {
   MapPin,
   Hash,
   Ticket,
-  Languages,
   MessageCircle,
   CreditCard,
 } from "lucide-react";
@@ -94,13 +93,13 @@ function UserInformationCard({
           </div>
         )}
 
-        {user && (
+        {/* {user && (
           <div className="flex items-center space-x-2">
             <Languages className="h-4 w-4" />
             <Label>Tili:</Label>
             <span>{user.lang}</span>
           </div>
-        )}
+        )} */}
 
         <div className="flex items-center space-x-2">
           <CalendarIcon className="h-4 w-4" />

@@ -23,14 +23,14 @@ import {
   // CalendarIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  ExternalLink,
+  // ExternalLink,
 } from "lucide-react";
 // import { format } from "date-fns";
 // import { DateRange } from "react-day-picker";
 import { Layout } from "@/components/Layout";
 import { request } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
+// import Link from "next/link";
 import { useRouter } from "next/router";
 import { Skeleton } from "@/components/ui/skeleton";
 // import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -248,13 +248,13 @@ function OrderList({
         {isLoading ? <OrderSkeleton/> : <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>ID</TableHead>
+              {/* <TableHead>ID</TableHead> */}
               <TableHead>Iiko ID</TableHead>
               <TableHead>Mijoz</TableHead>
               <TableHead>Telefon raqami</TableHead>
               <TableHead>Narxi</TableHead>
-              <TableHead>Mahsulotlar soni</TableHead>
-              <TableHead>Promokod</TableHead>
+              {/* <TableHead>Mahsulotlar soni</TableHead> */}
+              {/* <TableHead>Promokod</TableHead> */}
               <TableHead>Buyurtma vaqti</TableHead>
               <TableHead>Yetkazish/Olib ketish</TableHead>
               <TableHead>Buyurtma berilgan vaqt</TableHead>
@@ -265,13 +265,13 @@ function OrderList({
           <TableBody>
             {orders?.results?.map((order) => (
               <TableRow key={order.id} className="cursor-pointer">
-                <TableCell
+                {/* <TableCell
                   onClick={() => {
                     push(`orders/info?id=${order.id}`);
                   }}
                 >
                   {order.order_id}
-                </TableCell>
+                </TableCell> */}
 
                 <TableCell
                   onClick={() => {
@@ -316,14 +316,14 @@ function OrderList({
                     )}
                   </div>
                 </TableCell>
-                <TableCell
+                {/* <TableCell
                   onClick={() => {
                     push(`orders/info?id=${order.id}`);
                   }}
                 >
                   {order.products_count}
-                </TableCell>
-                <TableCell>
+                </TableCell> */}
+                {/* <TableCell>
                   {order.promocode ? (
                     <Link
                       href={`/promocodes/info?id=${order.promocode?.id}`}
@@ -335,7 +335,7 @@ function OrderList({
                   ) : (
                     "-"
                   )}
-                </TableCell>
+                </TableCell> */}
                 <TableCell
                   onClick={() => {
                     push(`orders/info?id=${order.id}`);

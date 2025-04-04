@@ -51,6 +51,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.53.0",
     "react-window": "^1.8.10",
+    "react-yandex-maps": "^4.6.0",
     "recharts": "^2.12.7",
     "sass": "^1.78.0",
     "sushi_dashboard": "file:",

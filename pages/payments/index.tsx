@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Table,
   TableBody,
@@ -12,7 +12,6 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import {
@@ -22,14 +21,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   CreditCard,
   DollarSign,
-  AlertCircle,
-  ChevronRightIcon,
-  ChevronLeftIcon,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -39,7 +33,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Layout } from "@/components/Layout";
 import { splitToHundreds } from "@/lib/utils";
 import { format } from "date-fns";
-import { queryClient } from "@/lib/query";
 
 const ProviderIcon = ({ provider }: { provider: IPayment["provider"] }) => {
   switch (provider) {
@@ -70,8 +63,14 @@ const ProviderIcon = ({ provider }: { provider: IPayment["provider"] }) => {
   }
 };
 
-const fetchPayments = async (page: number, type: string): Promise<PaginatedPaymentResponse> => {
-  const { data } = await request.get(`payments/paginated?page=${page}&type=${type}`);
+const fetchPayments = async (
+  page: number,
+  type: string,
+  q: string
+): Promise<PaginatedPaymentResponse> => {
+  const { data } = await request.get(
+    `payments/paginated?page=${page}&provider=${type}&search=${q}`
+  );
   return data;
 };
 
@@ -120,7 +119,7 @@ function FilterSection({
                 <SelectItem value="all">Hammasi</SelectItem>
                 <SelectItem value="PAYME">Payme</SelectItem>
                 <SelectItem value="CLICK">Click</SelectItem>
-                <SelectItem value="CASH">Naqt</SelectItem>
+                <SelectItem value="CASH">Naqd</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -153,168 +152,101 @@ function FilterSection({
 }
 
 function EnhancedPaymentListing() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [sortColumn, setSortColumn] = useState<keyof IPayment | "">("");
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  // const [sortColumn, setSortColumn] = useState<keyof IPayment | "">("");
+  
   const [filters, setFilters] = useState<Filter>({
     user: "",
     provider: "all",
     startDate: "",
     endDate: "",
   });
-  const itemsPerPage = 10;
-  const indexOfLastOrder = currentPage * itemsPerPage;
-  const indexOfFirstOrder = (currentPage - 1) * itemsPerPage;
-
-
-  const {
-    data: payments,
-    isLoading,
-    error,
-  } = useQuery<PaginatedPaymentResponse, Error>({
-    queryKey: ["payments", currentPage, filters?.provider],
-    queryFn:()=> fetchPayments (currentPage, filters?.provider),
+  const [paymentData, setPaymentData] = useState<IPayment[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const observerRef = useRef<HTMLDivElement | null>(null);
+  
+  // Query hook with dynamic query key based on filters and page
+  const { data: payments, isFetching } = useQuery<PaginatedPaymentResponse>({
+    queryKey: ["users", page, filters?.provider, filters?.user],
+    queryFn: () =>
+      fetchPayments(
+        page,
+        filters?.provider === "all" ? "" : filters?.provider,
+        filters?.user
+      ),
+    // Refetch when filters or page change
   });
+  
   useEffect(() => {
-    if (payments?.current_page) {
-      queryClient.prefetchQuery({
-        queryKey: ["payments", currentPage + 1, filters?.provider],
-        queryFn: () => fetchPayments(currentPage + 1, filters?.provider), // Ensure the function returns the promise
-      });
-    }
-  }, [payments, currentPage, filters]);
-  const handleSort = useCallback(
-    (column: keyof IPayment) => {
-      if (column === sortColumn) {
-        setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    // Reset payment data when filters or page changes
+    if (payments?.results) {
+      if (page === 1) {
+        setPaymentData(payments.results); // Reset on new search
       } else {
-        setSortColumn(column);
-        setSortDirection("asc");
+        setPaymentData((prev) => [...prev, ...payments.results]);
       }
-    },
-    [sortColumn, sortDirection]
-  );
-
-  // useEffect(() => {
-  //   if (payments?.results && Array.isArray(payments?.results)) {
-  //     let result = payments?.results;
-  //     if (filters.user) {
-  //       result = result.filter(
-  //         (payment) =>
-  //           payment.user.name
-  //             ?.toLowerCase()
-  //             ?.includes(filters.user?.toLowerCase()) ||
-  //           payment.user.number
-  //             ?.toLowerCase()
-  //             ?.includes(filters.user?.toLowerCase())
-  //       );
-  //     }
-  //     if (filters.provider !== "all") {
-  //       result = result.filter(
-  //         (payment) => payment.provider === filters.provider
-  //       );
-  //     }
-  //     if (filters.startDate) {
-  //       result = result.filter(
-  //         (payment) =>
-  //           new Date(payment.created_at) >= new Date(filters.startDate)
-  //       );
-  //     }
-  //     if (filters.endDate) {
-  //       result = result.filter(
-  //         (payment) =>
-  //           new Date(payment.created_at) <= new Date(filters.endDate)
-  //       );
-  //     }
-  //     setFilteredPayments(result);
-  //   } else {
-  //     setFilteredPayments([]); // Set an empty array if no payments
-  //   }
-  // }, [payments, filters]);
-  // useEffect(() => {
-  //   if (sortColumn) {
-  //     handleSort(sortColumn);
-  //   }
-  // }, [handleSort, sortColumn]);
-
-
-  // const sortedPayments = [...filteredPayments]
-  // ?.sort((a, b) => {
-  //   if (!sortColumn) return 0;
-  //   if (a[sortColumn]! < b[sortColumn]!)
-  //     return sortDirection === "asc" ? -1 : 1;
-  //   if (a[sortColumn]! > b[sortColumn]!)
-  //     return sortDirection === "asc" ? 1 : -1;
-  //   return 0;
-  // });
-
-  // const paginatedPayments = sortedPayments.slice(
-  //   (currentPage - 1) * itemsPerPage,
-  //   currentPage * itemsPerPage
-  // );
-
-  const totalPages = Math.ceil(payments?.count as number / itemsPerPage);
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
-  const getPaginationButtons = () => {
-    const buttons: (number | string)[] = [];
-    if (totalPages <= 1) return buttons;
-    buttons.push(1);
-    if (currentPage > 3) {
-      buttons.push("...");
+      setHasNextPage(!!payments.next);
     }
-    for (
-      let i = Math.max(2, currentPage - 1);
-      i <= Math.min(totalPages - 1, currentPage + 1);
-      i++
-    ) {
-      buttons.push(i);
-    }
-    if (currentPage < totalPages - 2) {
-      buttons.push("...");
-    }
-    buttons.push(totalPages);
-    return buttons;
-  };
-  const buttons = getPaginationButtons();
-
-  const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <Card>
-        <CardContent>
-          <div className="space-y-4">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="flex items-center space-x-4">
-                <Skeleton className="h-12 w-12 rounded-full" />
-                <div className="space-y-2">
-                  <Skeleton className="h-4 w-[250px]" />
-                  <Skeleton className="h-4 w-[200px]" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+  }, [payments, page]);
+  
+  const loadMorePaymentsData = useCallback(() => {
+    if (!hasNextPage || isFetching) return;
+    setPage((prevPage) => prevPage + 1);
+  }, [hasNextPage, isFetching]);
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMorePaymentsData();
+        }
+      },
+      { threshold: 1.0 }
     );
-  }
+  
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+  
+    return () => observer.disconnect();
+  }, [loadMorePaymentsData]);
+  
+  // Reset page to 1 and refetch when filters change
+  useEffect(() => {
+    setPage(1); // Reset page to 1 on filter change
+  }, [filters]); // Dependencies will trigger this when any filter changes
+  
+  // if (isLoading) {
+  //   return (
+  //     <Card>
+  //       <CardContent>
+  //         <div className="space-y-4">
+  //           {[...Array(5)].map((_, i) => (
+  //             <div key={i} className="flex items-center space-x-4">
+  //               <Skeleton className="h-12 w-12 rounded-full" />
+  //               <div className="space-y-2">
+  //                 <Skeleton className="h-4 w-[250px]" />
+  //                 <Skeleton className="h-4 w-[200px]" />
+  //               </div>
+  //             </div>
+  //           ))}
+  //         </div>
+  //       </CardContent>
+  //     </Card>
+  //   );
+  // }
 
-  if (error) {
-    return (
-      <Alert variant="destructive">
-        <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Hatolik</AlertTitle>
-        <AlertDescription>
-          An error occurred while fetching payments: {error.message}
-        </AlertDescription>
-      </Alert>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <Alert variant="destructive">
+  //       <AlertCircle className="h-4 w-4" />
+  //       <AlertTitle>Hatolik</AlertTitle>
+  //       <AlertDescription>
+  //         An error occurred while fetching payments: {error.message}
+  //       </AlertDescription>
+  //     </Alert>
+  //   );
+  // }
 
   return (
     <div className="container mx-auto py-10">
@@ -329,38 +261,38 @@ function EnhancedPaymentListing() {
               <TableRow>
                 <TableHead
                   className="cursor-pointer"
-                  onClick={() => handleSort("user")}
+                  // onClick={() => handleSort("user")}
                 >
                   Foydalanuvchi
                 </TableHead>
                 <TableHead
                   className="cursor-pointer"
-                  onClick={() => handleSort("provider")}
+                  // onClick={() => handleSort("provider")}
                 >
                   Manba
                 </TableHead>
                 <TableHead
                   className="cursor-pointer"
-                  onClick={() => handleSort("order")}
+                  // onClick={() => handleSort("order")}
                 >
                   Buyurtma
                 </TableHead>
                 <TableHead
                   className="cursor-pointer"
-                  onClick={() => handleSort("created_at")}
+                  // onClick={() => handleSort("created_at")}
                 >
                   Vaqti
                 </TableHead>
                 <TableHead
                   className="cursor-pointer"
-                  onClick={() => handleSort("amount")}
+                  // onClick={() => handleSort("amount")}
                 >
                   Miqdori
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {payments?.results?.map((payment) => (
+              {paymentData?.map((payment) => (
                 <TableRow key={payment.id}>
                   <TableCell>
                     <div className="flex items-center space-x-3">
@@ -370,7 +302,12 @@ function EnhancedPaymentListing() {
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <Link href={`/users/info?id=${payment?.user?.id}`} className="font-medium">{payment.user.name}</Link>
+                        <Link
+                          href={`/users/info?id=${payment?.user?.id}`}
+                          className="font-medium"
+                        >
+                          {payment.user.name}
+                        </Link>
                       </div>
                     </div>
                   </TableCell>
@@ -410,57 +347,9 @@ function EnhancedPaymentListing() {
               ))}
             </TableBody>
           </Table>
-          <div className="mt-4 flex justify-between items-center">
-        <div>
-          {payments?.count} ta to&apos;lovlardan {indexOfFirstOrder + 1} dan{" "}
-          {Math.min(indexOfLastOrder)} gacha
-        </div>
-        <div className="flex space-x-2 items-center">
-          <Button
-            variant="outline"
-            onClick={() => {
-              paginate(currentPage - 1);
-            }}
-            disabled={currentPage === 1}
-            className="w-10 h-10 p-0"
-          >
-            <ChevronLeftIcon className="w-4 h-4" />
-            <span className="sr-only">Previous page</span>
-          </Button>
-          {buttons.map((button, index) =>
-            button === "..." ? (
-              <span key={index} style={{ margin: "0 5px" }}>
-                ...
-              </span>
-            ) : (
-              <Button
-                key={index}
-                onClick={() => {
-                  handlePageChange(button as number);
-                }}
-                disabled={button === currentPage}
-                className={button === currentPage ? "" : "border"}
-                variant={button === currentPage ? "default" : "ghost"}
-              >
-                {button}
-              </Button>
-            )
-          )}
-          <Button
-            variant="outline"
-            onClick={() => {
-              paginate(currentPage + 1);
-            }}
-            // disabled={currentPage === totalPages}
-            className="w-10 h-10 p-0"
-          >
-            <ChevronRightIcon className="w-4 h-4" />
-            <span className="sr-only">Next page</span>
-          </Button>
-        </div>
-      </div>
         </CardContent>
       </Card>
+      <div ref={observerRef} className="h-10 w-full" />
     </div>
   );
 }

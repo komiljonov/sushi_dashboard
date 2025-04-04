@@ -14,6 +14,7 @@ import { IOrder } from '@/lib/types'
 import StatisticsModal from '@/components/statistics'
 import { splitToHundreds } from '@/lib/utils'
 import Charts from '@/components/analytics'
+import Heatmap from '@/components/home/heatmap'
 
 interface MostProduct {
   product__id: string;
@@ -85,7 +86,7 @@ function TrendingProducts() {
               <div className="space-y-1">
                 <p className="text-sm font-medium leading-none">{product.product__name_uz}</p>
                 <p className="text-sm text-muted-foreground">
-                  {product.product__price.toLocaleString()} so'm
+                  {product.product__price?.toLocaleString()} so'm
                 </p>
               </div>
               <div className="flex items-center space-x-4">
@@ -129,7 +130,7 @@ function EnhancedAnalyticsDashboard() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{statistics?.user_count.toLocaleString()}</div>
+            <div className="text-2xl font-bold">{statistics?.user_count?.toLocaleString()}</div>
             {/* <p className="text-xs text-muted-foreground">Bugun {statistics?.user_delta && (statistics?.user_delta > 0 ? '+' : '-')}{statistics?.user_delta}</p> */}
           </CardContent>
         </Card>
@@ -149,7 +150,7 @@ function EnhancedAnalyticsDashboard() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{statistics?.today_revenue.toLocaleString()} so'm</div>
+            <div className="text-2xl font-bold">{statistics?.today_revenue?.toLocaleString()} so'm</div>
             {/* <p className="text-xs text-muted-foreground">Kechagidan {statistics?.revenue_delta_percent}%</p> */}
           </CardContent>
         </Card>
@@ -162,7 +163,7 @@ function EnhancedAnalyticsDashboard() {
           </CardHeader>
           <CardContent>
             <ScrollArea className="h-[300px]">
-              {statistics?.recent_orders.map((order) => (
+              {statistics?.recent_orders?.map((order) => (
                 <div key={order.id} className="flex items-center justify-between py-2">
                   <div>
                     <p className="text-sm font-medium leading-none">{order.user?.name ?? "Anonym foydalanuvchi"}</p>
@@ -204,6 +205,7 @@ function EnhancedAnalyticsDashboard() {
 const Home: NextPage = () => {
   return (
     <Layout page='home'>
+      <Heatmap/>
       <EnhancedAnalyticsDashboard />
     </Layout>
   )

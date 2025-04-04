@@ -49,10 +49,10 @@ const Charts = () => {
 
 
     const pieData = {
-        labels: analytics.filials.map(f => f.filial),
+        labels: analytics.filials?.map(f => f.filial),
         datasets: [
             {
-                data: analytics.filials.map(f => f.count),
+                data: analytics.filials?.map(f => f.count),
                 backgroundColor: [
                     chartColors.red,
                     chartColors.blue,

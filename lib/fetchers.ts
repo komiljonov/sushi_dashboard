@@ -9,8 +9,13 @@ export const fetchFilials = async (): Promise<IFilial[]> => {
 }
 
 
+export const fetchPromocodesType = async (type: string): Promise<IPromocode[]> => {
+    const { data } = await request.get(`promocodes/${type}/`);
+    return data;
+}
+
 export const fetchPromocodes = async (): Promise<IPromocode[]> => {
-    const { data } = await request.get('promocodes/');
+    const { data } = await request.get(`promocodes/`);
     return data;
 }
 
