@@ -14,6 +14,11 @@ export const fetchPromocodesType = async (type: string): Promise<IPromocode[]> =
     return data;
 }
 
+export const fetchCatProducts = async (id: string) => {
+    const { data } = await request.get(`categories/${id}/stats`);
+    return data;
+  };
+
 export const fetchPromocodes = async (): Promise<IPromocode[]> => {
     const { data } = await request.get(`promocodes/`);
     return data;
@@ -37,6 +42,7 @@ export const fetchUsers = async (): Promise<IUser[]> => {
     const { data } = await request.get(`/users`);
     return data;
 }
+
 
 
 export const fetchUsersMin = async (): Promise<IUser[]> => {

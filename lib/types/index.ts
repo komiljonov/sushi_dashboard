@@ -34,7 +34,7 @@ export interface IProduct {
   category: string;
 
   image?: IFile | string;
-
+  count: number
   price: number;
   sale_count: number;
 }
