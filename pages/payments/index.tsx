@@ -102,6 +102,7 @@ function FilterSection({
               value={filters.user}
               onChange={(e) => setFilters({ ...filters, user: e.target.value })}
               placeholder="Foydalanuvchini izlash..."
+              className="!h-[36px]"
             />
           </div>
           <div>
@@ -112,7 +113,7 @@ function FilterSection({
                 setFilters({ ...filters, provider: value })
               }
             >
-              <SelectTrigger id="provider-filter">
+              <SelectTrigger id="provider-filter" className="input !h-[36px]">
                 <SelectValue placeholder="Select provider" />
               </SelectTrigger>
               <SelectContent>

@@ -28,7 +28,7 @@ export function Layout({
           collapsed={sidebarCollapsed}
           setCollapsed={setSidebarCollapsed}
         />
-        <main className="flex-1 p-4 bg-white text-black">
+        <main className="flex-1 p-4 bg-[#F5F5F5] text-black">
           {" "}
           {/* Main content light styling */}
           {children}

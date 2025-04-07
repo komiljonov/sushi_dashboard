@@ -1,34 +1,20 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 // import { Button } from "@/components/ui/Button"
 // import { Dialog } from "@/components/ui/dialog"
-import { useMutation, useQuery } from "@tanstack/react-query"
-import { request } from "@/lib/api"
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { request } from "@/lib/api";
 // import { PromocodeForm } from "@/components/promocode/Form"
-import { PromocodeTable } from "@/components/promocode/Table"
-import { DeleteDialog } from "@/components/promocode/DeleteDialog"
-import { IPromocode } from "@/lib/types"
-import { Layout } from "@/components/Layout"
-import { queryClient } from "@/lib/query"
-import { fetchPromocodesType } from "@/lib/fetchers"
-import { useRouter } from "next/router"
-
-
-
-
-
-
-
-
-
-
-
-
-
+import { PromocodeTable } from "@/components/promocode/Table";
+import { DeleteDialog } from "@/components/promocode/DeleteDialog";
+import { IPromocode } from "@/lib/types";
+import { Layout } from "@/components/Layout";
+import { queryClient } from "@/lib/query";
+import { fetchPromocodesType } from "@/lib/fetchers";
+import { useRouter } from "next/router";
 
 // const createPromocode = async (promocode: Omit<IPromocode, "id">) => {
-
 
 //   const { end_date } = promocode;
 
@@ -44,28 +30,27 @@ import { useRouter } from "next/router"
 //     payload.end_date = formattedEndDate;
 //   }
 
-
 //   await request.post('promocodes/', payload);
 
 // }
 
-
 const deletePromocode = async (id: string) => {
   await request.delete(`promocodes/${id}/`);
-}
+};
 
 export function Promocodes() {
-
-  const type = (useRouter()?.query?.type || "")as string
+  const type = (useRouter()?.query?.type || "") as string;
 
   const { data: promocodes } = useQuery({
-    queryKey: ['promocodes', type],
-    queryFn: ()=> fetchPromocodesType(type)
+    queryKey: ["promocodes", type],
+    queryFn: () => fetchPromocodesType(type),
   });
 
   // const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [promocodeToDelete, setPromocodeToDelete] = useState<IPromocode | null>(null);
+  const [promocodeToDelete, setPromocodeToDelete] = useState<IPromocode | null>(
+    null
+  );
 
   // const mutation = useMutation({
   //   mutationFn: createPromocode,
@@ -75,7 +60,7 @@ export function Promocodes() {
   const deleteMutation = useMutation({
     mutationFn: deletePromocode,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['promocodes'] });
+      queryClient.invalidateQueries({ queryKey: ["promocodes"] });
       setIsDeleteDialogOpen(false);
     },
   });
@@ -89,7 +74,7 @@ export function Promocodes() {
     if (promocodeToDelete) {
       deleteMutation.mutate(promocodeToDelete.id);
     }
-  }
+  };
 
   return (
     <div className="container mx-auto py-10 text-black">
@@ -110,10 +95,15 @@ export function Promocodes() {
           </DialogContent>
         </Dialog> */}
       {/* </div> */}
-      <PromocodeTable promocodes={promocodes} onDelete={(promo) => {
-        setPromocodeToDelete(promo);
-        setIsDeleteDialogOpen(true);
-      }} />
+      <div className="bg-white p-4 rounded-xl">
+        <PromocodeTable
+          promocodes={promocodes}
+          onDelete={(promo) => {
+            setPromocodeToDelete(promo);
+            setIsDeleteDialogOpen(true);
+          }}
+        />
+      </div>
       {/* <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}> */}
       <DeleteDialog
         open={isDeleteDialogOpen}
@@ -123,14 +113,14 @@ export function Promocodes() {
       />
       {/* </Dialog> */}
     </div>
-  )
+  );
 }
 
-
-
 export default function Page() {
-  const type = (useRouter()?.query?.type || "")as string
-  return <Layout page={type}>
-    <Promocodes />
-  </Layout>
+  const type = (useRouter()?.query?.type || "") as string;
+  return (
+    <Layout page={type}>
+      <Promocodes />
+    </Layout>
+  );
 }

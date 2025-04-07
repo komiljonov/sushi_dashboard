@@ -72,7 +72,7 @@ function UsersTable() {
       <div className="py-3 flex gap-3">
         <Input
           type="text"
-          className="max-w-[400px]"
+          className="max-w-[400px] !h-[36px]"
           onChange={(e) => {
             setSearchTerm(e.target.value);
             setUserData([]); // Clear previous data
@@ -81,7 +81,7 @@ function UsersTable() {
           placeholder="Foydalanuvchini ismi yoki raqami orqali qidirish..."
         />
       </div>
-      <div className="border rounded-md">
+      <div className="">
         {isFetching && userData.length === 0 ? (
           <UsersTableSkeleton />
         ) : (
@@ -222,8 +222,9 @@ export default function UsersListPage() {
         <h1 className="text-2xl font-bold mb-5">
           Foydalanuvchilar ro&apos;yxati
         </h1>
-
+        <div className="bg-white p-4 rounded-xl">
         <UsersTable />
+        </div>
       </div>
     </Layout>
   );

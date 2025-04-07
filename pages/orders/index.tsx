@@ -94,7 +94,7 @@ function OrderList({
   selectedStatus,
   // setDateRange,
   currentPage,
-  isLoading
+  isLoading,
 }: {
   orders: PaginatedOrderResponse;
   setCurrentPage: Dispatch<SetStateAction<number>>;
@@ -105,11 +105,10 @@ function OrderList({
   selectedStatus: string;
   searchTerm: string;
   // dateRange: { from?: Date; to?: Date }
-  isLoading: boolean
+  isLoading: boolean;
 }) {
   const router = useRouter();
- 
-  
+
   const ordersPerPage = 10;
   const totalPages = Math.ceil(orders?.count / ordersPerPage);
   const { push } = useRouter();
@@ -155,13 +154,14 @@ function OrderList({
         {/* <CreateOrderButton /> */}
         {/* <Button ></Button> */}
 
-        <Button variant="default" onClick={() => router.push("/orders/create")}>
+        <Button variant="default" className="button" onClick={() => router.push("/orders/create")}>
           Buyurtma yaratish
         </Button>
       </div>
 
-      <div className="flex flex-col space-y-4 mb-6">
-        {/* <div className="flex items-center space-x-4">
+      <div className="bg-white rounded-xl p-4">
+        <div className="flex flex-col space-y-4 mb-6">
+          {/* <div className="flex items-center space-x-4">
           <Label>Vaqt bo&apos;yicha filter:</Label>
           <Popover>
             <PopoverTrigger asChild>
@@ -214,58 +214,61 @@ function OrderList({
             Tozalash
           </Button>
         </div> */}
-        <div className="flex flex-wrap gap-2">
-          <Label className="flex items-center mr-2">
-            Holat bo&apos;yicha saralash:
-          </Label>
-          {statuses.map((status) => (
-            <Button
-              key={status.name}
-              variant="outline"
-              onClick={() => setSelectedStatus(status.value)}
-              className={`transition-colors duration-200 ${
-                selectedStatus === status.value
-                  ? `${status.color} border-2 ${status.border}`
-                  : `bg-white hover:${status.color}`
-              }`}
-            >
-              {status.name}
-            </Button>
-          ))}
+          <div className="flex flex-wrap gap-2">
+            <Label className="flex items-center mr-2">
+              Holat bo&apos;yicha saralash:
+            </Label>
+            {statuses.map((status) => (
+              <Button
+                key={status.name}
+                variant="outline"
+                onClick={() => setSelectedStatus(status.value)}
+                className={`transition-colors duration-200 ${
+                  selectedStatus === status.value
+                    ? `${status.color} border-2 ${status.border}`
+                    : `bg-white hover:${status.color}`
+                }`}
+              >
+                {status.name}
+              </Button>
+            ))}
+          </div>
+          <div className="flex items-center space-x-4">
+            <Label htmlFor="search">Qidirish:</Label>
+            <Input
+              id="search"
+              placeholder="Buyurtma raqami, mijoz ismi yoki telefon raqam."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="max-w-sm !h-[36px]"
+            />
+          </div>
         </div>
-        <div className="flex items-center space-x-4">
-          <Label htmlFor="search">Qidirish:</Label>
-          <Input
-            id="search"
-            placeholder="Buyurtma raqami, mijoz ismi yoki telefon raqam."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="max-w-sm"
-          />
-        </div>
-      </div>
-      <div className="border rounded-md">
-        {isLoading ? <OrderSkeleton/> : <Table>
-          <TableHeader>
-            <TableRow>
-              {/* <TableHead>ID</TableHead> */}
-              <TableHead>Iiko ID</TableHead>
-              <TableHead>Mijoz</TableHead>
-              <TableHead>Telefon raqami</TableHead>
-              <TableHead>Narxi</TableHead>
-              {/* <TableHead>Mahsulotlar soni</TableHead> */}
-              {/* <TableHead>Promokod</TableHead> */}
-              <TableHead>Buyurtma vaqti</TableHead>
-              <TableHead>Yetkazish/Olib ketish</TableHead>
-              <TableHead>Buyurtma berilgan vaqt</TableHead>
+        <div className="rounded-md">
+          {isLoading ? (
+            <OrderSkeleton />
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  {/* <TableHead>ID</TableHead> */}
+                  <TableHead>Iiko ID</TableHead>
+                  <TableHead>Mijoz</TableHead>
+                  <TableHead>Telefon raqami</TableHead>
+                  <TableHead>Narxi</TableHead>
+                  {/* <TableHead>Mahsulotlar soni</TableHead> */}
+                  {/* <TableHead>Promokod</TableHead> */}
+                  <TableHead>Buyurtma vaqti</TableHead>
+                  <TableHead>Yetkazish/Olib ketish</TableHead>
+                  <TableHead>Buyurtma berilgan vaqt</TableHead>
 
-              <TableHead>Holati</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {orders?.results?.map((order) => (
-              <TableRow key={order.id} className="cursor-pointer">
-                {/* <TableCell
+                  <TableHead>Holati</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {orders?.results?.map((order) => (
+                  <TableRow key={order.id} className="cursor-pointer">
+                    {/* <TableCell
                   onClick={() => {
                     push(`orders/info?id=${order.id}`);
                   }}
@@ -273,57 +276,57 @@ function OrderList({
                   {order.order_id}
                 </TableCell> */}
 
-                <TableCell
-                  onClick={() => {
-                    push(`orders/info?id=${order.id}`);
-                  }}
-                >
-                  {order.iiko_order_id}
-                </TableCell>
+                    <TableCell
+                      onClick={() => {
+                        push(`orders/info?id=${order.id}`);
+                      }}
+                    >
+                      {order.iiko_order_id}
+                    </TableCell>
 
-                <TableCell
-                  onClick={() => {
-                    push(`orders/info?id=${order.id}`);
-                  }}
-                >
-                  {order.user}
-                </TableCell>
-                <TableCell
-                  onClick={() => {
-                    push(`orders/info?id=${order.id}`);
-                  }}
-                >
-                  {order.phone_number}
-                </TableCell>
-                <TableCell
-                  onClick={() => {
-                    push(`orders/info?id=${order.id}`);
-                  }}
-                >
-                  <div className="flex items-center space-x-2">
-                    {order.price && (
-                      <Badge
-                        variant="secondary"
-                        className="text-green-600 bg-green-100"
-                      >
-                        {splitToHundreds(order.discount_price)} so&apos;m
-                      </Badge>
-                    )}
-                    {order.promocode && (
-                      <span className="text-sm text-muted-foreground line-through">
-                        {splitToHundreds(order.price)} so&apos;m
-                      </span>
-                    )}
-                  </div>
-                </TableCell>
-                {/* <TableCell
+                    <TableCell
+                      onClick={() => {
+                        push(`orders/info?id=${order.id}`);
+                      }}
+                    >
+                      {order.user}
+                    </TableCell>
+                    <TableCell
+                      onClick={() => {
+                        push(`orders/info?id=${order.id}`);
+                      }}
+                    >
+                      {order.phone_number}
+                    </TableCell>
+                    <TableCell
+                      onClick={() => {
+                        push(`orders/info?id=${order.id}`);
+                      }}
+                    >
+                      <div className="flex items-center space-x-2">
+                        {order.price && (
+                          <Badge
+                            variant="secondary"
+                            className="text-green-600 bg-green-100"
+                          >
+                            {splitToHundreds(order.discount_price)} so&apos;m
+                          </Badge>
+                        )}
+                        {order.promocode && (
+                          <span className="text-sm text-muted-foreground line-through">
+                            {splitToHundreds(order.price)} so&apos;m
+                          </span>
+                        )}
+                      </div>
+                    </TableCell>
+                    {/* <TableCell
                   onClick={() => {
                     push(`orders/info?id=${order.id}`);
                   }}
                 >
                   {order.products_count}
                 </TableCell> */}
-                {/* <TableCell>
+                    {/* <TableCell>
                   {order.promocode ? (
                     <Link
                       href={`/promocodes/info?id=${order.promocode?.id}`}
@@ -336,97 +339,106 @@ function OrderList({
                     "-"
                   )}
                 </TableCell> */}
-                <TableCell
-                  onClick={() => {
-                    push(`orders/info?id=${order.id}`);
-                  }}
-                >
-                  {order.time
-                    ? new Date(order.time).toLocaleString()
-                    : "Iloji boricha tez"}
-                </TableCell>
-                <TableCell>
-                  {order.delivery == "DELIVER"
-                    ? "Yetkazib berish"
-                    : "Olib ketish"}
-                </TableCell>
-                <TableCell>{String(order.order_time)}</TableCell>
+                    <TableCell
+                      onClick={() => {
+                        push(`orders/info?id=${order.id}`);
+                      }}
+                    >
+                      {order.time
+                        ? new Date(order.time).toLocaleString()
+                        : "Iloji boricha tez"}
+                    </TableCell>
+                    <TableCell>
+                      {order.delivery == "DELIVER"
+                        ? "Yetkazib berish"
+                        : "Olib ketish"}
+                    </TableCell>
+                    <TableCell>{String(order.order_time)}</TableCell>
 
-                <TableCell
-                  onClick={() => {
-                    push(`orders/info?id=${order.id}`);
-                  }}
-                >
-                  <Badge
-                    variant="outline"
-                    className={
-                      statuses.find((status) => status.value === order.status)
-                        ?.color
-                    }
-                  >
-                    {statuses.find((s) => s.value === order.status)?.name}
-                  </Badge>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>}
-      </div>
-      <div className="mt-4 flex justify-between items-center">
-        <div>
-          {orders?.count} ta buyurtmalardan {indexOfFirstOrder + 1} dan{" "}
-          {Math.min(indexOfLastOrder)} gacha
-        </div>
-        <div className="flex space-x-2 items-center">
-          <Button
-            variant="outline"
-            onClick={() => {
-              paginate(currentPage - 1);
-            }}
-            disabled={currentPage === 1}
-            className="w-10 h-10 p-0"
-          >
-            <ChevronLeftIcon className="w-4 h-4" />
-            <span className="sr-only">Previous page</span>
-          </Button>
-          {buttons.map((button, index) =>
-            button === "..." ? (
-              <span key={index} style={{ margin: "0 5px" }}>
-                ...
-              </span>
-            ) : (
-              <Button
-                key={index}
-                onClick={() => {
-                  handlePageChange(button as number);
-                }}
-                disabled={button === currentPage}
-                className={button === currentPage ? "" : "border"}
-                variant={button === currentPage ? "default" : "ghost"}
-              >
-                {button}
-              </Button>
-            )
+                    <TableCell
+                      onClick={() => {
+                        push(`orders/info?id=${order.id}`);
+                      }}
+                    >
+                      <Badge
+                        variant="outline"
+                        className={
+                          statuses.find(
+                            (status) => status.value === order.status
+                          )?.color
+                        }
+                      >
+                        {statuses.find((s) => s.value === order.status)?.name}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           )}
-          <Button
-            variant="outline"
-            onClick={() => {
-              paginate(currentPage + 1);
-            }}
-            // disabled={currentPage === totalPages}
-            className="w-10 h-10 p-0"
-          >
-            <ChevronRightIcon className="w-4 h-4" />
-            <span className="sr-only">Next page</span>
-          </Button>
+        </div>
+        <div className="mt-4 flex justify-between items-center">
+          <div>
+            {orders?.count} ta buyurtmalardan {indexOfFirstOrder + 1} dan{" "}
+            {Math.min(indexOfLastOrder)} gacha
+          </div>
+          <div className="flex space-x-2 items-center">
+            <Button
+              variant="outline"
+              onClick={() => {
+                paginate(currentPage - 1);
+              }}
+              disabled={currentPage === 1}
+              className="w-10 h-10 p-0"
+            >
+              <ChevronLeftIcon className="w-4 h-4" />
+              <span className="sr-only">Previous page</span>
+            </Button>
+            {buttons.map((button, index) =>
+              button === "..." ? (
+                <span key={index} style={{ margin: "0 5px" }}>
+                  ...
+                </span>
+              ) : (
+                <Button
+                  key={index}
+                  onClick={() => {
+                    handlePageChange(button as number);
+                  }}
+                  disabled={button === currentPage}
+                  className={button === currentPage ? "" : "border"}
+                  variant={button === currentPage ? "default" : "ghost"}
+                >
+                  {button}
+                </Button>
+              )
+            )}
+            <Button
+              variant="outline"
+              onClick={() => {
+                paginate(currentPage + 1);
+              }}
+              // disabled={currentPage === totalPages}
+              className="w-10 h-10 p-0"
+            >
+              <ChevronRightIcon className="w-4 h-4" />
+              <span className="sr-only">Next page</span>
+            </Button>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-const fetchOrders = async (page: number, status: string, search: string): Promise<PaginatedOrderResponse> => {
-  const { data } = await request.get(`orders/pagination?page=${page}&status=${status}&q=${search}`);
+const fetchOrders = async (
+  page: number,
+  status: string,
+  search: string
+): Promise<PaginatedOrderResponse> => {
+  const { data } = await request.get(
+    `orders/pagination?page=${page}&status=${status}&q=${search}`
+  );
   return data;
 };
 
@@ -474,7 +486,7 @@ export default function Page() {
   //   from: undefined,
   //   to: undefined,
   // });
-   // const startDate = dateRange?.from instanceof Date && !isNaN(dateRange.from.getTime())
+  // const startDate = dateRange?.from instanceof Date && !isNaN(dateRange.from.getTime())
   // ? format(dateRange.from, "yyyy-MM-dd")
   // : 'Invalid Date';
   // const endDate = dateRange?.to instanceof Date && !isNaN(dateRange.to.getTime())
@@ -502,17 +514,17 @@ export default function Page() {
   return (
     <Layout page="orders">
       {
-      // error ? (
-      //   <Alert variant="destructive">
-      //     <AlertTitle>Error</AlertTitle>
-      //     <AlertDescription>
-      //       {error instanceof Error
-      //         ? error.message
-      //         : "An error occurred while fetching orders."}
-      //     </AlertDescription>
-      //   </Alert>
-      // ) :
-      //  orders ? (
+        // error ? (
+        //   <Alert variant="destructive">
+        //     <AlertTitle>Error</AlertTitle>
+        //     <AlertDescription>
+        //       {error instanceof Error
+        //         ? error.message
+        //         : "An error occurred while fetching orders."}
+        //     </AlertDescription>
+        //   </Alert>
+        // ) :
+        //  orders ? (
         <OrderList
           orders={orders as PaginatedOrderResponse}
           setCurrentPage={setCurrentPage}
@@ -525,9 +537,8 @@ export default function Page() {
           currentPage={currentPage}
           isLoading={isLoading}
         />
-      // ) : null
+        // ) : null
       }
     </Layout>
   );
 }
-

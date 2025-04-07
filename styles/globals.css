@@ -110,3 +110,27 @@
   appearance: textfield;
   /* For Firefox */
 }
+
+input {
+  border: 1px solid #E5E5E5 !important;
+  background: #FAFAFA !important;
+  height: 44px !important;
+  border-radius: 8px !important;
+  box-shadow:  none !important;
+}
+
+.input {
+  border: 1px solid #E5E5E5 !important;
+  background: #FAFAFA !important;
+  border-radius: 8px !important;
+  box-shadow:  none !important;
+}
+
+.button {
+  height: 44px !important;
+  border-radius:  10px !important;
+}
+
+tr {
+  height: 50px;
+}

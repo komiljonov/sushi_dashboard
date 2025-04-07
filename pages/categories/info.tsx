@@ -213,7 +213,7 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
                   />
                   <Label htmlFor="active">Faol</Label>
                 </div>
-                <Button type="submit">Saqlash</Button>
+                <Button type="submit" className="button">Saqlash</Button>
               </div>
             </form>
           </CardContent>

@@ -155,18 +155,18 @@ export function Categories() {
                 <h1 className="text-2xl font-bold">Kategoriyalar</h1>
                 <div className="flex gap-2">
 
-                    <Button onClick={sync}>
+                    <Button className="button" onClick={sync}>
                         <RefreshCcw className="mr-2 h-4 w-4" />Sinxronlash
                     </Button>
 
                     <CreateCategoryModal parent={selectedCategory}>
-                        <Button>
+                        <Button className="button">
                             <Plus className="mr-2 h-4 w-4" />Kategoriya qo&apos;shish
                         </Button>
                     </CreateCategoryModal>
                 </div>
             </div>
-            <div className="border rounded-md p-4">
+            <div className="rounded-xl p-4 bg-white">
                 {isLoading || !categories ? (
                     <SkeletonCategories />
                 ) : (
