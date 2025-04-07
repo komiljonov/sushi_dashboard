@@ -9,12 +9,13 @@ import { useRouter } from "next/router";
 import { useToast } from "@/hooks/use-toast";
 import SushiImage from "@/public/images/sushi.svg"
 import Logo from "@/public/images/logo2.svg"
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useEffect } from "react";
 import { useLoading } from "@/lib/context/Loading";
 import Image from "next/image";
 import User from "@/public/images/user.svg"
 import Lock from "@/public/images/lock.svg"
+import PasswordInput from "@/components/password-input";
 
 
 
@@ -40,7 +41,7 @@ const LoginPage: React.FC & { authRequired?: boolean } = () => {
 
 
 
-    const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>();
+    const { register, handleSubmit, formState: { errors }, control } = useForm<IFormInput>();
 
 
     const onSubmit: SubmitHandler<IFormInput> = async (data) => {
@@ -81,19 +82,19 @@ const LoginPage: React.FC & { authRequired?: boolean } = () => {
                                 {...register('username', { required: true })}
                                 placeholder="Foydalanuvchi nomini kiriting"
                             />
-                            <Image src={User} alt="User" width={20} height={20} className="absolute bottom-3 left-3" />
+                            <Image src={User} alt="User" width={16} height={16} className="absolute bottom-3 left-3" />
                             {errors.username && <p className="text-sm text-red-500">{errors.username.message}</p>}
                         </div>
                         <div className="space-y-2 relative">
                             <Label htmlFor="password">Parol</Label>
-                            <Input
-                                id="password"
-                                type="password"
-                                className="h-[48px] rounded-lg bg-[#FAFAFA] !border-[#E5E5E5] pl-12"
-                                placeholder="Parolni kiriting"
-                                {...register('password', { required: true })}
-                            />
-                            <Image src={Lock} alt="Lock" width={20} height={20} className="absolute bottom-3 left-3" />
+                            <Controller
+                                name="password"
+                                control={control}
+                                render={({ field }) => (
+                                    <PasswordInput style={{ paddingLeft: 48}} placeholder="Parolni kiriting" id="password" {...field} />
+                                )}
+                                />
+                            <Image src={Lock} alt="Lock" width={18} height={18} className="absolute bottom-3 left-3" />
                             {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
                         </div>
                         <Button type="submit" className="w-full h-[48px] rounded-[10px] bg-black text-white hover:bg-gray-800">

@@ -86,15 +86,13 @@ const CreateAdminDialog = () => {
     handleSubmit,
     reset,
     formState: { errors },
-    watch,
     setValue,
     control,
   } = useForm<CreateAdminData>();
-  const password = watch("password");
 
   const onSubmit = async (data: CreateAdminData) => {
     try {
-      await request.post("admins/", data);
+      await request.post("admins/", {...data, password_repeat: data.password});
       queryClient.invalidateQueries({
         queryKey: ["admins"],
       });
@@ -109,7 +107,6 @@ const CreateAdminDialog = () => {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="button">
-          {" "}
           <Plus className="mr-2 w-4 h-4" /> Xodim qo'shish
         </Button>
       </DialogTrigger>
@@ -191,31 +188,18 @@ const CreateAdminDialog = () => {
               </p>
             )}
           </div>
-          <div>
-            <Label htmlFor="password_repeat">Parolni takrorlang</Label>
-            <Controller
-              name="password_repeat"
-              control={control}
-              rules={{
-                required: "Parolni takrorlash shart",
-                validate: (value) =>
-                  value === password || "Parollar mos kelmadi",
-              }}
-              render={({ field }) => (
-                <PasswordInput id="password_repeat" {...field} />
-              )}
-            />
-            {errors.password_repeat && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.password_repeat.message}
-              </p>
-            )}
-          </div>
           <div className="flex gap-3">
-                <Button type="button" onClick={() => setIsOpen(false)} className="w-full bg-[#F5F5F5] hover:bg-gray-100 text-black shadow-none">
-                Bekor qilish
-                </Button>
-                <Button type="submit" className="w-full hover:bg-green-600 bg-[#0EA60A]">
+            <Button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className="w-full bg-[#F5F5F5] button hover:bg-gray-100 text-black shadow-none"
+            >
+              Bekor qilish
+            </Button>
+            <Button
+              type="submit"
+              className="w-full hover:bg-green-600 bg-[#0EA60A] button"
+            >
               Qo&apos;shish
             </Button>
           </div>
@@ -272,6 +256,7 @@ const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
     formState: { errors },
     watch,
     setValue,
+    control
   } = useForm<CreateAdminData>();
 
   useEffect(() => {
@@ -310,7 +295,7 @@ const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
   });
 
   const onSubmit = (data: CreateAdminData) => {
-    updateAdminMutation.mutate(data);
+    updateAdminMutation.mutate({...data, password_repeat: password});
   };
 
   const onDelete = () => {
@@ -333,8 +318,7 @@ const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
             <DialogTitle>Update User</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="flex space-x-6">
-              <div className="w-[50%]">
+              <div>
                 <Label htmlFor="first_name">Ism</Label>
                 <Input
                   id="first_name"
@@ -348,7 +332,7 @@ const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
                   </p>
                 )}
               </div>
-              <div className="w-[50%]">
+              <div>
                 <Label htmlFor="last_name">Familya</Label>
                 <Input
                   id="last_name"
@@ -362,7 +346,6 @@ const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
                   </p>
                 )}
               </div>
-            </div>
 
             <div>
               <Label htmlFor="username">Username</Label>
@@ -385,7 +368,7 @@ const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
                 onValueChange={(value) => setValue("role", value as IAdminRole)}
                 defaultValue={admin.role}
               >
-                <SelectTrigger>
+                <SelectTrigger className="input h-[44px]">
                   <SelectValue placeholder="Lavozimni tanlang" />
                 </SelectTrigger>
                 <SelectContent>
@@ -402,32 +385,32 @@ const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
             </div>
 
             <div>
-              <Label htmlFor="password">Parol</Label>
-              <Input id="password" type="password" {...register("password")} />
-            </div>
-            <div>
-              <Label htmlFor="password_repeat">Parolni takrorlang</Label>
-              <Input
-                id="password_repeat"
-                type="password"
-                {...register("password_repeat", {
-                  validate: (value) =>
-                    !password || value === password || "Parollar mos kelmadi",
-                })}
-              />
-              {errors.password_repeat && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.password_repeat.message}
-                </p>
-              )}
-            </div>
-            <div className="flex justify-between">
-              <Button type="submit">Saqlash</Button>
+            <Label htmlFor="password">Parol</Label>
+            <Controller
+              name="password"
+              control={control}
+              rules={{ required: "Parol kiritish shart" }}
+              render={({ field }) => <PasswordInput id="password" {...field} />}
+            />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.password.message}
+              </p>
+            )}
+          </div>
+            <div className="flex justify-between gap-2">
               <Button
                 variant="destructive"
+                className="w-full  button  shadow-none"
                 onClick={() => setIsDeleteDialogOpen(true)}
               >
                 O&apos;chirish
+              </Button>
+              <Button
+                type="submit"
+                className="w-full hover:bg-green-600 bg-[#0EA60A] button"
+              >
+                Saqlash
               </Button>
             </div>
           </form>
@@ -453,7 +436,7 @@ const Admins: NextPage = () => {
   }
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="mx-auto py-10">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Foydalanuvchilar</h1>
         <CreateAdminDialog />

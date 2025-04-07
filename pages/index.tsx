@@ -1,212 +1,113 @@
-"use client"
+"use client";
 
-import type { NextPage } from 'next'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
-import { Layout } from '@/components/Layout'
-import { useQuery } from '@tanstack/react-query'
-import { request } from "@/lib/api"
-import { IOrder } from '@/lib/types'
-import StatisticsModal from '@/components/statistics'
-import Charts from '@/components/analytics'
-import OrderStatsCard from '@/components/stats/order-stats-card'
-import { AllOrders, OrdersThisMonth, OrdersToday, ProfitMonth } from '@/lib/icons'
+import type { NextPage } from "next";
+import { Layout } from "@/components/Layout";
+import { useQuery } from "@tanstack/react-query";
+import { request } from "@/lib/api";
+import { DashboardData, IMainAnalytics } from "@/lib/types";
+import StatisticsModal from "@/components/statistics";
+import OrderStatsCard from "@/components/stats/order-stats-card";
+import {
+  AllOrders,
+  OrdersThisMonth,
+  OrdersToday,
+  ProfitMonth,
+} from "@/lib/icons";
+import BranchsChart from "@/components/stats/branchs-chart";
+import DailyOrdersChart from "@/components/stats/daily-orders-chart";
+import MonthlyOrdersChart from "@/components/stats/monthly-orders-chart";
+import { fetchDateAnalytics } from "@/lib/fetchers";
 
-interface MostProduct {
-  product__id: string;
-  product__name_uz: string;
-  product__price: number;
-  total_count: number;
-  product__visits?: number;
-}
-
-interface IStatistics {
-  user_count: number;
-  user_delta: number;
-  orders_count: number;
-  orders_delta: number;
-  today_revenue: number;
-  revenue_delta_percent: number;
-  active_users: number;
-  active_users_delta: number;
-  recent_orders: IOrder[];
-  most_products: MostProduct[];
-}
-
-const fetchStatistics = async (): Promise<IStatistics> => {
-  const { data } = await request.get('statistics');
+const fetchStatistics = async (): Promise<DashboardData> => {
+  const { data } = await request.get("statistics");
   return data;
-}
-
-// function TrendingProducts() {
-//   const [productSort, setProductSort] = useState('sales')
-
-//   const { data: statistics } = useQuery({
-//     queryKey: ['statistics'],
-//     queryFn: fetchStatistics,
-//     refetchInterval: 60000
-//   });
-
-//   const sortProducts = (products: MostProduct[]) => {
-//     if (productSort === 'sales') {
-//       return [...products].sort((a, b) => b.total_count - a.total_count);
-//     } else if (productSort === 'price') {
-//       return [...products].sort((a, b) => b.product__price - a.product__price);
-//     } else if (productSort === 'visits') {
-//       return [...products].sort((a, b) => (b.product__visits || 0) - (a.product__visits || 0));
-//     }
-//     return products;
-//   }
-
-//   const sortedProducts = statistics?.most_products ? sortProducts(statistics.most_products) : [];
-
-//   return (
-//     <Card>
-//       <CardHeader className="flex flex-row items-center justify-between space-y-0">
-//         <CardTitle>Trend mahsulotlar</CardTitle>
-//         <Select value={productSort} onValueChange={setProductSort}>
-//           <SelectTrigger className="w-[180px]">
-//             <SelectValue placeholder="Saralash" />
-//           </SelectTrigger>
-//           <SelectContent>
-//             <SelectItem value="sales">Sotuvlar</SelectItem>
-//             <SelectItem value="price">Narx</SelectItem>
-//             <SelectItem value="visits">Tashriflar</SelectItem>
-//           </SelectContent>
-//         </Select>
-//       </CardHeader>
-//       <CardContent>
-//         <ScrollArea className="h-[300px] pr-4">
-//           {sortedProducts.map((product) => (
-//             <div key={product.product__id} className="flex items-center justify-between py-4 border-b last:border-b-0">
-//               <div className="space-y-1">
-//                 <p className="text-sm font-medium leading-none">{product.product__name_uz}</p>
-//                 <p className="text-sm text-muted-foreground">
-//                   {product.product__price?.toLocaleString()} so'm
-//                 </p>
-//               </div>
-//               <div className="flex items-center space-x-4">
-//                 <Badge variant="secondary" className="flex items-center space-x-1">
-//                   <ShoppingCart className="w-3 h-3" />
-//                   <span>{product.total_count}</span>
-//                 </Badge>
-//                 {productSort === 'visits' && (
-//                   <Badge variant="outline" className="flex items-center space-x-1">
-//                     <Eye className="w-3 h-3" />
-//                     <span>{product.product__visits || 0}</span>
-//                   </Badge>
-//                 )}
-//               </div>
-//             </div>
-//           ))}
-//         </ScrollArea>
-//       </CardContent>
-//     </Card>
-//   )
-// }
+};
 
 function EnhancedAnalyticsDashboard() {
-  const { data: statistics } = useQuery({
-    queryKey: ['statistics'],
+  const { data: statistics, isLoading: statsLoading, isError: statsError } = useQuery({
+    queryKey: ["statistics"],
     queryFn: fetchStatistics,
-    refetchInterval: 60000
+    refetchInterval: 60000,
   });
+
+  const {
+    data: analytics,
+    isLoading,
+    isError,
+  } = useQuery<IMainAnalytics>({
+    queryKey: ["date_analytics"],
+    queryFn: fetchDateAnalytics,
+  });
+
+  const bot1 = statistics?.bot_orders?.find((bot) => bot.bot === "BOT1");
+  const bot2 = statistics?.bot_orders?.find((bot) => bot.bot === "BOT2");
 
   const orderStats = [
     {
-      title: 'Jami buyurtmalar soni',
-      count: statistics?.orders_count || 0,
-      bot1: '0000',
-      bot2: '0000',
-      icon: AllOrders
+      title: "Jami buyurtmalar soni",
+      count: statistics?.all_orders || 0,
+      bot1: bot1?.order_count || 0,
+      bot2: bot2?.order_count || 0,
+      icon: AllOrders,
     },
     {
-      title: 'Bugun buyurtmalar soni',
+      title: "Bugun buyurtmalar soni",
       count: statistics?.orders_count || 0,
-      bot1: '0000',
-      bot2: '0000',
-      icon: OrdersToday
+      bot1: bot1?.today_orders || 0,
+      bot2: bot2?.today_orders || 0,
+      icon: OrdersToday,
     },
     {
-      title: 'Joriy oydagi buyurtmalar soni',
-      count: statistics?.orders_count || 0,
-      bot1: '0000',
-      bot2: '0000',
-      icon: OrdersThisMonth
+      title: "Bugungi jami daromad",
+      count: statistics?.today_revenue || 0,
+      bot1: bot1?.today_revenue || 0,
+      bot2: bot2?.today_revenue || 0,
+      icon: OrdersThisMonth,
     },
     {
-      title: 'Joriy oydagi jami daromad',
-      count: statistics?.user_count || 0,
-      bot1: '0000',
-      bot2: '0000',
-      icon: ProfitMonth
-    }
-  ]
+      title: "Joriy oydagi jami daromad",
+      count: statistics?.this_month_revenue || 0,
+      bot1: bot1?.this_month_revenue || 0,
+      bot2: bot2?.this_month_revenue || 0,
+      icon: ProfitMonth,
+    },
+  ];
+
+
+  if (isError || statsError) {
+    return <div>Ma'lumotlarni yuklashda xatolik yuz berdi!</div>
+  }
+
+  if (isLoading || statsLoading) {
+    return <div>Ma'lumotlar yuklanmoqda...</div>
+  }
 
   return (
-    <div className=" space-y-6">
+    <div className=" space-y-4 w-full">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Admin panel</h1>
         <StatisticsModal />
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 w-full">
-       {
-        orderStats.map((stat) => (
+        {orderStats.map((stat) => (
           <OrderStatsCard key={stat.title} {...stat} />
-        ))
-       }
+        ))}
       </div>
-
-      {/* <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>So'nggi buyurtmalar</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ScrollArea className="h-[300px]">
-              {statistics?.recent_orders?.map((order) => (
-                <div key={order.id} className="flex items-center justify-between py-2">
-                  <div>
-                    <p className="text-sm font-medium leading-none">{order.user?.name ?? "Anonym foydalanuvchi"}</p>
-                    <div className="flex items-center space-x-2 mt-1">
-                      <Badge variant="secondary" className="text-green-600 bg-green-100">
-                        {splitToHundreds(order.discount_price)} so'm
-                      </Badge>
-                      {order.promocode && (
-                        <span className="text-sm text-muted-foreground line-through">
-                          {splitToHundreds(order.price)} so'm
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <Badge variant={order.status === 'completed' ? 'default' : 'secondary'}>
-                    {order.status === 'completed' ? 'Bajarildi' : 'Jarayonda'}
-                  </Badge>
-                </div>
-              ))}
-            </ScrollArea>
-          </CardContent>
-        </Card>
-
-      </div> */}
-
-      <Card className="mt-6">
-        <CardHeader>
-          <CardTitle>Analitika</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Charts />
-        </CardContent>
-      </Card>
+      <div className="grid grid-cols-2 gap-4 w-full">
+        <BranchsChart data={analytics as IMainAnalytics} />
+        <DailyOrdersChart data={analytics as IMainAnalytics} />
+      </div>
+      <MonthlyOrdersChart data={analytics as IMainAnalytics} />
     </div>
-  )
+  );
 }
 
 const Home: NextPage = () => {
   return (
-    <Layout page='home'>
+    <Layout page="home">
       <EnhancedAnalyticsDashboard />
     </Layout>
-  )
-}
+  );
+};
 
 export default Home;

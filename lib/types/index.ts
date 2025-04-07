@@ -1,3 +1,5 @@
+import { OrderItem } from "@/components/orders/create/types";
+
 export interface ICategory {
   id: string;
   name_uz: string;
@@ -265,3 +267,53 @@ export interface IMainAnalytics {
   sales: number[];
   sales_year: number[];
 }
+
+
+export type DashboardData = {
+  user_count: number;
+  user_delta: number;
+  orders_count: number;
+  all_orders: number;
+  orders_delta: number;
+  today_revenue: number;
+  revenue_delta_percent: number;
+  active_users: number;
+  active_users_delta: number;
+  bot_orders: BotOrder[];
+  recent_orders: RecentOrder[];
+  this_month_revenue: number;
+};
+
+type BotOrder = {
+  bot: string;
+  order_count: number;
+  success_orders: number;
+  canceled_orders: number;
+  today_orders: number;
+  this_month_orders: number;
+  today_revenue: number;
+  this_month_revenue: number;
+};
+
+type RecentOrder = {
+  id: string;
+  order_id: number;
+  iiko_order_id: string | null;
+  user: IUser;
+  phone_number: string | null;
+  products_count: number;
+  promocode: string | null;
+  order_time: string;
+  time: string | null;
+  delivery: string;
+  status: string;
+  price: number;
+  discount_price: number;
+  saving: number;
+  items: OrderItem[];
+  comment: string | null;
+  payment: IPayment; // replace with a specific type if you have it
+  filial: IFilial; // replace with a specific type if you have it
+  location: ILocation; // replace with a specific type if you have it
+  taxi: ITaxi; // replace with a specific type if you have it
+};

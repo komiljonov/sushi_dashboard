@@ -3,14 +3,8 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/Button";
-// import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
-// import {
-//   // Popover,
-//   // PopoverContent,
-//   // PopoverTrigger,
-// } from "@/components/ui/popover";
 import {
   Table,
   TableBody,
@@ -19,25 +13,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  // CalendarIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  // ExternalLink,
-} from "lucide-react";
-// import { format } from "date-fns";
-// import { DateRange } from "react-day-picker";
 import { Layout } from "@/components/Layout";
 import { request } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
-// import Link from "next/link";
 import { useRouter } from "next/router";
 import { Skeleton } from "@/components/ui/skeleton";
-// import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { PaginatedOrderResponse } from "@/lib/types";
 import React from "react";
 import { splitToHundreds } from "@/lib/utils";
 import { queryClient } from "@/lib/query";
+import CustomPagination from "@/components/pagination";
 
 const statuses = [
   {
@@ -116,39 +101,8 @@ function OrderList({
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = (currentPage - 1) * ordersPerPage;
 
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
-  const getPaginationButtons = () => {
-    const buttons: (number | string)[] = [];
-    if (totalPages <= 1) return buttons;
-    buttons.push(1);
-    if (currentPage > 3) {
-      buttons.push("...");
-    }
-    for (
-      let i = Math.max(2, currentPage - 1);
-      i <= Math.min(totalPages - 1, currentPage + 1);
-      i++
-    ) {
-      buttons.push(i);
-    }
-    if (currentPage < totalPages - 2) {
-      buttons.push("...");
-    }
-    buttons.push(totalPages);
-    return buttons;
-  };
-
-  const buttons = getPaginationButtons();
-
-  const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= orders?.count) {
-      setCurrentPage(page);
-    }
-  };
-
   return (
-    <div className="container mx-auto py-10">
+    <div className="mx-auto py-10">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Buyurtmalar</h1>
         {/* <CreateOrderButton /> */}
@@ -382,49 +336,7 @@ function OrderList({
             {orders?.count} ta buyurtmalardan {indexOfFirstOrder + 1} dan{" "}
             {Math.min(indexOfLastOrder)} gacha
           </div>
-          <div className="flex space-x-2 items-center">
-            <Button
-              variant="outline"
-              onClick={() => {
-                paginate(currentPage - 1);
-              }}
-              disabled={currentPage === 1}
-              className="w-10 h-10 p-0"
-            >
-              <ChevronLeftIcon className="w-4 h-4" />
-              <span className="sr-only">Previous page</span>
-            </Button>
-            {buttons.map((button, index) =>
-              button === "..." ? (
-                <span key={index} style={{ margin: "0 5px" }}>
-                  ...
-                </span>
-              ) : (
-                <Button
-                  key={index}
-                  onClick={() => {
-                    handlePageChange(button as number);
-                  }}
-                  disabled={button === currentPage}
-                  className={button === currentPage ? "" : "border"}
-                  variant={button === currentPage ? "default" : "ghost"}
-                >
-                  {button}
-                </Button>
-              )
-            )}
-            <Button
-              variant="outline"
-              onClick={() => {
-                paginate(currentPage + 1);
-              }}
-              // disabled={currentPage === totalPages}
-              className="w-10 h-10 p-0"
-            >
-              <ChevronRightIcon className="w-4 h-4" />
-              <span className="sr-only">Next page</span>
-            </Button>
-          </div>
+          <CustomPagination totalPages={totalPages} setPage={setCurrentPage} page={currentPage} />
         </div>
       </div>
     </div>

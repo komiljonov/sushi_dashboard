@@ -22,6 +22,7 @@ import {
   UsersActive,
 } from "@/lib/icons";
 import { LogOut } from "lucide-react";
+import { useState } from "react";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -165,7 +166,7 @@ export function Sidebar({ collapsed, page }: SidebarProps) {
             />
           ))}
         </div>
-        <div className="p-2 mt-auto">
+        <div className="p-2 h-full flex items-end">
           <Button
             variant="ghost"
             className={cn("w-full justify-start", collapsed ? "px-2" : "px-4")}
@@ -197,23 +198,26 @@ export function NavItem({
   isSelected,
   activeIcon,
 }: NavItemProps) {
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <Link href={href} as={href}>
       <Button
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
         // variant={isSelected ? "secondary" : "ghost"}
         className={cn(
           "w-full justify-start !rounded-none ease-linear duration-200 shadow-none hover:bg-[#FFF0F1] hover:text-[#FF2735] hover:border-l-[2.5px] border-[#FF2735] h-[56px] bg-white text-[#D6D6D6]",
           collapsed ? "px-2" : "px-4",
-          isSelected && "bg-[#FFF0F1]  border-l-[2.5px] border-[#FF2735]"
+          (isSelected || isOpen) && "bg-[#FFF0F1]  border-l-[2.5px] border-[#FF2735]"
         )}
       >
         <span
           className={cn(
             "flex items-center gap-3",
-            isSelected && "text-[#FF2735]"
+            (isSelected || isOpen) && "text-[#FF2735]"
           )}
         >
-          {isSelected ? activeIcon : icon}
+          {(isSelected || isOpen) ? activeIcon : icon}
           {!collapsed && <span className="ml-2">{label}</span>}
         </span>
       </Button>
