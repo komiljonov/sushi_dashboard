@@ -1,7 +1,6 @@
 "use client";
 
 import { Layout } from "@/components/Layout";
-import { Button } from "@/components/ui/Button";
 import {
   Table,
   TableBody,
@@ -11,7 +10,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { IUser, PaginatedUserResponse } from "@/lib/types";
-import { CheckCircle, XCircle, ExternalLink, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { request } from "@/lib/api";
@@ -19,6 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/Input";
+import { RxArrowTopRight } from "react-icons/rx";
 
 function UsersTable() {
   const { push } = useRouter();
@@ -88,12 +87,12 @@ function UsersTable() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Ismi</TableHead>
+                <TableHead>Ismi va familiyasi</TableHead>
                 <TableHead>Telefon raqami</TableHead>
-                <TableHead>Buyurtmasi bormi</TableHead>
+                <TableHead>Buyurtma</TableHead>
                 <TableHead>Tili</TableHead>
                 <TableHead>Telegram</TableHead>
-                <TableHead>Hozirgi buyurtmasi</TableHead>
+                {/* <TableHead>Hozirgi buyurtmasi</TableHead> */}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -109,9 +108,12 @@ function UsersTable() {
                   <TableCell>{user.number}</TableCell>
                   <TableCell>
                     {user.has_order ? (
-                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <div className=" text-green-500">
+                        <RxArrowTopRight className="h-5 w-5" />
+                        <span>Ko'rish</span>
+                      </div>
                     ) : (
-                      <XCircle className="h-5 w-5 text-red-500" />
+                      <span className="text-red-500">Mavjud emas</span>
                     )}
                   </TableCell>
                   <TableCell>
@@ -125,18 +127,17 @@ function UsersTable() {
                       onClick={(e) => e.stopPropagation()}
                       className="flex items-center text-blue-500 hover:text-blue-700"
                     >
-                      <ExternalLink className="h-4 w-4 mr-1" />
                       Ochish
+                      <RxArrowTopRight className="h-4 w-4 mr-1" />
                     </Link>
                   </TableCell>
-                  <TableCell>
+                  {/* <TableCell>
                     {user.current_order && (
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={(e) => {
                           e.stopPropagation();
-                          // Add logic to open current order info
                           console.log(`Open current order for user ${user.id}`);
                         }}
                       >
@@ -144,7 +145,7 @@ function UsersTable() {
                         Buyurtmani ochish
                       </Button>
                     )}
-                  </TableCell>
+                  </TableCell> */}
                 </TableRow>
               ))}
             </TableBody>
@@ -223,7 +224,7 @@ export default function UsersListPage() {
           Foydalanuvchilar ro&apos;yxati
         </h1>
         <div className="bg-white p-4 rounded-xl">
-        <UsersTable />
+          <UsersTable />
         </div>
       </div>
     </Layout>

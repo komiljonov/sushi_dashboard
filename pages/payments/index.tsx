@@ -21,10 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  CreditCard,
-  DollarSign,
-} from "lucide-react";
+import { CreditCard } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { IPayment, PaginatedPaymentResponse } from "@/lib/types";
@@ -33,13 +30,14 @@ import { useQuery } from "@tanstack/react-query";
 import { Layout } from "@/components/Layout";
 import { splitToHundreds } from "@/lib/utils";
 import { format } from "date-fns";
+import { RxArrowTopRight } from "react-icons/rx";
 
 const ProviderIcon = ({ provider }: { provider: IPayment["provider"] }) => {
   switch (provider) {
     case "PAYME":
       return (
         <Image
-          src="/images/payme.png"
+          src="/images/payme.svg"
           alt="Payme"
           className="object-contain"
           width={24}
@@ -49,7 +47,7 @@ const ProviderIcon = ({ provider }: { provider: IPayment["provider"] }) => {
     case "CLICK":
       return (
         <Image
-          src="/images/click.png"
+          src="/images/click.svg"
           alt="Click"
           className="object-contain"
           width={24}
@@ -57,7 +55,18 @@ const ProviderIcon = ({ provider }: { provider: IPayment["provider"] }) => {
         />
       );
     case "CASH":
-      return <DollarSign className="h-5 w-5" />;
+      return (
+        <div className="flex items-center gap-1">
+          <Image
+            src="/images/cash.svg"
+            alt="Cash"
+            className="object-contain"
+            width={24}
+            height={24}
+          />
+          Naqd
+        </div>
+      );
     default:
       return <CreditCard className="h-5 w-5" />;
   }
@@ -154,7 +163,7 @@ function FilterSection({
 
 function EnhancedPaymentListing() {
   // const [sortColumn, setSortColumn] = useState<keyof IPayment | "">("");
-  
+
   const [filters, setFilters] = useState<Filter>({
     user: "",
     provider: "all",
@@ -165,7 +174,7 @@ function EnhancedPaymentListing() {
   const [page, setPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(true);
   const observerRef = useRef<HTMLDivElement | null>(null);
-  
+
   // Query hook with dynamic query key based on filters and page
   const { data: payments, isFetching } = useQuery<PaginatedPaymentResponse>({
     queryKey: ["users", page, filters?.provider, filters?.user],
@@ -177,7 +186,7 @@ function EnhancedPaymentListing() {
       ),
     // Refetch when filters or page change
   });
-  
+
   useEffect(() => {
     // Reset payment data when filters or page changes
     if (payments?.results) {
@@ -189,12 +198,12 @@ function EnhancedPaymentListing() {
       setHasNextPage(!!payments.next);
     }
   }, [payments, page]);
-  
+
   const loadMorePaymentsData = useCallback(() => {
     if (!hasNextPage || isFetching) return;
     setPage((prevPage) => prevPage + 1);
   }, [hasNextPage, isFetching]);
-  
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -204,19 +213,19 @@ function EnhancedPaymentListing() {
       },
       { threshold: 1.0 }
     );
-  
+
     if (observerRef.current) {
       observer.observe(observerRef.current);
     }
-  
+
     return () => observer.disconnect();
   }, [loadMorePaymentsData]);
-  
+
   // Reset page to 1 and refetch when filters change
   useEffect(() => {
     setPage(1); // Reset page to 1 on filter change
   }, [filters]); // Dependencies will trigger this when any filter changes
-  
+
   // if (isLoading) {
   //   return (
   //     <Card>
@@ -250,7 +259,7 @@ function EnhancedPaymentListing() {
   // }
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="mx-auto py-10">
       <h1 className="text-3xl font-bold mb-6">To&apos;lovlar</h1>
 
       <FilterSection filters={filters} setFilters={setFilters} />
@@ -270,13 +279,13 @@ function EnhancedPaymentListing() {
                   className="cursor-pointer"
                   // onClick={() => handleSort("provider")}
                 >
-                  Manba
+                  To'lov usuli
                 </TableHead>
                 <TableHead
                   className="cursor-pointer"
                   // onClick={() => handleSort("order")}
                 >
-                  Buyurtma
+                  Buyurtma raqami
                 </TableHead>
                 <TableHead
                   className="cursor-pointer"
@@ -288,7 +297,7 @@ function EnhancedPaymentListing() {
                   className="cursor-pointer"
                   // onClick={() => handleSort("amount")}
                 >
-                  Miqdori
+                  To'lov miqdori
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -329,9 +338,10 @@ function EnhancedPaymentListing() {
                     {payment.order && (
                       <Link
                         href={`/orders/info?id=${payment.order_id}`}
-                        className="hover:underline"
+                        className="hover:underline text-blue-400"
                       >
                         <Badge variant="outline">#{payment.order}</Badge>
+                        <RxArrowTopRight className="h-5 w-5" />
                       </Link>
                     )}
                   </TableCell>
