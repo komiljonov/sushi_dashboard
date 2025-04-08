@@ -447,7 +447,7 @@ const Admins: NextPage = () => {
 };
 
 const LoadingSkeleton = () => (
-  <div className="container mx-auto py-10">
+  <div className="mx-auto py-10">
     <div className="flex justify-between items-center mb-6">
       <Skeleton className="h-10 w-40" />
       <Skeleton className="h-10 w-40" />

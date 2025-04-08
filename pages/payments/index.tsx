@@ -9,9 +9,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import {
@@ -40,8 +39,8 @@ const ProviderIcon = ({ provider }: { provider: IPayment["provider"] }) => {
           src="/images/payme.svg"
           alt="Payme"
           className="object-contain"
-          width={24}
-          height={24}
+          width={80}
+          height={30}
         />
       );
     case "CLICK":
@@ -50,8 +49,8 @@ const ProviderIcon = ({ provider }: { provider: IPayment["provider"] }) => {
           src="/images/click.svg"
           alt="Click"
           className="object-contain"
-          width={24}
-          height={24}
+          width={80}
+          height={30}
         />
       );
     case "CASH":
@@ -61,14 +60,14 @@ const ProviderIcon = ({ provider }: { provider: IPayment["provider"] }) => {
             src="/images/cash.svg"
             alt="Cash"
             className="object-contain"
-            width={24}
-            height={24}
+            width={80}
+            height={30}
           />
           Naqd
         </div>
       );
     default:
-      return <CreditCard className="h-5 w-5" />;
+      return <CreditCard className="h-4 w-4" />;
   }
 };
 
@@ -98,7 +97,7 @@ function FilterSection({
   setFilters: React.Dispatch<React.SetStateAction<Filter>>;
 }) {
   return (
-    <Card className="mb-6">
+    <div className="bg-white rounded-xl mb-6">
       <CardHeader>
         <CardTitle>Filterlash</CardTitle>
       </CardHeader>
@@ -157,7 +156,7 @@ function FilterSection({
           </div> */}
         </div>
       </CardContent>
-    </Card>
+    </div>
   );
 }
 
@@ -264,7 +263,7 @@ function EnhancedPaymentListing() {
 
       <FilterSection filters={filters} setFilters={setFilters} />
 
-      <Card>
+      <div className="bg-white pt-6 rounded-xl">
         <CardContent>
           <Table>
             <TableHeader>
@@ -324,24 +323,16 @@ function EnhancedPaymentListing() {
                   <TableCell>
                     <div className="flex items-center space-x-2">
                       <ProviderIcon provider={payment.provider} />
-                      <span className="capitalize">
-                        {payment.provider &&
-                          {
-                            CASH: "Naqd",
-                            PAYME: "Payme",
-                            CLICK: "Click",
-                          }[payment?.provider]}
-                      </span>
                     </div>
                   </TableCell>
                   <TableCell>
                     {payment.order && (
                       <Link
                         href={`/orders/info?id=${payment.order_id}`}
-                        className="hover:underline text-blue-400"
+                        className="hover:underline text-blue-400 flex items-center space-x-1 font-medium"
                       >
-                        <Badge variant="outline">#{payment.order}</Badge>
-                        <RxArrowTopRight className="h-5 w-5" />
+                        <span>#{payment.order}</span>
+                        <RxArrowTopRight  className="h-4 w-4" />
                       </Link>
                     )}
                   </TableCell>
@@ -359,7 +350,7 @@ function EnhancedPaymentListing() {
             </TableBody>
           </Table>
         </CardContent>
-      </Card>
+      </div>
       <div ref={observerRef} className="h-10 w-full" />
     </div>
   );

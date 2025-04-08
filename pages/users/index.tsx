@@ -108,9 +108,9 @@ function UsersTable() {
                   <TableCell>{user.number}</TableCell>
                   <TableCell>
                     {user.has_order ? (
-                      <div className=" text-green-500">
-                        <RxArrowTopRight className="h-5 w-5" />
+                      <div className=" text-green-500 flex items-center gap-2">
                         <span>Ko'rish</span>
+                        <RxArrowTopRight className="h-5 w-5" />
                       </div>
                     ) : (
                       <span className="text-red-500">Mavjud emas</span>
@@ -125,7 +125,7 @@ function UsersTable() {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="flex items-center text-blue-500 hover:text-blue-700"
+                      className="flex items-center gap-2 text-blue-500 hover:text-blue-700"
                     >
                       Ochish
                       <RxArrowTopRight className="h-4 w-4 mr-1" />

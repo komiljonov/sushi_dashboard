@@ -11,7 +11,9 @@ class MyDocument extends Document {
     return (
       <Html lang="uz">
         <Head>
-          <meta name="description" content="Sushi Yummy Dashboard" />
+          <meta name="description" content="Sushi Yummy Dashboard" /> 
+          <link rel="icon" href="/images/logo2.svg" type="image/svg" />
+        <link rel="apple-touch-icon" href="/images/logo2.svg" />
         </Head>
         <body className='bg-white'>
           <Main />

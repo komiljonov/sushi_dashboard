@@ -71,9 +71,9 @@ function CreateOrderPage() {
     }
 
     return (
-        <div className="container mx-auto py-8">
+        <div className="mx-auto py-8">
             <h1 className="text-3xl font-bold mb-6">Yangi buyurtma yaratish</h1>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 bg-white rounded-xl p-6">
                 <FormProvider {...methods}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <UserSelect />
