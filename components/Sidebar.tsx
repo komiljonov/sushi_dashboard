@@ -169,7 +169,7 @@ export function Sidebar({ collapsed, page }: SidebarProps) {
         <div className="p-2 h-full flex items-end">
           <Button
             variant="ghost"
-            className={cn("w-full justify-start", collapsed ? "px-2" : "px-4")}
+            className={cn("w-full justify-start hover:text-red-500", collapsed ? "px-2" : "px-4")}
             onClick={handleLogout}
           >
             <LogOut className="h-4 w-4" />
