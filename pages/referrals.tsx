@@ -172,12 +172,13 @@ function ReferralLinksCRUD() {
 
         <Table>
           <TableHeader>
-            <TableRow>
+            <TableRow className="bg-[#F5F5F5] border-none">
+              <TableHead className="rounded-l-[10px]">T/R</TableHead>
               <TableHead>Nomi</TableHead>
               <TableHead>Foydalanuvchilar Soni</TableHead>
-              <TableHead>Buyurtma bergan foydalanuvchilar</TableHead>
-              <TableHead>Buyurtma bermagan foydalanuvchilar</TableHead>
-              <TableHead>Amallar</TableHead>
+              <TableHead>Buyurtma berganar</TableHead>
+              <TableHead>Buyurtma bermaganar</TableHead>
+              <TableHead className="rounded-r-[10px]"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -198,8 +199,9 @@ function ReferralLinksCRUD() {
                     </TableCell>
                   </TableRow>
                 ))
-              : referrals?.map((referral) => (
+              : referrals?.map((referral, index) => (
                   <TableRow key={referral.id}>
+                    <TableCell>{index + 1}</TableCell>
                     <TableCell>{referral.name}</TableCell>
                     <TableCell>{referral.users_count}</TableCell>
                     <TableCell>{referral.ordered_users_count}</TableCell>

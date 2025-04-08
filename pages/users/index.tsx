@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/Input";
 import { RxArrowTopRight } from "react-icons/rx";
+import { Search } from "lucide-react";
 
 function UsersTable() {
   const { push } = useRouter();
@@ -68,10 +69,11 @@ function UsersTable() {
 
   return (
     <div>
-      <div className="py-3 flex gap-3">
+      <div className="py-3 flex gap-3 relative">
+        <Search className="w-5 h-5 absolute top-5 left-3 text-[#A3A3A3]"/>
         <Input
           type="text"
-          className="max-w-[400px] !h-[36px]"
+          className="max-w-[400px] !h-[36px] pl-10"
           onChange={(e) => {
             setSearchTerm(e.target.value);
             setUserData([]); // Clear previous data

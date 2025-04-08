@@ -126,7 +126,7 @@ const OrdersList = ({ orders }: { orders: IOrder[] }) => (
 
 function UserInfoPage({ user }: { user: IUser }) {
   return (
-    <div className="container mx-auto p-4 space-y-8">
+    <div className="container mx-auto space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <UserInfoCard user={user} />
         <CurrentOrderCard order={user.current_order} />

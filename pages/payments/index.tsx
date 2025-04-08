@@ -9,10 +9,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { CardContent} from "@/components/ui/Card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/Input";
-import { Label } from "@/components/ui/Label";
 import {
   Select,
   SelectContent,
@@ -20,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CreditCard } from "lucide-react";
+import { CreditCard, Search } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { IPayment, PaginatedPaymentResponse } from "@/lib/types";
@@ -97,31 +96,27 @@ function FilterSection({
   setFilters: React.Dispatch<React.SetStateAction<Filter>>;
 }) {
   return (
-    <div className="bg-white rounded-xl mb-6">
-      <CardHeader>
-        <CardTitle>Filterlash</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-          <div>
-            <Label htmlFor="user-filter">Foydalanuvchi</Label>
-            <Input
+    <div className="mb-6">
+        <div className="flex justify-between w-full gap-4">
+          <div className="relative"> 
+          <Search className="w-5 h-5 absolute top-2 left-3 text-[#A3A3A3]"/>
+          <Input
               id="user-filter"
               value={filters.user}
               onChange={(e) => setFilters({ ...filters, user: e.target.value })}
               placeholder="Foydalanuvchini izlash..."
-              className="!h-[36px]"
+              className="!h-[36px] min-w-[400px] pl-10"
             />
           </div>
           <div>
-            <Label htmlFor="provider-filter">Manba</Label>
+            {/* <Label htmlFor="provider-filter">Manba</Label> */}
             <Select
               value={filters.provider}
               onValueChange={(value) =>
                 setFilters({ ...filters, provider: value })
               }
             >
-              <SelectTrigger id="provider-filter" className="input !h-[36px]">
+              <SelectTrigger id="provider-filter" className="input border !h-[36px] min-w-[166px]">
                 <SelectValue placeholder="Select provider" />
               </SelectTrigger>
               <SelectContent>
@@ -155,7 +150,6 @@ function FilterSection({
             />
           </div> */}
         </div>
-      </CardContent>
     </div>
   );
 }
@@ -261,10 +255,11 @@ function EnhancedPaymentListing() {
     <div className="mx-auto py-10">
       <h1 className="text-3xl font-bold mb-6">To&apos;lovlar</h1>
 
+
+      <div className="bg-white rounded-xl">
+        <CardContent className="!p-4">
       <FilterSection filters={filters} setFilters={setFilters} />
 
-      <div className="bg-white pt-6 rounded-xl">
-        <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
@@ -339,7 +334,7 @@ function EnhancedPaymentListing() {
                   <TableCell>
                     {format(
                       new Date(payment.created_at),
-                      "yyyy-MM-dd HH:mm:ss"
+                      "dd.MM.yyyy HH:mm:ss"
                     )}
                   </TableCell>
                   <TableCell>

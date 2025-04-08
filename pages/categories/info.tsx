@@ -172,7 +172,7 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Kategoriya ma&apos;lumotlari</h1>
       </div>
@@ -331,14 +331,14 @@ export default function Page() {
   // If the category is of type "PRODUCT", show the tabs as before.
   return (
     <Layout page="categories">
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full ">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full bg-white p-6 rounded-xl">
         <TabsList className="grid w-full grid-cols-2 text-black">
-          <TabsTrigger value="category-info">
+          <TabsTrigger value="category-info" className={activeTab === "category-info" ? "!bg-white" : ""}>
             Kategoriya ma&apos;lumotlari
           </TabsTrigger>
 
           {category?.content_type === "PRODUCT" && (
-            <TabsTrigger value="products-list">
+            <TabsTrigger value="products-list" className={activeTab === "products-list" ? "!bg-white" : ""}>
               Mahsulotlar ro&apos;yxati
             </TabsTrigger>
           )}
