@@ -9,6 +9,9 @@ import { Controller, useFormContext } from "react-hook-form";
 import { CreateOrderForm } from "./types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/Input";
+import { MapPin } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchLocationName } from "@/lib/fetchers";
 
 // Location Picker Component
 const LocationPicker = ({
@@ -27,9 +30,10 @@ export default function DeliveryMap() {
     libraries: ["places"],
   });
 
-  const { control, setValue } = useFormContext<CreateOrderForm>();
+  
+  const { control, setValue, watch } = useFormContext<CreateOrderForm>();
   const [mapCenter, setMapCenter] = useState({ lat: 41.2995, lng: 69.2401 });
-
+  
   const bounds = useMemo(
     () => ({
       north: 45.0,
@@ -39,9 +43,18 @@ export default function DeliveryMap() {
     }),
     []
   );
+  
+  const lat = watch("location.latitude");
+  const lng = watch("location.longitude");
 
+  const {data: locationName} = useQuery({
+    queryKey: ['location-name'],
+    queryFn: ()=>fetchLocationName(lat, lng),
+    enabled: !!lat && !!lng
+  })
+  
   const autoCompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
-
+  
   const onPlaceSelect = () => {
     if (autoCompleteRef.current) {
       const place = autoCompleteRef.current.getPlace();
@@ -68,10 +81,10 @@ export default function DeliveryMap() {
   // ];
 
   return (
-    <div className="h-80 bg-gray-100 flex flex-col items-center justify-center rounded-md">
+    <div className="h-80 flex flex-col items-center justify-center rounded-md">
       {isLoaded ? (
-        <>
-          <div className="relative w-full mb-1">
+        <div className="flex flex-col h-full gap-1 w-full">
+          <div className="relative w-full">
             {/* Search Box */}
             <Autocomplete
               onLoad={(autocomplete) =>
@@ -120,10 +133,12 @@ export default function DeliveryMap() {
               />
             )}
           />
-          <p className="text-xs text-gray-500 mt-2">
-            Yetkazib berish joyini tanlash uchun xaritani bosing
-          </p>
-        </>
+
+          {lat && lng && <div className="text-xs text-gray-500 mt-2 flex items-center gap-2 p-4 rounded-lg border bg-[#FAFAFA]">
+            <MapPin className="w-5 h-5" />
+            <span>{locationName?.name}</span>
+          </div>}
+        </div>
       ) : (
         <Skeleton className="w-full h-full" />
       )}

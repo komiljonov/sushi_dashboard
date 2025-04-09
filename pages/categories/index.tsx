@@ -61,7 +61,7 @@ export function Categories() {
         },
         onError: () => {
             toast({
-                title: "Kategoriyani o'chirishda hatolik.",
+                title: "Kategoriyani o'chirishda xatolik.",
                 description: "O'chirilmadi.",
             });
         },
@@ -138,7 +138,7 @@ export function Categories() {
         onError: () => {
             setLoading(false);
             toast({
-                title: "Hatolik yuz berdi."
+                title: "Xatolik yuz berdi."
             })
         }
     });
@@ -150,7 +150,7 @@ export function Categories() {
     }
 
     return (
-        <div className="mx-auto py-10">
+        <div className="mx-auto">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold">Kategoriyalar</h1>
                 <div className="flex gap-2">

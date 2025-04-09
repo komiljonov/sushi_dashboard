@@ -436,7 +436,7 @@ const Admins: NextPage = () => {
   }
 
   return (
-    <div className="mx-auto py-10">
+    <div className="mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Foydalanuvchilar</h1>
         <CreateAdminDialog />
@@ -447,7 +447,7 @@ const Admins: NextPage = () => {
 };
 
 const LoadingSkeleton = () => (
-  <div className="mx-auto py-10">
+  <div className="mx-auto">
     <div className="flex justify-between items-center mb-6">
       <Skeleton className="h-10 w-40" />
       <Skeleton className="h-10 w-40" />

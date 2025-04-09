@@ -67,3 +67,8 @@ export const fetchDateAnalytics = async (): Promise<IMainAnalytics> => {
     const { data } = await request.get(`/yearly_statistics`);
     return data;
 }
+
+export const fetchLocationName = async (lat: number, lng: number): Promise<{name: string}> => {
+    const { data } = await request.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`);
+    return data;
+}

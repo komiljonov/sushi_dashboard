@@ -90,7 +90,7 @@ export default function StatisticsModal() {
     return (
         <Dialog >
             <DialogTrigger asChild>
-                <Button variant="outline">Statistikani ochish</Button>
+                <Button variant="outline" className="bg-white">Statistikani ochish</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px] text-black">
                 <DialogHeader>

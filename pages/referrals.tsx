@@ -153,7 +153,7 @@ function ReferralLinksCRUD() {
   }
 
   return (
-    <div className="mx-auto p-4 space-y-8">
+    <div className="mx-auto space-y-8">
       <h1 className="text-2xl font-bold">Referal Havolalarini Boshqarish</h1>
 
       <div className="p-4 rounded-xl bg-white space-y-4">

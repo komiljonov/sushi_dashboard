@@ -24,7 +24,7 @@ import { splitToHundreds } from "@/lib/utils";
 import { queryClient } from "@/lib/query";
 import CustomPagination from "@/components/pagination";
 
-const statuses = [
+export const statuses = [
   {
     value: "",
     name: "Hammasi",
@@ -103,7 +103,7 @@ function OrderList({
   const indexOfFirstOrder = (currentPage - 1) * ordersPerPage;
 
   return (
-    <div className="mx-auto py-10">
+    <div className="mx-auto ">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Buyurtmalar</h1>
         {/* <CreateOrderButton /> */}

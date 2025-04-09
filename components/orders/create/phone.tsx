@@ -20,7 +20,7 @@ export default function PhoneNumberSelect({ phone_numbers }: { phone_numbers?: I
                 rules={{ required: "Telefon raqami majburiy" }}
                 render={({ field }) => (
                     <Select value={field.value} onValueChange={field.onChange}>
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger className="w-full input h-[44px]">
                             <SelectValue placeholder="Telefon raqamni tanlang" />
                         </SelectTrigger>
                         <SelectContent>

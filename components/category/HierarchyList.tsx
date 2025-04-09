@@ -37,7 +37,7 @@ export default function HierarchyList({ categories }: HierarchyListProps) {
         },
         onError: () => {
             toast({
-                title: "Kategoriyani o'chirishda hatolik.",
+                title: "Kategoriyani o'chirishda xatolik.",
                 description: "O'chirilmadi.",
             });
         },

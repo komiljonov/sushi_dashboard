@@ -26,7 +26,7 @@ export default function PromocodeSelect({ promocodes }: { promocodes?: IPromocod
                 <Select value={promocode} onValueChange={(val) => {
                     setValue("promocode", val == "null" ? "" : val)
                 }} >
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger className="w-full h-[44px] input">
                         <SelectValue placeholder="Promokodni tanlang" />
                     </SelectTrigger>
                     <SelectContent>

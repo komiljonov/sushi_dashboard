@@ -20,10 +20,10 @@ export default function FilialSelect({ filials, phone_numbers }: { filials?: IFi
     return (
         <div className="space-y-2">
             {/* Row container with flex to align both selects in one row */}
-            <div className="flex space-x-2">
+            <div className="flex space-x-4">
                 {/* Filial Select will only appear when delivery method is PICKUP */}
                 {deliveryMethod === 'PICKUP' && (
-                    <div className="flex-1">
+                    <div className="flex-1 space-y-2">
                         <Label>Filialni tanlang</Label>
                         {/* Use Controller for Filial select */}
                         <Controller
@@ -32,7 +32,7 @@ export default function FilialSelect({ filials, phone_numbers }: { filials?: IFi
                             rules={{ required: "Filialni tanlash shart" }}
                             render={({ field }) => (
                                 <Select value={field.value} onValueChange={field.onChange}>
-                                    <SelectTrigger className="w-full">
+                                    <SelectTrigger className="w-full h-[44px] input">
                                         <SelectValue placeholder="Filialni tanlang" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -54,8 +54,8 @@ export default function FilialSelect({ filials, phone_numbers }: { filials?: IFi
                     </div>
                 )}
 
-                <div className="flex-1">
-                    <Label>Telefon raqam</Label>
+                <div className="flex-1 space-y-2">
+                    <Label>Filial telefon raqami</Label>
                     <PhoneNumberSelect phone_numbers={phone_numbers} />
                 </div>
             </div>

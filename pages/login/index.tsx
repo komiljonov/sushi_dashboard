@@ -58,7 +58,7 @@ const LoginPage: React.FC & { authRequired?: boolean } = () => {
         } else {
             setLoading(false);
             toast({
-                title: "Kirishda hatolik",
+                title: "Kirishda xatolik",
                 description: "Username yoki parol noto'g'ri."
             });
         }

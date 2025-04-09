@@ -221,7 +221,7 @@ const fetchUsers = async (
 export default function UsersListPage() {
   return (
     <Layout page="users">
-      <div className="mx-auto py-10">
+      <div className="mx-auto">
         <h1 className="text-2xl font-bold mb-5">
           Foydalanuvchilar ro&apos;yxati
         </h1>

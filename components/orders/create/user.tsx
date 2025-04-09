@@ -114,7 +114,7 @@ export default function UserSelect() {
       {listStatus && (
         <div
           ref={listRef}
-          className="border p-2 rounded w-full absolute bg-white top-[62px] z-20 max-h-64 overflow-y-auto"
+          className="border p-2 rounded w-full absolute bg-white top-[70px] z-20 max-h-64 overflow-y-auto"
           onMouseDown={(e) => e.preventDefault()} // 🟢 `onBlur` ni oldini olish
         >
           { isFetching ? (

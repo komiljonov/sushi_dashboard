@@ -138,7 +138,7 @@ export function Header({ collapsed, }: HeaderProps) {
                     <p className="text-green-600">Parol yangilandi.</p>
                   )}
                   {changePasswordMutation.isError && (
-                    <p className="text-red-600">Parolni o&apos;zgartirishda hatolik. Iltimos qaytadan urinib ko&apos;ring.</p>
+                    <p className="text-red-600">Parolni o&apos;zgartirishda xatolik. Iltimos qaytadan urinib ko&apos;ring.</p>
                   )}
                 </DialogContent>
               </Dialog>

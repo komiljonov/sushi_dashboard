@@ -17,6 +17,7 @@ import BranchsChart from "@/components/stats/branchs-chart";
 import DailyOrdersChart from "@/components/stats/daily-orders-chart";
 import MonthlyOrdersChart from "@/components/stats/monthly-orders-chart";
 import { fetchDateAnalytics } from "@/lib/fetchers";
+import AdminPanelSkeleton from "@/components/stats/stats-skeleton";
 
 const fetchStatistics = async (): Promise<DashboardData> => {
   const { data } = await request.get("statistics");
@@ -79,7 +80,7 @@ function EnhancedAnalyticsDashboard() {
   }
 
   if (isLoading || statsLoading) {
-    return <div>Ma'lumotlar yuklanmoqda...</div>
+    return <AdminPanelSkeleton/>
   }
 
   return (
