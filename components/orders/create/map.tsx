@@ -11,7 +11,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/Input";
 import { MapPin } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchLocationName } from "@/lib/fetchers";
+
+export const fetchLocationName = async (lat: number, lng: number) => {
+  const res = await fetch(`/api/geocode?lat=${lat}&lng=${lng}`);
+  if (!res.ok) throw new Error("Failed to fetch location name");
+  return res.json(); // { name: "Tashkent, Uzbekistan" }
+};
+
+// lib/fetchers.ts
 
 // Location Picker Component
 const LocationPicker = ({
@@ -48,11 +55,11 @@ export default function DeliveryMap() {
   const lng = watch("location.longitude");
 
   const {data: locationName} = useQuery({
-    queryKey: ['location-name'],
+    queryKey: ['location-name', lat, lng],
     queryFn: ()=>fetchLocationName(lat, lng),
     enabled: !!lat && !!lng
   })
-  
+
   const autoCompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   
   const onPlaceSelect = () => {
@@ -134,7 +141,7 @@ export default function DeliveryMap() {
             )}
           />
 
-          {lat && lng && <div className="text-xs text-gray-500 mt-2 flex items-center gap-2 p-4 rounded-lg border bg-[#FAFAFA]">
+          {lat && lng && <div className="text-sm mt-2 flex items-center gap-2 p-4 rounded-lg border bg-[#FAFAFA]">
             <MapPin className="w-5 h-5" />
             <span>{locationName?.name}</span>
           </div>}

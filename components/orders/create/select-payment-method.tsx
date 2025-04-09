@@ -7,23 +7,23 @@ import CashImage from "../../../public/images/cash.svg";
 
 const paymentMethods = [
   {
-    id: "cash",
+    id: "CASH",
     label: "Naqd pul",
     icon: CashImage,
   },
   {
-    id: "payme",
+    id: "PAYME",
     label: "",
     icon: PaymeImage,
   },
   {
-    id: "click",
+    id: "CLICK",
     label: "",
     icon: ClickImage,
   },
 ];
 
-const PaymentMethodSelector = () => {
+const PaymentMethodSelector = ({onChange}: {onChange: (value: string) => void}) => {
   const [selected, setSelected] = useState("cash");
 
   return (
@@ -36,7 +36,9 @@ const PaymentMethodSelector = () => {
             <motion.button
               key={method.id}
               type="button"
-              onClick={() => setSelected(method.id)}
+              onClick={() => {
+                onChange(method.id);
+                setSelected(method.id)}}
               className={`flex items-center justify-center space-x-2 rounded-xl p-4 border transition hover:border-orange-500 ${
                 isSelected ? "border-orange-500" : "border-muted"
               }`}

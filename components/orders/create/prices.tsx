@@ -52,36 +52,36 @@ export default function TotalPrices({ _deliveryPrice, deliveryPriceLoading, prom
 
     return (
         <div className="space-y-2">
-            <div className="flex justify-between">
+            <div className="flex justify-between border-b-2 border-dashed pb-1">
                 <span>Mahsulotlar:</span>
-                <span>{splitToHundreds(calculateTotal())} so'm</span>
+                <span>{splitToHundreds(calculateTotal()) || 0} so'm</span>
             </div>
 
             {watch('promocode') && (
-                <div className="flex justify-between text-green-600">
+                <div className="flex justify-between text-green-600 border-b-2 border-dashed pb-1">
                     <span>Chegirma:</span>
-                    <span>-{splitToHundreds(calculateDiscount())} so'm</span>
+                    <span>-{splitToHundreds(calculateDiscount()) || 0} so'm</span>
                 </div>
             )}
 
             {deliveryMethod == "DELIVER" && (
-                <div className="flex justify-between">
+                <div className="flex justify-between border-b-2 border-dashed pb-1">
                     <span>Yetkazib berish:</span>
                     {deliveryPriceLoading ? (
                         <Skeleton className="h-6 w-20" />
                     ) : (
-                        <span>{splitToHundreds(_deliveryPrice?.cost) ?? "Hisoblanmoqda..."}</span>
+                        <span>{(splitToHundreds(_deliveryPrice?.cost) || 0) ?? "Hisoblanmoqda..."}</span>
                     )}
                 </div>
             )}
 
-            <div className="flex justify-between font-bold">
+            <div className="flex justify-between font-bold border-b-2 border-dashed pb-1">
                 <span>Jami:</span>
                 <div className="flex items-center space-x-2">
                     <Badge variant="secondary" className="text-green-600 bg-green-100">
                         {/* {calculateTotal()} | {calculateDiscount()} | {deliveryPrice} */}
                         {/* | {(calculateTotal() - calculateDiscount() + deliveryPrice)} | */}
-                        {splitToHundreds(calculateTotal() - calculateDiscount() + deliveryPrice)} so'm
+                        {splitToHundreds(calculateTotal() - calculateDiscount() + deliveryPrice) || 0} so'm
                     </Badge>
                     {watch('promocode') && (
                         <span className="text-sm text-muted-foreground line-through">

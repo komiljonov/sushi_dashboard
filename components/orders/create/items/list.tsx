@@ -43,8 +43,8 @@ export default function OrderItems({
   const headers = ["MAHSULOT NOMI", "SONI", "NARX"];
 
   return (
-    <Card className="shadow-none border-none bg-[#FAFAFA] rounded-2xl">
-      <CardContent className="p-4">
+    <Card className="shadow-none border-none p-0 bg-transparent">
+      <CardContent className="p-0">
         <div className="grid grid-cols-7 py-3 border-b">
         {headers?.map((header, index) => (
           <span

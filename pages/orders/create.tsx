@@ -85,7 +85,7 @@ function CreateOrderPage() {
   };
 
   return (
-    <div className="mx-auto py-8">
+    <div className="mx-auto">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-6 bg-white rounded-xl p-6"
@@ -129,7 +129,12 @@ function CreateOrderPage() {
             </div>
 
             <div className="col-span-2">
-                <PaymentMethodSelector />
+              <Controller
+                name="payment_type"
+                control={control}
+                defaultValue="CASH"
+                render={({ field }) => <PaymentMethodSelector {...field} />}
+              />
             </div>
 
             <div className="space-y-2 col-span-2">
@@ -137,9 +142,7 @@ function CreateOrderPage() {
                 name="delivery"
                 control={control}
                 defaultValue="PICKUP"
-                render={({ field }) => (
-                  <DeliveryMethodSelector {...field} />
-                )}
+                render={({ field }) => <DeliveryMethodSelector {...field} />}
               />
             </div>
           </div>
@@ -157,25 +160,34 @@ function CreateOrderPage() {
 
           <DeliveryTime />
 
-          <OrderItems setIsAddItemOpen={setIsAddItemOpen} />
+          <div className="col-span-2 bg-[#FAFAFA] rounded-2xl p-4 space-y-2">
+            <OrderItems setIsAddItemOpen={setIsAddItemOpen} />
 
-          <AddItemModal
-            isOpen={isAddItemOpen}
-            setIsOpen={setIsAddItemOpen}
-            products={products}
-          />
+            <AddItemModal
+              isOpen={isAddItemOpen}
+              setIsOpen={setIsAddItemOpen}
+              products={products}
+            />
 
-          <TotalPrices
-            _deliveryPrice={_deliveryPrice}
-            deliveryPriceLoading={deliveryPriceLoading}
-            promocodes={promocodes}
-          />
+            <TotalPrices
+              _deliveryPrice={_deliveryPrice}
+              deliveryPriceLoading={deliveryPriceLoading}
+              promocodes={promocodes}
+            />
+          </div>
 
           <div className="flex justify-start space-x-4">
-            <Button type="button" className="button bg-[#F0F0F0]" onClick={() => reset()} variant="ghost">
+            <Button
+              type="button"
+              className="button bg-[#F0F0F0]"
+              onClick={() => reset()}
+              variant="ghost"
+            >
               Bekor qilish
             </Button>
-            <Button type="submit" className="button">Buyurtma yaratish</Button>
+            <Button type="submit" className="button">
+              Buyurtma yaratish
+            </Button>
           </div>
         </FormProvider>
       </form>
