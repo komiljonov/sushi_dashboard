@@ -10,14 +10,13 @@ import {
 } from "@/components/ui/dialog";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
-import { Minus, PackageOpen, Plus, Search } from "lucide-react";
+import { Minus, PackageOpen, Plus } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-
 import { Button } from "@/components/ui/Button";
 import { ICategory, ICategoryWithStats, IFile, IProduct } from "@/lib/types";
 import { fetchCatProducts } from "@/lib/fetchers";
 import { OrderItem } from "../types";
-import { Input } from "@/components/ui/Input";
+import Search from "@/components/search";
 
 export interface Option {
   label: string;
@@ -65,7 +64,7 @@ const AddProductModal = ({
       // Render root categories
       return (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {categories?.map(
+          {categories?.filter(category=> searchTerm ?  category.name_uz?.toLowerCase() === searchTerm?.toLowerCase() : category)?.map(
             (category) =>
               (category?.children.length > 0 ||
                 category.products_count > 0) && (
@@ -86,7 +85,7 @@ const AddProductModal = ({
       // Render subcategories
       return (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {currentCategory.children.map((category) => (
+          {currentCategory.children?.filter(category=> searchTerm ? category.name_uz?.toLowerCase() === searchTerm?.toLowerCase() : category)?.map((category) => (
             <div
               key={category.id}
               className="cursor-pointer border rounded-md p-4 flex items-center gap-2"
@@ -242,15 +241,7 @@ const AddProductModal = ({
               : "Mahsulotni tanlang va uni miqdorini kiritng"}
           </DialogDescription>
         </div>
-        <div className="flex gap-3 relative w-full">
-          <Search className="w-5 h-5 absolute top-2 left-3 text-[#A3A3A3]" />
-          <Input
-            type="text"
-            className=" !h-[36px] pl-10"
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Foydalanuvchini ismi yoki raqami orqali qidirish..."
-          />
-        </div>
+        <Search search={searchTerm} setSearch={setSearchTerm} />
 
         <div className="w-full overflow-y-auto h-[400px]">
           {renderContent()}

@@ -23,6 +23,12 @@ import {
 } from "@/lib/icons";
 import { LogOut } from "lucide-react";
 import { useState } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface SidebarProps {
   collapsed: boolean;
@@ -31,7 +37,7 @@ interface SidebarProps {
 
 const menuItems = [
   {
-    name: "Home",
+    name: "Hisobotlar",
     href: "/",
     iconActive: HomeActive,
     icon: Home,
@@ -52,18 +58,11 @@ const menuItems = [
     page: "categories",
   },
   {
-    name: "Faol promokodlar",
-    href: "/promocodes/active",
+    name: "Promokodlar",
+    href: "/promocodes",
     iconActive: PromocodesActive,
     icon: Promocodes,
     page: "active",
-  },
-  {
-    name: "Nofaol promokodlar",
-    href: "/promocodes/inactive",
-    iconActive: PromocodesActive,
-    icon: Promocodes,
-    page: "inactive",
   },
   {
     name: "Foydalanuvchilar",
@@ -166,15 +165,41 @@ export function Sidebar({ collapsed, page }: SidebarProps) {
             />
           ))}
         </div>
-        <div className="p-2 h-full flex items-end">
-          <Button
-            variant="ghost"
-            className={cn("w-full justify-start hover:text-red-500", collapsed ? "px-2" : "px-4")}
-            onClick={handleLogout}
-          >
-            <LogOut className="h-4 w-4" />
-            {!collapsed && <span className="ml-2">Chiqish</span>}
-          </Button>
+        <div className={`${collapsed ? "" : "p-2"}  h-full flex items-end`}>
+          {collapsed ? (
+            <TooltipProvider>
+              <Tooltip delayDuration={100}>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className={cn(
+                      "w-full hover:text-red-500",
+                      collapsed ? "px-4" : "px-4 justify-start"
+                    )}
+                    onClick={handleLogout}
+                  >
+                    <LogOut className="h-4 w-4" />
+                    {!collapsed && <span className="ml-2">Chiqish</span>}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="right" className="text-sm">
+                  Chiqish
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : (
+            <Button
+              variant="ghost"
+              className={cn(
+                "w-full hover:text-red-500",
+                collapsed ? "px-4" : "px-4 justify-start"
+              )}
+              onClick={handleLogout}
+            >
+              <LogOut className="h-4 w-4" />
+              {!collapsed && <span className="ml-2">Chiqish</span>}
+            </Button>
+          )}
         </div>
       </div>
     </aside>
@@ -199,28 +224,44 @@ export function NavItem({
   activeIcon,
 }: NavItemProps) {
   const [isOpen, setIsOpen] = useState(false);
-  return (
-    <Link href={href} as={href}>
-      <Button
+
+  const button = (
+    <Button
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
-        // variant={isSelected ? "secondary" : "ghost"}
+      className={cn(
+        "w-full !rounded-none ease-linear duration-200 shadow-none hover:bg-[#FFF0F1] hover:text-[#FF2735] hover:border-l-[2.5px] border-[#FF2735] h-[56px] bg-white text-[#D6D6D6]",
+        collapsed ? "px-4 justify-center" : "px-4 justify-start",
+        (isSelected || isOpen) &&
+          "bg-[#FFF0F1] border-l-[2.5px] border-[#FF2735]"
+      )}
+    >
+      <span
         className={cn(
-          "w-full justify-start !rounded-none ease-linear duration-200 shadow-none hover:bg-[#FFF0F1] hover:text-[#FF2735] hover:border-l-[2.5px] border-[#FF2735] h-[56px] bg-white text-[#D6D6D6]",
-          collapsed ? "px-2" : "px-4",
-          (isSelected || isOpen) && "bg-[#FFF0F1]  border-l-[2.5px] border-[#FF2735]"
+          "flex items-center gap-3",
+          (isSelected || isOpen) && "text-[#FF2735]"
         )}
       >
-        <span
-          className={cn(
-            "flex items-center gap-3",
-            (isSelected || isOpen) && "text-[#FF2735]"
-          )}
-        >
-          {(isSelected || isOpen) ? activeIcon : icon}
-          {!collapsed && <span className="ml-2">{label}</span>}
-        </span>
-      </Button>
+        {isSelected || isOpen ? activeIcon : icon}
+        {!collapsed && <span className="ml-2">{label}</span>}
+      </span>
+    </Button>
+  );
+
+  return (
+    <Link href={href} as={href}>
+      {collapsed ? (
+        <TooltipProvider>
+          <Tooltip delayDuration={100}>
+            <TooltipTrigger asChild>{button}</TooltipTrigger>
+            <TooltipContent side="right" className="text-sm">
+              {label}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      ) : (
+        button
+      )}
     </Link>
   );
 }

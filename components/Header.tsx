@@ -16,7 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { User, ChevronRight, ChevronLeft } from "lucide-react";
+import { User, ChevronLeft, Menu } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/lib/context/Auth";
 import { request } from "@/lib/api";
@@ -29,7 +29,7 @@ interface HeaderProps {
   setCollapsed: (collapsed: boolean) => void;
 }
 
-export function Header({ collapsed, }: HeaderProps) {
+export function Header({ collapsed, setCollapsed}: HeaderProps) {
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
   const [passwordError, setPasswordError] = useState("");
 
@@ -86,13 +86,23 @@ export function Header({ collapsed, }: HeaderProps) {
           variant="ghost"
           size="icon"
           // onClick={() => setCollapsed(!collapsed)}
+          onClick={()=>setCollapsed(!collapsed)}
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className="mr-4"
+        >
+          <Menu/>
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          // onClick={() => setCollapsed(!collapsed)}
           onClick={() => {
             back();
           }}
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           className="mr-4"
         >
-          {collapsed ? <ChevronRight /> : <ChevronLeft />}
+          {<ChevronLeft />}
         </Button>
         <h1 className="text-xl font-semibold">Boshqaruv</h1>
       </div>

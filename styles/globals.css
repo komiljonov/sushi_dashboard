@@ -136,3 +136,17 @@ input {
 tr {
   height: 50px;
 }
+
+.table_width {
+  max-width: calc(100vw - 327px);
+  /* overflow-x: auto; */
+}
+
+.table_width_collapsed {
+  max-width: calc(100vw - 142px);
+  /* overflow-x: auto; */
+}
+
+.Mui-selected {
+  color: #FF2735 !important;
+}

@@ -222,6 +222,7 @@ export type IPromocode<T = IOrderArray> = {
 
   min_amount: number;
   max_amount: number;
+  is_active: boolean;
 
   is_limited: boolean;
   is_max_limited: boolean;

@@ -13,6 +13,7 @@ import { Layout } from "@/components/Layout";
 import { queryClient } from "@/lib/query";
 import { fetchPromocodesType } from "@/lib/fetchers";
 import { useRouter } from "next/router";
+import CustomTabs from "@/components/custom-tabs";
 
 // const createPromocode = async (promocode: Omit<IPromocode, "id">) => {
 
@@ -39,11 +40,10 @@ const deletePromocode = async (id: string) => {
 };
 
 export function Promocodes() {
-  const type = (useRouter()?.query?.type || "") as string;
-
+  const [selectedTab, setSelectedTab] = useState("active");
   const { data: promocodes } = useQuery({
-    queryKey: ["promocodes", type],
-    queryFn: () => fetchPromocodesType(type),
+    queryKey: ["promocodes", selectedTab],
+    queryFn: () => fetchPromocodesType(selectedTab),
   });
 
   // const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -95,7 +95,8 @@ export function Promocodes() {
           </DialogContent>
         </Dialog> */}
       {/* </div> */}
-      <div className="bg-white p-4 rounded-xl">
+      <CustomTabs triggers={[{title: "Faol", value: "active" }, { title: "Faol emas", value: "inactive" }]} selectedTab={selectedTab} setSelectedTab={setSelectedTab} storageKey="promocodes" />
+      <div className="bg-white p-4 rounded-xl mt-4">
         <PromocodeTable
           promocodes={promocodes}
           onDelete={(promo) => {

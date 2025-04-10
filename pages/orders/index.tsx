@@ -3,7 +3,6 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import {
   Table,
@@ -23,6 +22,8 @@ import React from "react";
 import { splitToHundreds } from "@/lib/utils";
 import { queryClient } from "@/lib/query";
 import CustomPagination from "@/components/pagination";
+import Search from "@/components/search";
+import { useLoading } from "@/lib/context/Loading";
 
 export const statuses = [
   {
@@ -98,6 +99,8 @@ function OrderList({
   const ordersPerPage = 10;
   const totalPages = Math.ceil(orders?.count / ordersPerPage);
   const { push } = useRouter();
+
+  const {collapsed} = useLoading()
 
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = (currentPage - 1) * ordersPerPage;
@@ -188,24 +191,18 @@ function OrderList({
               </Button>
             ))}
           </div>
-          <div className="flex items-center space-x-4">
-            <Label htmlFor="search">Qidirish:</Label>
-            <Input
-              id="search"
-              placeholder="Buyurtma raqami, mijoz ismi yoki telefon raqam."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="max-w-sm !h-[36px]"
-            />
+          <div className="max-w-[400px]">
+          <Search search={searchTerm} setSearch={setSearchTerm} />
+
           </div>
         </div>
-        <div className="rounded-md">
+        <div className={`rounded-md ${collapsed ? "table_width_collapsed" : "table_width"} `}>
           {isLoading ? (
             <OrderSkeleton />
           ) : (
             <Table>
               <TableHeader>
-                <TableRow>
+                <TableRow className="whitespace-nowrap">
                   {/* <TableHead>ID</TableHead> */}
                   <TableHead>Iiko ID</TableHead>
                   <TableHead>Mijoz</TableHead>
@@ -213,7 +210,7 @@ function OrderList({
                   <TableHead>Narxi</TableHead>
                   {/* <TableHead>Mahsulotlar soni</TableHead> */}
                   {/* <TableHead>Promokod</TableHead> */}
-                  <TableHead>Buyurtma vaqti</TableHead>
+                  <TableHead>Filiali</TableHead>
                   <TableHead>Yetkazish/Olib ketish</TableHead>
                   <TableHead>Buyurtma berilgan vaqt</TableHead>
 
@@ -222,41 +219,23 @@ function OrderList({
               </TableHeader>
               <TableBody>
                 {orders?.results?.map((order) => (
-                  <TableRow key={order.id} className="cursor-pointer">
-                    {/* <TableCell
-                  onClick={() => {
+                  <TableRow key={order.id} className="cursor-pointer whitespace-nowrap" onClick={() => {
                     push(`orders/info?id=${order.id}`);
-                  }}
-                >
-                  {order.order_id}
-                </TableCell> */}
-
+                  }}>
                     <TableCell
-                      onClick={() => {
-                        push(`orders/info?id=${order.id}`);
-                      }}
                     >
                       {order.iiko_order_id}
                     </TableCell>
 
                     <TableCell
-                      onClick={() => {
-                        push(`orders/info?id=${order.id}`);
-                      }}
                     >
                       {order.user}
                     </TableCell>
                     <TableCell
-                      onClick={() => {
-                        push(`orders/info?id=${order.id}`);
-                      }}
                     >
                       {order.phone_number}
                     </TableCell>
                     <TableCell
-                      onClick={() => {
-                        push(`orders/info?id=${order.id}`);
-                      }}
                     >
                       <div className="flex items-center space-x-2">
                         {order.price && (
@@ -295,13 +274,8 @@ function OrderList({
                   )}
                 </TableCell> */}
                     <TableCell
-                      onClick={() => {
-                        push(`orders/info?id=${order.id}`);
-                      }}
                     >
-                      {order.time
-                        ? new Date(order.time).toLocaleString()
-                        : "Iloji boricha tez"}
+                      {order?.filial?.name_uz}
                     </TableCell>
                     <TableCell>
                       {order.delivery == "DELIVER"
@@ -311,14 +285,11 @@ function OrderList({
                     <TableCell>{String(order.order_time)}</TableCell>
 
                     <TableCell
-                      onClick={() => {
-                        push(`orders/info?id=${order.id}`);
-                      }}
                     >
                      <div className="flex w-full justify-start">
                      <div
                         className={
-                          `px-2 py-1 rounded-full text-white text-xs ${statuses.find(
+                          `px-2 py-1 rounded-full text-white text-xs whitespace-nowrap ${statuses.find(
                             (status) => status.value === order.status
                           )?.color}`
                         }

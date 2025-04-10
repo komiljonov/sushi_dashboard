@@ -7,6 +7,8 @@ interface ILoadingProvider {
     loading: boolean,
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
     setInfo: React.Dispatch<React.SetStateAction<ILoadingInfo>>
+    collapsed: boolean,
+    setCollapsed: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 
@@ -15,6 +17,8 @@ export const LoadingContext = createContext<ILoadingProvider>({
     loading: false,
     setLoading: () => { },
     setInfo: () => { },
+    collapsed: false,
+    setCollapsed: () => { }
 });
 
 export const useLoading = () => useContext(LoadingContext);
@@ -30,6 +34,7 @@ interface ILoadingInfo {
 
 export const LoadingProvider = ({ children }: ILoadingProviderProps) => {
     const [loading, setLoading] = useState<boolean>(false);
+    const [collapsed, setCollapsed] = useState<boolean>(false);
 
     const [info, setInfo] = useState<ILoadingInfo>({
         title: "Yuklanmoqda...",
@@ -50,7 +55,7 @@ export const LoadingProvider = ({ children }: ILoadingProviderProps) => {
 
 
     return (
-        <LoadingContext.Provider value={{ loading, setLoading, setInfo }} >
+        <LoadingContext.Provider value={{ loading, setLoading, setInfo, collapsed, setCollapsed }} >
             {loading && <Loading {...info} />}
             {children}
         </LoadingContext.Provider>

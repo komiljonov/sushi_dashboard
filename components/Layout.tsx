@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
+import { useLoading } from "@/lib/context/Loading";
 
 export function Layout({
   children,
@@ -11,7 +11,8 @@ export function Layout({
   children: React.ReactNode;
   page: string;
 }) {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  const {collapsed: sidebarCollapsed, setCollapsed: setSidebarCollapsed} = useLoading()
 
   return (
     <div
@@ -20,7 +21,7 @@ export function Layout({
     >
       {" "}
       {/* Ensures light background */}
-      <div className="min-w-[255px]">
+      <div className={sidebarCollapsed ? "min-w-[64px]" :"min-w-[255px]"}>
         <Sidebar collapsed={sidebarCollapsed} page={page} />
       </div>
       <div className="flex-1 flex flex-col ">
