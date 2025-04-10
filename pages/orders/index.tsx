@@ -318,7 +318,7 @@ function OrderList({
                      <div className="flex w-full justify-start">
                      <div
                         className={
-                          `px-2 py-1 rounded-full text-white ${statuses.find(
+                          `px-2 py-1 rounded-full text-white text-xs ${statuses.find(
                             (status) => status.value === order.status
                           )?.color}`
                         }

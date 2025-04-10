@@ -81,7 +81,10 @@ function CreateOrderPage() {
 
   const onSubmit = (data: CreateOrderForm) => {
     console.log("Buyurtma yuborildi", { ...data, orderItems });
-    createOrderMutation.mutate(data);
+    createOrderMutation.mutate({...data, items: data?.items?.map(item => ({
+      ...item,
+      product: item?._product?.id
+    }))});
   };
 
   return (
@@ -161,13 +164,14 @@ function CreateOrderPage() {
           <DeliveryTime />
 
           <div className="col-span-2 bg-[#FAFAFA] rounded-2xl p-4 space-y-2">
-            <OrderItems setIsAddItemOpen={setIsAddItemOpen} />
+            <OrderItems />
 
             <AddItemModal
               isOpen={isAddItemOpen}
               setIsOpen={setIsAddItemOpen}
               products={products}
             />
+            
 
             <TotalPrices
               _deliveryPrice={_deliveryPrice}
@@ -176,7 +180,7 @@ function CreateOrderPage() {
             />
           </div>
 
-          <div className="flex justify-start space-x-4">
+          <div className="flex justify-end space-x-4">
             <Button
               type="button"
               className="button bg-[#F0F0F0]"

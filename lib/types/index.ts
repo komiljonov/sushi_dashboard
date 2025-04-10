@@ -38,6 +38,7 @@ export interface IProduct {
   image?: IFile | string;
   count: number
   price: number;
+  product: IProduct
   sale_count: number;
 }
 

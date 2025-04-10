@@ -101,7 +101,7 @@ export default function CreateCategoryModal({ children, parent }: CreateCategory
                             rules={{ required: "Content type is required" }}
                             render={({ field }) => (
                                 <Select onValueChange={field.onChange} value={field.value}>
-                                    <SelectTrigger id="content_type" className="w-full">
+                                    <SelectTrigger id="content_type" className="w-full input h-[44px]">
                                         <SelectValue placeholder="Kontent turini tanlang" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -113,7 +113,7 @@ export default function CreateCategoryModal({ children, parent }: CreateCategory
                         />
                         {errors.content_type && <p className="text-sm text-red-500">{errors.content_type.message}</p>}
                     </div>
-                    <Button type="submit" className="w-full" disabled={mutation.isPending}>
+                    <Button type="submit" className="w-full button" disabled={mutation.isPending}>
                         {mutation.isPending ? 'Yaratilmoqda...' : 'Kategoriya yaratish'}
                     </Button>
                 </form>

@@ -95,6 +95,7 @@ export default function AddItemModal({
     setCategories(categoriesData as ICategory[]);
     setProducts(filteredProducts);
   }, [categoriesData, filteredProducts]);
+  
   const handleAddItem = useCallback(
     (id: string) => {
       const selectedProduct = products.find((p) => p.id === id);

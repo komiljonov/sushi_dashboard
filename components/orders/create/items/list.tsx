@@ -12,12 +12,12 @@ import {
 import { CreateOrderForm } from "../types";
 import { splitToHundreds } from "@/lib/utils";
 import Image from "next/image";
+import AddProductModal from "./add-order";
+import { ICategory, IProduct } from "@/lib/types";
+import { useQuery } from "@tanstack/react-query";
+import { request } from "@/lib/api";
 
-export default function OrderItems({
-  setIsAddItemOpen,
-}: {
-  setIsAddItemOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+export default function OrderItems() {
   const {
     control,
     watch,
@@ -25,7 +25,7 @@ export default function OrderItems({
     formState: { errors },
   } = useFormContext<CreateOrderForm>();
 
-  const { remove } = useFieldArray({
+  const { fields, remove, update, append } = useFieldArray({
     control,
     name: "items",
     rules: {
@@ -38,9 +38,43 @@ export default function OrderItems({
 
   const orderItems = watch("items");
 
-  console.log(orderItems);
-
   const headers = ["MAHSULOT NOMI", "SONI", "NARX"];
+
+  const selectedProducts = watch("items");
+
+  const { data: categories } = useQuery<ICategory[]>({
+      queryKey: ["categories"],
+      queryFn: async () => {
+        const { data } = await request.get(`/categories`);
+        return data;
+      },
+    });
+
+
+  const handleProductChange = (product: IProduct, quantity: number) => {
+    const existingIndex = selectedProducts.findIndex(
+      (item) => item?._product.id === product.id
+    );
+    if (quantity < 1) {
+      if (existingIndex >= 0) {
+        remove(existingIndex);
+      }
+      return;
+    }
+    if (existingIndex >= 0) {
+      update(existingIndex, {
+        _product: product,
+        product: product?.name_uz,
+        quantity,
+      });
+    } else {
+      append({
+        _product: product,
+        product: product?.name_uz,
+        quantity,
+      });
+    }
+  };
 
   return (
     <Card className="shadow-none border-none p-0 bg-transparent">
@@ -111,30 +145,15 @@ export default function OrderItems({
             </div>
           </div>
         ))}
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => setIsAddItemOpen(true)}
-          className="mt-4 shadow-none font-normal border-orange-500 bg-orange-50 border hover:text-orange-500 hover:bg-orange-50 rounded-[10px]  text-orange-500"
-        >
-          <Plus className="h-4 w-4 mr-2" /> Taom qo'shish
-        </Button>
       </CardContent>
         {errors.items && (
-      <CardFooter>
+          <CardFooter>
           <p className="text-sm text-red-500 mt-1">
             {errors.items.message || "Mahsulotlar bo'sh"}
           </p>
         </CardFooter>
         )}
-        {/* {errors.items && (
-                    <Alert variant="destructive">
-                        <AlertCircle className="h-4 w-4" />
-                        <AlertDescription>
-                            {errors.items.message || "At least one item is required"}
-                        </AlertDescription>
-                    </Alert>
-                )} */}
+        <AddProductModal fields={fields} categories={categories as ICategory[]} onChange={handleProductChange}/>
     </Card>
   );
 }

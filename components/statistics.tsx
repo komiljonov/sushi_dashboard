@@ -156,7 +156,7 @@ export default function StatisticsModal() {
                                         console.log(value);
                                         field.onChange(value);
                                     }}>
-                                        <SelectTrigger>
+                                        <SelectTrigger className="h-[44px] input">
                                             <SelectValue placeholder="Filialni tanlang" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -298,7 +298,7 @@ export default function StatisticsModal() {
                             />
                         </div>
                     </div>
-                    <Button type="submit" className="w-full" disabled={isPending}>
+                    <Button type="submit" className="w-full button" disabled={isPending}>
                         <Download className="mr-2 h-4 w-4" /> {isPending ? "Yuklanmoqda..." : "XLSX yuklab olish"}
                     </Button>
                 </form>
