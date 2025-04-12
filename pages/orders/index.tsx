@@ -288,7 +288,7 @@ function OrderList({
                         ? "Yetkazib berish"
                         : "Olib ketish"}
                     </TableCell>
-                    <TableCell>{String(order.order_time)}</TableCell>
+                    <TableCell>{String(order.order_time === null ? "-" : order.order_time)}</TableCell>
 
                     <TableCell
                     >

@@ -7,6 +7,7 @@ import {
   Marker,
   Polyline,
 } from "@react-google-maps/api";
+import { useState } from "react";
 
 const containerStyle = {
   width: "100%",
@@ -14,33 +15,48 @@ const containerStyle = {
   borderRadius: "12px",
 };
 
-const TaxiLocation = ({ taxi }: { taxi: ITaxi }) => {
-  const start = {
-    lat: taxi?.source_lat || 41.3111,
-    lng: taxi?.source_lon || 69.2401,
-  };
-  const end = {
-    lat: taxi?.destination_lat || 41.285,
-    lng: taxi?.destination_lon || 69.2605,
-  };
 
-  const path = [start, end];
+const TaxiLocation = ({taxi}: {taxi: ITaxi}) => {
+  const [mapsApi, setMapsApi] = useState<google.maps.Map | null>(null);
 
-  const center = start;
+    const start = {
+        lat: taxi?.source_lat,
+        lng: taxi?.source_lon,
+    };
+    const end = {
+        lat: taxi?.destination_lat,
+        lng: taxi?.destination_lon,
+    };
+    const center = start || end
 
   return (
     <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}>
-      <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={13}>
-        <Marker position={start} />
-        <Marker
-          position={end}
-          icon={{
-            url: "/building.svg", // public folder path
-            scaledSize: new google.maps.Size(40, 40), // control icon size
-          }}
-        />
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={center}
+        zoom={13}
+        onLoad={(map) => {
+          setMapsApi(map);
+        }}
+      >
+        {/* Only render custom markers after the map (and google object) is ready */}
+        {mapsApi && (
+          <>
+            <Marker
+              position={start}
+            />
+            <Marker
+              position={end}
+              icon={{
+                url: "/building.svg",
+                scaledSize: new window.google.maps.Size(40, 40),
+              }}
+            />
+          </>
+        )}
+
         <Polyline
-          path={path}
+          path={[start, end]}
           options={{
             strokeColor: "#FF0000",
             strokeOpacity: 0.8,
