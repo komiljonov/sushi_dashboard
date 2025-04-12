@@ -63,7 +63,7 @@ const AdminsTable = ({ admins }: { admins: IAdmin[] }) => (
         </TableRow>
       </TableHeader>
       <TableBody>
-        {admins.map((admin) => (
+        {admins?.map((admin) => (
           <TableRow key={admin.id}>
             <TableCell className="rounded-l-xl ">{admin.first_name}</TableCell>
             <TableCell>{admin.last_name}</TableCell>

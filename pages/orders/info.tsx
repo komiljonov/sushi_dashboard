@@ -471,9 +471,9 @@ function ConfirmationButtons({ order }: { order: IOrder }) {
 }
 
 function OrderInfo({ order }: { order: IOrder }) {
-  if (!order) {
-    return <div>Buyurtma topilmadi.</div>;
-  }
+  // if (!order) {
+  //   return <div>Buyurtma topilmadi.</div>;
+  // }
 
   return (
     <div className="mx-auto">

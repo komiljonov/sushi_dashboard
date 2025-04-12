@@ -28,7 +28,7 @@ const BranchsChart = ({data}: {data: IMainAnalytics}) => {
                 endAngle={-270}
                 dataKey="value"
               >
-                {chartData.map((_, index) => (
+                {chartData?.map((_, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={COLORS[index % COLORS.length]}
@@ -39,7 +39,7 @@ const BranchsChart = ({data}: {data: IMainAnalytics}) => {
           </div>
         </div>
         <div className="ml-6 text-sm space-y-6 w-full">
-          {chartData.map((item, index) => (
+          {chartData?.map((item, index) => (
             <div key={index} className="flex items-center gap-2 w-full justify-between">
               <div className="flex items-center gap-2">
                 <span
