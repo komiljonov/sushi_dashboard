@@ -138,15 +138,15 @@ tr {
 }
 
 .table_width {
-  max-width: calc(100vw - 327px);
+  max-width: calc(100vw - 337px);
   /* overflow-x: auto; */
 }
 
 .table_width_collapsed {
-  max-width: calc(100vw - 142px);
+  max-width: calc(100vw - 144px);
   /* overflow-x: auto; */
 }
 
-.Mui-selected {
+.css-gydqk7-MuiButtonBase-root-MuiTab-root.Mui-selected {
   color: #FF2735 !important;
 }

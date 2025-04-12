@@ -247,7 +247,7 @@ function OrderDetailsCard({ order }: { order: IOrder }) {
               <Ticket className="h-4 w-4" />
               <Label className="font-normal">Promokod:</Label>
             </div>
-            <div className="text-sm">
+            <div className="text-sm flex gap-2">
               <span className="font-medium text-sm">
                 {order.promocode?.name_uz}
               </span>
@@ -485,8 +485,8 @@ function OrderInfo({ order }: { order: IOrder }) {
       <div className="grid gap-4 md:grid-cols-2">
         <UserInformationCard order={order} />
         <OrderDetailsCard order={order} />
-        {order.taxi && <TaxiInfoCard taxi={order.taxi} />}
         <ProductListCard order={order} />
+        {order.taxi && <TaxiInfoCard taxi={order.taxi} />}
       </div>
     </div>
   );

@@ -248,6 +248,10 @@ export interface ITaxi {
   car_number: string;
   total_sum: number;
   driver_phone_number: string;
+  source_lat: number;
+  source_lon: number;
+  destination_lat: number;
+  destination_lon: number;
 }
 
 export interface DeliveryPrice {
