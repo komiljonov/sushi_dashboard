@@ -77,7 +77,7 @@ const LoginPage: React.FC & { authRequired?: boolean } = () => {
                         <div className="space-y-2 relative">
                             <Label htmlFor="username">Foydalanuvchi nomi</Label>
                             <Input
-                            className="h-[48px] rounded-lg bg-[#FAFAFA] !border-[#E5E5E5] pl-12"
+                            className="h-[48px] input rounded-lg bg-[#FAFAFA] !border-[#E5E5E5] pl-12"
                                 id="username"
                                 {...register('username', { required: true })}
                                 placeholder="Foydalanuvchi nomini kiriting"

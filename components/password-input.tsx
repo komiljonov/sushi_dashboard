@@ -25,6 +25,7 @@ const PasswordInput = ({
         onChange={(e) => onChange(e.target.value)}
         value={value}
         placeholder={placeholder}
+        className="input"
       />
       <div
         onClick={() => setShowPassword(!showPassword)}

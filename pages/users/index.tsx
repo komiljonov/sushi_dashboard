@@ -29,23 +29,23 @@ function UsersTable() {
   const [hasNextPage, setHasNextPage] = useState(true);
   const observerRef = useRef<HTMLDivElement | null>(null);
 
-  const { data: monitoring, isFetching } = useQuery<PaginatedUserResponse>({
+  const { data: users, isFetching } = useQuery<PaginatedUserResponse>({
     queryKey: ["users", page, searchTerm],
     queryFn: () => fetchUsers(page, searchTerm, ""),
   });
 
   useEffect(() => {
-    if (monitoring?.results) {
+    if (users?.results) {
       if (page === 1) {
-        setUserData(monitoring.results); // Reset on new search
+        setUserData(users.results); // Reset on new search
       } else {
-        setUserData((prev) => [...prev, ...monitoring.results]);
+        setUserData((prev) => [...prev, ...users.results]);
       }
-      setHasNextPage(!!monitoring.next);
+      setHasNextPage(!!users.next);
     }
-  }, [monitoring, page]);
+  }, [users, page]);
 
-  const loadMoreMonitoringData = useCallback(() => {
+  const loadMoreUsersData = useCallback(() => {
     if (!hasNextPage || isFetching) return;
     setPage((prevPage) => prevPage + 1);
   }, [hasNextPage, isFetching]);
@@ -54,7 +54,7 @@ function UsersTable() {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          loadMoreMonitoringData();
+          loadMoreUsersData();
         }
       },
       { threshold: 1.0 }
@@ -65,7 +65,7 @@ function UsersTable() {
     }
 
     return () => observer.disconnect();
-  }, [loadMoreMonitoringData]);
+  }, [loadMoreUsersData]);
 
   return (
     <div>
@@ -73,7 +73,7 @@ function UsersTable() {
         <Search className="w-5 h-5 absolute top-5 left-3 text-[#A3A3A3]"/>
         <Input
           type="text"
-          className="max-w-[400px] !h-[36px] pl-10"
+          className="max-w-[400px] !h-[36px] pl-10 input"
           onChange={(e) => {
             setSearchTerm(e.target.value);
             setUserData([]); // Clear previous data

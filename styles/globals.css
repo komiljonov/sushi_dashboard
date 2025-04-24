@@ -111,18 +111,19 @@
   /* For Firefox */
 }
 
-input {
+/* input {
   border: 1px solid #E5E5E5 !important;
   background: #FAFAFA !important;
   height: 44px !important;
   border-radius: 8px !important;
   box-shadow:  none !important;
   color: #A3A3A3;
-}
+} */
 
 .input {
-  border: 1px solid #E5E5E5;
+  border: 1px solid #E5E5E5 !important;
   background: #FAFAFA !important;
+  height: 44px !important;
   border-radius: 8px !important;
   box-shadow:  none !important;
   color: #A3A3A3;
@@ -148,5 +149,14 @@ tr {
 }
 
 .css-gydqk7-MuiButtonBase-root-MuiTab-root.Mui-selected {
+  color: #FF2735 !important;
+}
+
+
+.css-1vswajs-MuiButtonBase-root-MuiTab-root.Mui-selected {
+  color: #FF2735 !important;
+}
+
+.css-1wnaute.Mui-selected {
   color: #FF2735 !important;
 }

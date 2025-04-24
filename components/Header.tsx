@@ -127,15 +127,15 @@ export function Header({ collapsed, setCollapsed}: HeaderProps) {
                   <form onSubmit={handleChangePassword} className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="oldPassword">Hozirgi parol</Label>
-                      <Input id="oldPassword" name="oldPassword" type="password" required />
+                      <Input className="input" id="oldPassword" name="oldPassword" type="password" required />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="newPassword">Yangi parol</Label>
-                      <Input id="newPassword" name="newPassword" type="password" required />
+                      <Input className="input" id="newPassword" name="newPassword" type="password" required />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="repeatNewPassword">yangi parolni takrorlang</Label>
-                      <Input id="repeatNewPassword" name="repeatNewPassword" type="password" required />
+                      <Input className="input" id="repeatNewPassword" name="repeatNewPassword" type="password" required />
                     </div>
                     {passwordError && (
                       <p className="text-red-600 text-sm">{passwordError}</p>

@@ -188,6 +188,7 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
                 <div>
                   <Label htmlFor="name_uz">Nomi (O&apos;zbek)</Label>
                   <Input
+                  className="input"
                     id="name_uz"
                     {...register("name_uz", { required: true })}
                   />
@@ -195,6 +196,7 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
                 <div>
                   <Label htmlFor="name_ru">Nomi (Rus)</Label>
                   <Input
+                  className="input"
                     id="name_ru"
                     {...register("name_ru", { required: true })}
                   />

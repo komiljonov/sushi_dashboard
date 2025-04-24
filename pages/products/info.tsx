@@ -126,6 +126,7 @@ function Products() {
                     <div>
                         <Label htmlFor="name_uz">Nomi (O&apos;zbekcha)</Label>
                         <Input
+                        className='input'
                             id="name_uz"
 
                             {...register("name_uz", { required: true })}
@@ -135,6 +136,7 @@ function Products() {
                     <div>
                         <Label htmlFor="name_ru">Nomi (Ruscha)</Label>
                         <Input
+                        className='input'
                             id="name_ru"
                             {...register("name_ru", { required: true })}
                             placeholder="Mahsulotni rus tilidagi nomini kiriting."

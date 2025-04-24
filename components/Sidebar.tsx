@@ -62,7 +62,7 @@ const menuItems = [
     href: "/promocodes",
     iconActive: PromocodesActive,
     icon: Promocodes,
-    page: "active",
+    page: "promocodes",
   },
   {
     name: "Foydalanuvchilar",

@@ -118,6 +118,7 @@ const CreateAdminDialog = () => {
           <div>
             <Label htmlFor="first_name">Ism</Label>
             <Input
+            className="input"
               id="first_name"
               {...register("first_name", { required: "Ism kiritish shart" })}
             />
@@ -130,6 +131,7 @@ const CreateAdminDialog = () => {
           <div>
             <Label htmlFor="last_name">Familya</Label>
             <Input
+            className="input"
               id="last_name"
               {...register("last_name", {
                 required: "Familya kiritish shart",
@@ -145,6 +147,7 @@ const CreateAdminDialog = () => {
           <div>
             <Label htmlFor="username">Foydalanuvchi nomi</Label>
             <Input
+            className="input"
               id="username"
               {...register("username", { required: "Username kiritish shart" })}
             />
@@ -321,6 +324,7 @@ const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
               <div>
                 <Label htmlFor="first_name">Ism</Label>
                 <Input
+                className="input"
                   id="first_name"
                   {...register("first_name", {
                     required: "Ism kiritish shart",
@@ -335,6 +339,7 @@ const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
               <div>
                 <Label htmlFor="last_name">Familya</Label>
                 <Input
+                className="input"
                   id="last_name"
                   {...register("last_name", {
                     required: "Familya kiritish shart",
@@ -350,6 +355,7 @@ const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
             <div>
               <Label htmlFor="username">Username</Label>
               <Input
+              className="input"
                 id="username"
                 {...register("username", {
                   required: "Username kiritish shart",

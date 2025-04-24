@@ -85,7 +85,7 @@ export default function DeliveryTime() {
                                         handleCustomTimeChange(validatedHours, customMinutes)
                                     }}
                                     placeholder="00"
-                                    className="w-16 text-center !h-9"
+                                    className="w-16 text-center !h-9 input"
                                     maxLength={2}
                                 />
                                 <span className="text-xl">:</span>
@@ -98,7 +98,7 @@ export default function DeliveryTime() {
                                         handleCustomTimeChange(customHours, validatedMinutes)
                                     }}
                                     placeholder="00"
-                                    className="w-16 text-center !h-9"
+                                    className="w-16 text-center !h-9 input"
                                     maxLength={2}
                                 />
                             </div>

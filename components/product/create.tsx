@@ -71,14 +71,14 @@ export default function CreateProductModal({ children }: { children: React.React
                         <Label htmlFor="name_uz" className="text-right">
                             Name (UZ)
                         </Label>
-                        <Input id="name_uz" className="col-span-3 border-gray-950" {...register('name_uz', { required: "Name (UZ) is required" })} />
+                        <Input id="name_uz" className="input col-span-3 border-gray-950" {...register('name_uz', { required: "Name (UZ) is required" })} />
                         {errors.name_uz && <p className="text-sm text-red-500">{errors.name_uz.message}</p>}
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="name_ru" className="text-right">
                             Name (RU)
                         </Label>
-                        <Input id="name_ru" className="col-span-3 border-gray-950" {...register('name_ru', { required: "Name (RU) is required" })} />
+                        <Input id="name_ru" className="input col-span-3 border-gray-950" {...register('name_ru', { required: "Name (RU) is required" })} />
                         {errors.name_ru && <p className="text-sm text-red-500">{errors.name_ru.message}</p>}
                     </div>
                     <Button type="submit" className="ml-auto" disabled={mutation.isPending}>

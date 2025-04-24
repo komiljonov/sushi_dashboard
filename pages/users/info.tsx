@@ -29,7 +29,7 @@ const UserInfoCard = ({ user }: { user: IUser }) => (
         ].map((field) => (
           <div key={field.label} className="space-y-2">
             <Label htmlFor={field.label}>{field.label}</Label>
-            <Input id={field.label} value={field.value || ''} readOnly />
+            <Input className="input" id={field.label} value={field.value || ''} readOnly />
           </div>
         ))}
       </form>

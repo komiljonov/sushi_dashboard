@@ -88,7 +88,7 @@ export default function DeliveryMap() {
   // ];
 
   return (
-    <div className="h-80 flex flex-col items-center justify-center rounded-md">
+    <div className="h-[500px] flex flex-col items-center justify-center rounded-md">
       {isLoaded ? (
         <div className="flex flex-col h-full gap-1 w-full">
           <div className="relative w-full">
@@ -99,7 +99,7 @@ export default function DeliveryMap() {
               }
               onPlaceChanged={onPlaceSelect}
             >
-              <Input placeholder="Qidirish..." className="w-full bg-white" />
+              <Input placeholder="Qidirish..." className="w-full bg-white input" />
             </Autocomplete>
           </div>
           {/* <p className="text-sm text-gray-700 mb-2">

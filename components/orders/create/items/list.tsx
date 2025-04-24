@@ -4,11 +4,7 @@ import React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { Plus, Minus, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/Card";
+import { Card, CardContent, CardFooter } from "@/components/ui/Card";
 import { CreateOrderForm } from "../types";
 import { splitToHundreds } from "@/lib/utils";
 import Image from "next/image";
@@ -43,13 +39,12 @@ export default function OrderItems() {
   const selectedProducts = watch("items");
 
   const { data: categories } = useQuery<ICategory[]>({
-      queryKey: ["categories"],
-      queryFn: async () => {
-        const { data } = await request.get(`/categories`);
-        return data;
-      },
-    });
-
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const { data } = await request.get(`/categories`);
+      return data;
+    },
+  });
 
   const handleProductChange = (product: IProduct, quantity: number) => {
     const existingIndex = selectedProducts.findIndex(
@@ -79,17 +74,24 @@ export default function OrderItems() {
   return (
     <Card className="shadow-none border-none p-0 bg-transparent">
       <CardContent className="p-0">
-        <div className="grid grid-cols-7 py-3 border-b">
-        {headers?.map((header, index) => (
-          <span
-            className={`text-sm text-[#A3A3A3] font-medium ${
-              index === 0 ? "col-span-3" : " col-span-2"
-            }`}
-            key={index}
-          >
-            {header}
+        <div className="grid grid-cols-9 py-3 border-b items-center">
+          {headers?.map((header, index) => (
+            <span
+              className={`text-sm text-[#A3A3A3] font-medium ${
+                index === 0 ? "col-span-3" : " col-span-2"
+              }`}
+              key={index}
+            >
+              {header}
+            </span>
+          ))}
+          <span className="col-span-2 flex w-full justify-end">
+            <AddProductModal
+              fields={fields}
+              categories={categories as ICategory[]}
+              onChange={handleProductChange}
+            />
           </span>
-        ))}
         </div>
         {orderItems.map((field, index) => (
           <div key={index} className="grid grid-cols-7 py-4 border-b">
@@ -146,14 +148,13 @@ export default function OrderItems() {
           </div>
         ))}
       </CardContent>
-        {errors.items && (
-          <CardFooter>
+      {errors.items && (
+        <CardFooter>
           <p className="text-sm text-red-500 mt-1">
             {errors.items.message || "Mahsulotlar bo'sh"}
           </p>
         </CardFooter>
-        )}
-        <AddProductModal fields={fields} categories={categories as ICategory[]} onChange={handleProductChange}/>
+      )}
     </Card>
   );
 }

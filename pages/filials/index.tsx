@@ -153,6 +153,7 @@ function DeleteModal({ isOpen, onClose, onConfirm }: { isOpen: boolean, onClose:
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
             placeholder="Tasdiqlash so'zini kiriting"
+            className="input"
           />
         </div>
         <DialogFooter>
@@ -213,7 +214,7 @@ const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
               <Input
                 id="name_uz"
                 {...register("name_uz", { required: "Nomi bo'sh bo'lishi mumkin emas." })}
-                className="col-span-3"
+                className="col-span-3 input"
               />
             </div>
 
@@ -225,7 +226,7 @@ const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
               <Input
                 id="name_ru"
                 {...register("name_ru", { required: "Nomi bo'sh bo'lishi mumkin emas." })}
-                className="col-span-3"
+                className="col-span-3 input"
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
@@ -235,7 +236,7 @@ const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
               <Input
                 id="phone_number"
                 {...register("phone_number", { required: "Telefon raqam bo'sh bo'lmasligi kerak." })}
-                className="col-span-3"
+                className="col-span-3 input"
               />
             </div>
 

@@ -261,12 +261,14 @@ export default function AddItemModal({
             >
               {activeTab === "PRODUCT" && (
                 <Input
+                className="input"
                   placeholder="Mahsulot nomini qidirish"
                   onChange={handleSearchChange}
                 />
               )}
               {activeTab === "CATEGORY" && (
                 <Input
+                className="input"
                   placeholder="Kategoriyalar nomini qidirish"
                   onChange={handleSearchCategory}
                 />

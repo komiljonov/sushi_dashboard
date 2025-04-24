@@ -164,7 +164,7 @@ function ReferralLinksCRUD() {
               placeholder="Referal havolasi nomini kiriting"
               value={newReferralName}
               onChange={(e) => setNewReferralName(e.target.value)}
-              className="flex-grow !h-[36px]"
+              className="flex-grow !h-[36px] input"
             />
             <Button type="submit">Havola Yaratish</Button>
           </div>

@@ -118,7 +118,7 @@ function OrderList({
         {/* <CreateOrderButton /> */}
         {/* <Button ></Button> */}
 
-        <Button variant="default" className="button" onClick={() => router.push("/orders/create")}>
+        <Button variant="default" className="button bg-green-500 hover:bg-green-600" onClick={() => router.push("/orders/create")}>
           Buyurtma yaratish
         </Button>
       </div>

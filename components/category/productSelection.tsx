@@ -87,6 +87,7 @@ export function CategoryProductModal({ isOpen, onClose, categoryId }: CategoryPr
                 <div className="grid gap-4 py-4">
                     <Input
                         placeholder="Search products..."
+                        className='input'
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />

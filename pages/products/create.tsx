@@ -90,6 +90,7 @@ function Products() {
                     <div>
                         <Label htmlFor="name_uz">Nomi (O'z)</Label>
                         <Input
+                        className='input'
                             id="name_uz"
 
                             {...register("name_uz", { required: true })}
@@ -99,6 +100,7 @@ function Products() {
                     <div>
                         <Label htmlFor="name_ru">Nomi (Ru)</Label>
                         <Input
+                        className='input'
                             id="name_ru"
                             {...register("name_ru", { required: true })}
                             placeholder="Mahsulot nomini rus tilida kiriting..."
@@ -128,7 +130,7 @@ function Products() {
                         <Input
                             id="price"
                             type="number"
-                             className="no-spinner"
+                             className="no-spinner input"
                             {...register("price", { required: true, valueAsNumber: true })}
                             placeholder="Mahsulot narxini kiriting"
                         />

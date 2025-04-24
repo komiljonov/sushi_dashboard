@@ -11,11 +11,11 @@ const Search = ({
   setSearch: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   return (
-    <div className="flex gap-3 relative w-full">
-      <SearchIcon className="w-5 h-5 absolute top-2 left-3 text-[#A3A3A3]" />
+    <div className="flex gap-3 relative w-full items-center">
+      <SearchIcon className="w-5 h-5 absolute top-3 left-3 text-[#A3A3A3]" />
       <Input
         type="text"
-        className=" !h-[36px] pl-10"
+        className=" !h-[36px] pl-10 input"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder="Qidirish..."
