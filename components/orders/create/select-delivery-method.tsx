@@ -27,7 +27,7 @@ const DeliveryMethodSelector = ({
 }: {
   onChange: (value: string) => void;
 }) => {
-  const [selected, setSelected] = useState("pickup");
+  const [selected, setSelected] = useState("DELIVER");
 
   return (
     <div className="space-y-4 w-full">

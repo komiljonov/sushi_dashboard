@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import PaymeImage from "../../../public/images/payme.svg";
-import ClickImage from "../../../public/images/click.svg";
+// import ClickImage from "../../../public/images/click.svg";
 import CashImage from "../../../public/images/cash.svg";
 
 const paymentMethods = [
@@ -16,20 +16,20 @@ const paymentMethods = [
     label: "",
     icon: PaymeImage,
   },
-  {
-    id: "CLICK",
-    label: "",
-    icon: ClickImage,
-  },
+  // {
+  //   id: "CLICK",
+  //   label: "",
+  //   icon: ClickImage,
+  // },
 ];
 
 const PaymentMethodSelector = ({onChange}: {onChange: (value: string) => void}) => {
-  const [selected, setSelected] = useState("cash");
+  const [selected, setSelected] = useState("CASH");
 
   return (
     <div className="space-y-4 w-full">
       <div className="text-sm font-medium">To'lov usulini tanlang</div>
-      <div className="grid grid-cols-3 gap-4 w-full">
+      <div className="grid grid-cols-2 gap-4 w-full">
         {paymentMethods.map((method) => {
           const isSelected = selected === method.id;
           return (

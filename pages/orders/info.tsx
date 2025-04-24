@@ -420,7 +420,7 @@ function ConfirmationButtons({ order }: { order: IOrder }) {
       <AlertDialog open={openConfirm} onOpenChange={setOpenConfirm}>
         <AlertDialogTrigger asChild>
           <Button
-            className="bg-[#1AD012] h-[44px] rounded-[10px] hover:bg-green-600 text-white"
+            className="bg-[#1AD012] hover:bg-green-600 h-[44px] rounded-[10px] text-white"
             disabled={confirmPending || order.status != "PENDING"}
           >
             Tasdiqlash

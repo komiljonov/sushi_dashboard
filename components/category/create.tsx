@@ -79,7 +79,7 @@ export default function CreateCategoryModal({ children, parent }: CreateCategory
                         <Label htmlFor="name_uz">Nomi (UZ)</Label>
                         <Input
                             id="name_uz"
-                            className="w-full border-gray-300"
+                            className="w-full input border-gray-300"
                             {...register('name_uz', { required: "Name (UZ) is required" })}
                         />
                         {errors.name_uz && <p className="text-sm text-red-500">{errors.name_uz.message}</p>}
@@ -88,7 +88,7 @@ export default function CreateCategoryModal({ children, parent }: CreateCategory
                         <Label htmlFor="name_ru">Nomi (RU)</Label>
                         <Input
                             id="name_ru"
-                            className="w-full border-gray-300"
+                            className="w-full input border-gray-300"
                             {...register('name_ru', { required: "Name (RU) is required" })}
                         />
                         {errors.name_ru && <p className="text-sm text-red-500">{errors.name_ru.message}</p>}

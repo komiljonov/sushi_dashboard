@@ -110,6 +110,7 @@ export default function StatisticsModal() {
                                 <Input
                                     id="start-date"
                                     type="date"
+                                    className="input"
                                     value={field.value}
                                     onChange={field.onChange}
                                 />
@@ -134,6 +135,7 @@ export default function StatisticsModal() {
                                 <Input
                                     id="end_date"
                                     type="date"
+                                    className="input"
                                     value={field.value}
                                     onChange={field.onChange}
                                 />

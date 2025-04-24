@@ -125,7 +125,7 @@ const AddProductModal = ({
                   }`}
                 >
                   <div className="flex gap-2 items-center">
-                    <div className="bg-gray-200 rounded-md">
+                    <div className="min-w-[56px] h-[56px] bg-gray-100 rounded-md">
                       <Image
                         src={
                           (product?.image as IFile)?.file || "/placeholder.jpg"
@@ -223,7 +223,7 @@ const AddProductModal = ({
         <Button
           type="button"
           variant="outline"
-          className="mt-4 shadow-none font-normal border-orange-500 bg-orange-50 border hover:text-orange-500 hover:bg-orange-50 rounded-[10px]  text-orange-500"
+          className="shadow-none font-normal border-orange-500 bg-orange-50 border hover:text-orange-500 hover:bg-orange-50 rounded-[10px]  text-orange-500"
         >
           <Plus className="h-4 w-4 mr-2" /> Taom qo'shish
         </Button>
@@ -246,16 +246,22 @@ const AddProductModal = ({
         <div className="w-full overflow-y-auto h-[400px]">
           {renderContent()}
         </div>
-        <div className="flex justify-end w-full" >
           {path.length > 0 && (
+        <div className="flex justify-between gap-4 w-full" >
             <Button
               onClick={goBack}
               className="bg-gray-200 hover:bg-gray-200 text-black w-full button"
             >
               Orqaga
             </Button>
-          )}
+            <Button
+              onClick={()=> setIsOpen(false)}
+              className="bg-green-500 hover:bg-green-600 button w-full"
+              >
+              Tasdiqlash
+            </Button>
         </div>
+            )}
       </DialogContent>
     </Dialog>
   );

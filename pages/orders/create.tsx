@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from "react";
 import { useForm, Controller, FormProvider } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -22,16 +20,19 @@ import { Layout } from "@/components/Layout";
 import { useRouter } from "next/router";
 import PaymentMethodSelector from "@/components/orders/create/select-payment-method";
 import DeliveryMethodSelector from "@/components/orders/create/select-delivery-method";
+import { Loader2 } from "lucide-react";
 
 function CreateOrderPage() {
   const router = useRouter();
   const [isAddItemOpen, setIsAddItemOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);  // Step 1: Add state for button disable
 
   const { filials, promocodes, phone_numbers, products } = useFetchData();
 
   const methods = useForm<CreateOrderForm>({
     defaultValues: {
-      delivery: "PICKUP",
+      delivery: "DELIVER",
+      payment_type: "CASH",
       time: null,
       items: [],
       location: undefined,
@@ -68,23 +69,28 @@ function CreateOrderPage() {
     mutationFn: CreateOrder,
     onSuccess: (data) => {
       console.log(data);
-
       router.push(`/orders/info?id=${data.id}`);
+      setIsSubmitting(false);  // Step 2: Re-enable button on success
       // reset()
       // alert("Buyurtma muvaffaqiyatli yaratildi!")
     },
     onError: (e) => {
       console.log(e);
       alert("Xatolik yuz berdi");
+      setIsSubmitting(false);  // Step 2: Re-enable button on error
     },
   });
 
   const onSubmit = (data: CreateOrderForm) => {
+    setIsSubmitting(true);  // Step 3: Disable button on first click
     console.log("Buyurtma yuborildi", { ...data, orderItems });
-    createOrderMutation.mutate({...data, items: data?.items?.map(item => ({
-      ...item,
-      product: item?._product?.id
-    }))});
+    createOrderMutation.mutate({
+      ...data,
+      items: data?.items?.map((item) => ({
+        ...item,
+        product: item?._product?.id,
+      })),
+    });
   };
 
   return (
@@ -106,6 +112,7 @@ function CreateOrderPage() {
                 {...register("phone", {
                   required: "Telefon raqamni kiritish majburiy.",
                 })}
+                className="input"
                 placeholder="Telefon raqamni kiriting"
               />
               {errors.phone && (
@@ -144,7 +151,6 @@ function CreateOrderPage() {
               <Controller
                 name="delivery"
                 control={control}
-                defaultValue="PICKUP"
                 render={({ field }) => <DeliveryMethodSelector {...field} />}
               />
             </div>
@@ -163,7 +169,7 @@ function CreateOrderPage() {
 
           <DeliveryTime />
 
-          <div className="col-span-2 bg-[#FAFAFA] rounded-2xl p-4 space-y-2">
+          <div className="col-span-2 bg-[#FAFAFA] rounded-2xl px-4 py-1 space-y-2">
             <OrderItems />
 
             <AddItemModal
@@ -171,7 +177,6 @@ function CreateOrderPage() {
               setIsOpen={setIsAddItemOpen}
               products={products}
             />
-            
 
             <TotalPrices
               _deliveryPrice={_deliveryPrice}
@@ -184,13 +189,18 @@ function CreateOrderPage() {
             <Button
               type="button"
               className="button bg-[#F0F0F0]"
-              onClick={() => reset()}
+              onClick={() => {reset(); router.push("/orders")}}
               variant="ghost"
             >
               Bekor qilish
             </Button>
-            <Button type="submit" className="button">
-              Buyurtma yaratish
+            <Button
+              type="submit"
+              className="button bg-green-500 hover:bg-green-600 w-[150px] text-center"
+              disabled={isSubmitting} // Step 4: Disable button while submitting
+            >
+              {!isSubmitting ? "Buyurtma yaratish" : <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              
             </Button>
           </div>
         </FormProvider>

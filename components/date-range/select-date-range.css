@@ -1,0 +1,50 @@
+.rdrDateDisplayItemActive {
+  border-color: #ff2735 !important;
+}
+/* Start Date - Left rounded border */
+.rdrDayStartPreview {
+  border-top-left-radius: 16px !important;
+  border-bottom-left-radius: 16px !important;
+  border-color: #ff2735 !important; /* Change to your color */
+}
+
+/* End Date - Right rounded border */
+.rdrDayEndPreview {
+  border-top-right-radius: 16px !important;
+  border-bottom-right-radius: 16px !important;
+  border-color: #ff2735 !important; /* Change to your color */
+}
+
+/* Middle Dates - Full Border */
+.rdrDayInPreview {
+  border-color: #ff2735 !important;
+}
+
+.rdrDayToday .rdrDayNumber span:after {
+  background-color: #ff2735 !important;
+}
+
+.rdrDayToday .rdrDayNumber span {
+  color: #fff !important;
+}
+
+.rdrDayToday .rdrDayNumber {
+  background: red !important;
+  color: #fff !important;
+  border-radius: 50vw;
+}
+
+.rdrSelected,
+.rdrInRange,
+.rdrStartEdge,
+.rdrEndEdge {
+  background-color: #ff2735 !important;
+}
+
+.range_open {
+  background: #fff !important;
+  border-radius: 8px;
+  outline: none;
+  min-height: 36px;
+  box-shadow: none;
+}

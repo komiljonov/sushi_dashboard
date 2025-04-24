@@ -10,7 +10,7 @@ import { Checkbox } from "../ui/checkbox"
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { cn } from "@/lib/utils"
 import { CalendarIcon } from "lucide-react"
-import { format } from "date-fns/format"
+import { format } from "date-fns"
 import { Calendar } from "../ui/calendar"
 
 export type PromocodeFormOnSubmitProps = Omit<IPromocode, "id">;
@@ -36,6 +36,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                     <Label htmlFor="name_uz">Nomi</Label>
                     <Input
                         id="name_uz"
+                        className="input"
                         {...register("name_uz", { required: "Nom kiritish shart" })}
                         aria-invalid={errors.name_uz ? "true" : "false"}
                     />
@@ -49,6 +50,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                     <Label htmlFor="name_ru">Nomi</Label>
                     <Input
                         id="name_ru"
+                        className="input"
                         {...register("name_ru", { required: "Nom kiritish shart" })}
                         aria-invalid={errors.name_ru ? "true" : "false"}
                     />
@@ -66,6 +68,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
             <div className="space-y-2">
                 <Label htmlFor="code">Kod</Label>
                 <Input
+                className="input"
                     id="code"
                     {...register("code", { required: "Kod kiritish shart" })}
                     aria-invalid={errors.code ? "true" : "false"}
@@ -88,7 +91,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                         rules={{ required: "O'lchov tanlash shart" }}
                         render={({ field }) => (
                             <Select onValueChange={field.onChange} value={field.value}>
-                                <SelectTrigger id="measurement">
+                                <SelectTrigger id="measurement" className="input">
                                     <SelectValue placeholder="O'lchovni tanlang" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -109,7 +112,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                     <Input
                         id="amount"
                         type="number"
-                        className="no-spinner"
+                        className="no-spinner input"
                         {...register("amount", {
                             required: "Miqdor kiritish shart",
                             validate: (value) => {
@@ -137,7 +140,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                     <Input
                         id="count"
                         type="number"
-                        className="no-spinner"
+                        className="no-spinner input"
                         {...register("count", { required: "Son kiritish shart" })}
                         aria-invalid={errors.count ? "true" : "false"}
                     />
@@ -164,7 +167,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                                         )}
                                     >
                                         <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {field.value ? format(field.value, "PPP") : <span>Sanani tanlang</span>}
+                                        {field.value ? format(new Date(field.value), "PPP") : <span>Sanani tanlang</span>}
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-auto p-0" align="start">
@@ -224,7 +227,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
 
                         {...register("min_amount", { required: is_limited ? "Minimal miqdorni kiritish shart" : false })}
                         aria-invalid={errors.min_amount ? "true" : "false"}
-                        className="no-spinner"
+                        className="no-spinner input"
                     />
                     {errors.min_amount && (
                         <p className="text-red-500 text-sm" id="min-amount-error">
@@ -241,7 +244,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                         type="number"
                         {...register("max_amount", { required: is_limited && is_max_limited ? "Maksimal miqdorni kiritish shart" : false })}
                         aria-invalid={errors.max_amount ? "true" : "false"}
-                        className="no-spinner"
+                        className="no-spinner input"
                     />
                     {errors.max_amount && (
                         <p className="text-red-500 text-sm" id="max-amount-error">

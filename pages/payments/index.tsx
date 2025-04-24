@@ -105,7 +105,7 @@ function FilterSection({
               value={filters.user}
               onChange={(e) => setFilters({ ...filters, user: e.target.value })}
               placeholder="Foydalanuvchini izlash..."
-              className="!h-[36px] min-w-[400px] pl-10"
+              className="!h-[36px] min-w-[400px] pl-10 input"
             />
           </div>
           <div>

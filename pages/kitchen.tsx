@@ -114,7 +114,7 @@ export default function OrderDashboard() {
                         placeholder="Поиск по ID"
                         value={filter}
                         onChange={(e) => setFilter(e.target.value)}
-                        className="w-64 mr-2"
+                        className="w-64 mr-2 input"
                     />
                     <Badge variant="secondary" className="text-sm">
                         Всего: {Object.values(orders).flat().length}

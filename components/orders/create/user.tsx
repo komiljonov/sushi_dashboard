@@ -89,7 +89,7 @@ export default function UserSelect() {
           placeholder="Foydalanuvchilarni qidirish..."
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
-          className="w-full"
+          className="w-full input"
           onFocus={() => setListStatus(true)}
           onBlur={() => {
             setTimeout(() => {
@@ -103,6 +103,7 @@ export default function UserSelect() {
           type="text"
           placeholder="Foydalanuvchilarni qidirish..."
           value={selectedUser}
+          className="input"
           onClick={() => {
             // setValue('user', "");
             // setValue('phone', "");

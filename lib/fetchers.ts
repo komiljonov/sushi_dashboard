@@ -63,8 +63,8 @@ export const fetchNumbers = async (): Promise<IPhoneNumber[]> => {
 }
 
 
-export const fetchDateAnalytics = async (): Promise<IMainAnalytics> => {
-    const { data } = await request.get(`/yearly_statistics`);
+export const fetchDateAnalytics = async (start_date: string, end_date: string): Promise<IMainAnalytics> => {
+    const { data } = await request.get(`/yearly_statistics?start_date=${start_date}&end_date=${end_date}`);
     return data;
 }
 

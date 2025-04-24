@@ -33,7 +33,7 @@ const chartColors = {
 const Charts = () => {
     const { data: analytics, isLoading, isError } = useQuery<IMainAnalytics>({
         queryKey: ["date_analytics"],
-        queryFn: fetchDateAnalytics
+        queryFn: ()=> fetchDateAnalytics("", "")
     });
 
     if (isLoading) {

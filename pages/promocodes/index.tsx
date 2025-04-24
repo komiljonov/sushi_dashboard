@@ -12,7 +12,6 @@ import { IPromocode } from "@/lib/types";
 import { Layout } from "@/components/Layout";
 import { queryClient } from "@/lib/query";
 import { fetchPromocodesType } from "@/lib/fetchers";
-import { useRouter } from "next/router";
 import CustomTabs from "@/components/custom-tabs";
 
 // const createPromocode = async (promocode: Omit<IPromocode, "id">) => {
@@ -118,9 +117,8 @@ export function Promocodes() {
 }
 
 export default function Page() {
-  const type = (useRouter()?.query?.type || "") as string;
   return (
-    <Layout page={type}>
+    <Layout page={"promocodes"}>
       <Promocodes />
     </Layout>
   );
