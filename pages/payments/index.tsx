@@ -30,14 +30,14 @@ import { splitToHundreds } from "@/lib/utils";
 import { format } from "date-fns";
 import { RxArrowTopRight } from "react-icons/rx";
 
-const ProviderIcon = ({ provider }: { provider: IPayment["provider"] }) => {
+export const ProviderIcon = ({ provider }: { provider: IPayment["provider"] }) => {
   switch (provider) {
     case "PAYME":
       return (
         <Image
           src="/images/payme.svg"
           alt="Payme"
-          className="object-contain"
+          className="object-contain max-h-[30px]"
           width={80}
           height={30}
         />
@@ -47,18 +47,18 @@ const ProviderIcon = ({ provider }: { provider: IPayment["provider"] }) => {
         <Image
           src="/images/click.svg"
           alt="Click"
-          className="object-contain"
+          className="object-contain max-h-[30px]"
           width={80}
           height={30}
         />
       );
     case "CASH":
       return (
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 text-md">
           <Image
             src="/images/cash.svg"
             alt="Cash"
-            className="object-contain"
+            className="object-contain max-h-[30px] max-w-[30px]"
             width={80}
             height={30}
           />
@@ -99,7 +99,7 @@ function FilterSection({
     <div className="mb-6">
         <div className="flex justify-between w-full gap-4">
           <div className="relative"> 
-          <Search className="w-5 h-5 absolute top-2 left-3 text-[#A3A3A3]"/>
+          <Search className="w-5 h-5 absolute top-3 left-3 text-[#A3A3A3]"/>
           <Input
               id="user-filter"
               value={filters.user}

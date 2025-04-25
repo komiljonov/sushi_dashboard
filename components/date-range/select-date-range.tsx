@@ -122,7 +122,7 @@ const SelectCoupleDate: React.FC<Props> = ({ disabled = false }) => {
         <div className="flex justify-end">
           <Button
             onClick={handleConfirm}
-            className="button bg_green h-[48px] hover:bg-[#4b6bfb]"
+            className="button bg_green h-[48px] hover:bg-green-600 bg-green-500"
           >
             Saqlash
           </Button>

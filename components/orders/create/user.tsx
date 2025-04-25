@@ -16,7 +16,7 @@ export default function UserSelect() {
   const [hasNextPage, setHasNextPage] = useState(true);
   const [isFetching, setIsFetching] = useState(false);
   const [listStatus, setListStatus] = useState(false);
-    const [selectedUser, setSelectedUser] = useState<string>("");
+  const [selectedUser, setSelectedUser] = useState<string>("");
   const pageRef = useRef(1);
   const listRef = useRef<HTMLDivElement | null>(null);
   const queryClient = useQueryClient();
@@ -67,7 +67,8 @@ export default function UserSelect() {
 
     const handleScroll = () => {
       const isBottom =
-        container.scrollTop + container.clientHeight >= container.scrollHeight - 5;
+        container.scrollTop + container.clientHeight >=
+        container.scrollHeight - 5;
 
       if (isBottom && hasNextPage && !isFetching) {
         loadMoreUsers();
@@ -80,66 +81,90 @@ export default function UserSelect() {
 
   const { setValue } = useFormContext<CreateOrderForm>();
 
-  return (
-    <div className="space-y-2 relative w-full flex justify-center items-start">
-      <div className="space-y-2 w-full">
-        <Label htmlFor="user">Foydalanuvchi</Label>
-        {listStatus ? <Input
-          type="text"
-          placeholder="Foydalanuvchilarni qidirish..."
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          className="w-full input"
-          onFocus={() => setListStatus(true)}
-          onBlur={() => {
-            setTimeout(() => {
-              if (!listRef.current?.contains(document.activeElement)) {
-                setListStatus(false);
-              }
-            }, 100);
-          }}
-        /> :
-        <Input
-          type="text"
-          placeholder="Foydalanuvchilarni qidirish..."
-          value={selectedUser}
-          className="input"
-          onClick={() => {
-            // setValue('user', "");
-            // setValue('phone', "");
-            setListStatus(true)}}
-          readOnly
-        />}
-      </div>
+  // const phone = watch("phone");
 
-      {listStatus && (
-        <div
-          ref={listRef}
-          className="border p-2 rounded w-full absolute bg-white top-[70px] z-20 max-h-64 overflow-y-auto"
-          onMouseDown={(e) => e.preventDefault()} // 🟢 `onBlur` ni oldini olish
-        >
-          { isFetching ? (
-            <div className="w-full flex justify-center">
-            <Loader2 className="animate-spin" /></div>
+// // Set searchValue only from phone
+// useEffect(() => {
+//   if (phone) setSearchValue(phone);
+// }, [phone]);
+
+// // Lookup user once users are updated
+// useEffect(() => {
+//   if (phone && users.length > 0) {
+//     const phone2 = phone?.slice(1);
+//     const user = users.find((user) => user.number === phone2);
+//     setValue("user", user ? user.id : null);
+//     if (user) setSelectedUser(user.name);
+//   }
+// }, [users, phone, setValue]);
+
+
+  return (
+      <div className="space-y-2 relative w-full flex justify-center items-start">
+        <div className="space-y-2 w-full">
+          <Label htmlFor="user">Foydalanuvchi</Label>
+          {listStatus ? (
+            <Input
+              type="text"
+              placeholder="Foydalanuvchilarni qidirish..."
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              className="w-full input"
+              onFocus={() => setListStatus(true)}
+              onBlur={() => {
+                setTimeout(() => {
+                  if (!listRef.current?.contains(document.activeElement)) {
+                    setListStatus(false);
+                  }
+                }, 100);
+              }}
+            />
           ) : (
-            users.map((user, index) => (
-              <div
-                key={index}
-                className="p-2 border-b cursor-pointer hover:bg-gray-100"
-                onClick={() => {
-                  setValue("user", user.id);
-                  setValue('phone', user.number);
-                  setSelectedUser(user.name);
-                  setListStatus(false);
-                  setSearchValue("");
-                }}
-              >
-                {user.name} ({user.number})
-              </div>
-            ))
+            <Input
+              type="text"
+              placeholder="Foydalanuvchilarni qidirish..."
+              value={selectedUser}
+              className="input"
+              onClick={() => {
+                // setValue('user', "");
+                // setValue('phone', "");
+                setListStatus(true);
+              }}
+              readOnly
+            />
           )}
         </div>
-      )}
-    </div>
+
+        {listStatus && (
+          <div
+            ref={listRef}
+            className="border p-2 rounded w-full absolute bg-white top-[70px] z-20 max-h-64 overflow-y-auto"
+            onMouseDown={(e) => e.preventDefault()} // 🟢 `onBlur` ni oldini olish
+          >
+            {isFetching ? (
+              <div className="w-full flex justify-center">
+                <Loader2 className="animate-spin" />
+              </div>
+            ) : (
+              users.map((user, index) => (
+                <div
+                  key={index}
+                  className="p-2 border-b cursor-pointer hover:bg-gray-100"
+                  onClick={() => {
+                    setValue("user", user.id);
+                    setValue("phone", user.number);
+                    setSelectedUser(user.name);
+                    setListStatus(false);
+                    setSearchValue("");
+                  }}
+                >
+                  {user.name} ({user.number})
+                </div>
+              ))
+            )}
+          </div>
+        )}
+      </div>
+   
   );
 }
