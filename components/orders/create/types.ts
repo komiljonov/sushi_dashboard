@@ -18,7 +18,7 @@ export type CreateOrderForm = {
     phone_number: string;
     time: string | null;
     payment_type: string;
-    location: {
+    location?: {
         latitude: number,
         longitude: number
     }

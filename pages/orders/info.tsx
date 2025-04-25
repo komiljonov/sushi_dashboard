@@ -223,17 +223,17 @@ function OrderDetailsCard({ order }: { order: IOrder }) {
           </div>
         </div>
 
-        <div className="flex items-center space-x-2 w-full justify-between">
-        <div className="flex items-center text-[#A3A3A3] gap-2">
+        { order?.delivery === "DELIVER" && <div className="flex items-center space-x-2 w-full justify-between">
+          <div className="flex items-center text-[#A3A3A3] gap-2">
             {" "}
             <CreditCardIcon className="h-4 w-4" />
             <Label className="font-normal">Yetkazish narxi:</Label>
           </div>
           {/* <span>{order.items?.reduce((sum, product) => sum + product.count, 0)}</span> */}
           <Badge variant="secondary" className="text-green-600 bg-green-100">
-              {splitToHundreds(order.delivery_price)} so&apos;m
-            </Badge>
-        </div>
+            {splitToHundreds(order.delivery_price)} so&apos;m
+          </Badge>
+        </div>}
 
         <div className="flex items-center space-x-2 w-full justify-between">
           <div className="flex items-center text-[#A3A3A3] gap-2">

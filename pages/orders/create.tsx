@@ -84,14 +84,23 @@ function CreateOrderPage() {
   const onSubmit = (data: CreateOrderForm) => {
     setIsSubmitting(true);  // Step 3: Disable button on first click
     console.log("Buyurtma yuborildi", { ...data, orderItems });
-    createOrderMutation.mutate({
-      ...data,
+    const {
+      location, // destructure to potentially omit
+      ...restData
+    } = data;
+    
+    const payload = {
+      ...restData,
       delivery_price: _deliveryPrice?.cost || 0,
       items: data?.items?.map((item) => ({
         ...item,
         product: item?._product?.id,
       })),
-    });
+      ...(data.delivery !== "PICKUP" ? { location } : {}), // only add location if not PICKUP
+    };
+    
+    createOrderMutation.mutate(payload);
+    
   };
 
   return (
@@ -122,6 +131,14 @@ function CreateOrderPage() {
                 </p>
               )}
             </div>
+            
+            <div className="space-y-2 col-span-2">
+              <Controller
+                name="delivery"
+                control={control}
+                render={({ field }) => <DeliveryMethodSelector {...field} />}
+              />
+            </div>
             <div className="col-span-2">
               <FilialSelect filials={filials} phone_numbers={phone_numbers} />
             </div>
@@ -148,23 +165,12 @@ function CreateOrderPage() {
               />
             </div>
 
-            <div className="space-y-2 col-span-2">
-              <Controller
-                name="delivery"
-                control={control}
-                render={({ field }) => <DeliveryMethodSelector {...field} />}
-              />
-            </div>
           </div>
           {deliveryMethod == "DELIVER" && (
             <div className={`space-y-2 `}>
               <Label>Yetkazib berish joyi</Label>
 
               <DeliveryMap />
-              <p>
-                {_deliveryPrice?.address ??
-                  (deliveryPriceLoading ? "Yuklanmoqda" : "")}
-              </p>
             </div>
           )}
 
