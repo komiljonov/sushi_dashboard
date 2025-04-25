@@ -125,7 +125,7 @@ const AddProductModal = ({
                   }`}
                 >
                   <div className="flex gap-2 items-center">
-                    <div className="min-w-[56px] h-[56px] bg-gray-100 rounded-md">
+                    <div className="min-w-[56px] h-[56px] rounded-md">
                       <Image
                         src={
                           (product?.image as IFile)?.file || "/placeholder.jpg"
