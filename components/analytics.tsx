@@ -3,19 +3,11 @@ import { Pie, Bar, Line } from 'react-chartjs-2';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchDateAnalytics } from '@/lib/fetchers';
+import { IMainAnalytics } from '@/lib/types';
 
 // Register necessary components
 ChartJS.register(ArcElement, BarElement, LineElement, CategoryScale, LinearScale, Title, Tooltip, Legend, PointElement);
-
-export interface IMainAnalytics {
-    filials: {
-        filial: string,
-        count: number
-    }[],
-
-    sales: number[],
-    sales_year: number[]
-}
+  
 
 const chartColors = {
     red: 'rgb(255, 99, 132)',

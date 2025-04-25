@@ -86,6 +86,7 @@ function CreateOrderPage() {
     console.log("Buyurtma yuborildi", { ...data, orderItems });
     createOrderMutation.mutate({
       ...data,
+      delivery_price: _deliveryPrice?.cost || 0,
       items: data?.items?.map((item) => ({
         ...item,
         product: item?._product?.id,

@@ -150,6 +150,7 @@ export type IOrder = {
 
   phone_number?: string;
   products_count?: number;
+  delivery_price?: number;
   promocode?: IPromocode;
   order_time: Date;
   time?: Date | null;
@@ -271,7 +272,10 @@ export interface IMainAnalytics {
   }[];
 
   sales: number[];
-  sales_year: number[];
+
+  sales_year: {
+    [key: string]: string;
+  }[];
 }
 
 

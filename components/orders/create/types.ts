@@ -13,6 +13,7 @@ export type CreateOrderForm = {
     comment: string;
     promocode?: string;
     delivery: 'PICKUP' | 'DELIVER';
+    delivery_price: number;
     filial: string;
     phone_number: string;
     time: string | null;

@@ -21,18 +21,24 @@ import AdminPanelSkeleton from "@/components/stats/stats-skeleton";
 import { useDateFilterStore } from "@/lib/context/date-store";
 import SelectCoupleDate from "@/components/date-range/select-date-range";
 
-const fetchStatistics = async (start_date: string, end_date: string): Promise<DashboardData> => {
-  const { data } = await request.get(`statistics?start_date=${start_date}&end_date=${end_date}`);
+const fetchStatistics = async (
+  start: string,
+  end: string
+): Promise<DashboardData> => {
+  const { data } = await request.get(`statistics?start=${start}&end=${end}`);
   return data;
 };
 
 function EnhancedAnalyticsDashboard() {
+  const { start, end } = useDateFilterStore();
 
-  const {start_date, end_date} = useDateFilterStore();
-
-  const { data: statistics, isLoading: statsLoading, isError: statsError } = useQuery({
+  const {
+    data: statistics,
+    isLoading: statsLoading,
+    isError: statsError,
+  } = useQuery({
     queryKey: ["statistics"],
-    queryFn: ()=> fetchStatistics(start_date, end_date),
+    queryFn: () => fetchStatistics(start, end),
     refetchInterval: 60000,
   });
 
@@ -42,7 +48,7 @@ function EnhancedAnalyticsDashboard() {
     isError,
   } = useQuery<IMainAnalytics>({
     queryKey: ["date_analytics"],
-    queryFn: ()=> fetchDateAnalytics(start_date, end_date),
+    queryFn: () => fetchDateAnalytics(start, end),
   });
 
   const bot1 = statistics?.bot_orders?.find((bot) => bot.bot === "BOT1");
@@ -79,13 +85,12 @@ function EnhancedAnalyticsDashboard() {
     },
   ];
 
-
   if (isError || statsError) {
-    return <div>Ma'lumotlarni yuklashda xatolik yuz berdi!</div>
+    return <div>Ma'lumotlarni yuklashda xatolik yuz berdi!</div>;
   }
 
   if (isLoading || statsLoading) {
-    return <AdminPanelSkeleton/>
+    return <AdminPanelSkeleton />;
   }
 
   return (
@@ -93,8 +98,8 @@ function EnhancedAnalyticsDashboard() {
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Admin panel</h1>
         <div className="flex items-center gap-4">
-        <SelectCoupleDate/>
-        <StatisticsModal />
+          <SelectCoupleDate />
+          <StatisticsModal />
         </div>
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 w-full">

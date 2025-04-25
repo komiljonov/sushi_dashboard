@@ -36,7 +36,6 @@ export default function PromocodeSelect({
             <SelectValue placeholder="Promokodni tanlang" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="null">Promokodni tanlang</SelectItem>
             {promocodes
               ?.filter((promocode) => promocode?.is_active)
               .map((promocode) => (

@@ -1,7 +1,7 @@
 "use client";
 
+import { IMainAnalytics } from "@/lib/types";
 import { PieChart, Pie, Cell } from "recharts";
-import { IMainAnalytics } from "../analytics";
 
 
 const COLORS = ["#DCDDFE", "#5E4BFE", 'rgb(255, 159, 64)', 'rgb(255, 99, 132)'];

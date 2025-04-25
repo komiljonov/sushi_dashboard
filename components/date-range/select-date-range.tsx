@@ -17,13 +17,13 @@ const SelectCoupleDate: React.FC<Props> = ({ disabled = false }) => {
   const [open, setOpen] = useState(false);
 
   // Get Zustand state for date filters
-  const { start_date, end_date, setDateFilter, resetDateFilters } = useDateFilterStore();
+  const { start, end, setDateFilter, resetDateFilters } = useDateFilterStore();
 
   // Local state for selected date range
   const [range, setRange] = useState<Range[]>([
     {
-      startDate: start_date ? new Date(start_date) : new Date(),
-      endDate: end_date ? new Date(end_date) : start_date ? new Date(start_date) : new Date(), // ✅ Use new Date(start_date) to avoid unwanted range selection
+      startDate: start ? new Date(start) : new Date(),
+      endDate: end ? new Date(end) : start ? new Date(start) : new Date(), // ✅ Use new Date(start) to avoid unwanted range selection
       key: "selection",
     },
   ]);
@@ -31,12 +31,12 @@ const SelectCoupleDate: React.FC<Props> = ({ disabled = false }) => {
   useEffect(() => {
     setRange([
       {
-        startDate: start_date ? new Date(start_date) : new Date(),
-        endDate: end_date ? new Date(end_date) : start_date ? new Date(start_date) : new Date(), // ✅ Ensure it's null when missing
+        startDate: start ? new Date(start) : new Date(),
+        endDate: end ? new Date(end) : start ? new Date(start) : new Date(), // ✅ Ensure it's null when missing
         key: "selection",
       },
     ]);
-  }, [start_date, end_date]);
+  }, [start, end]);
   
 
   // Auto-remove focus on open
@@ -50,11 +50,11 @@ const SelectCoupleDate: React.FC<Props> = ({ disabled = false }) => {
   }, [open]);
 
   // Format displayed date
-  const formattedStartDate = start_date
-    ? format(new Date(start_date), "d MMMM", { locale: uz })
+  const formattedStartDate = start
+    ? format(new Date(start), "d MMMM", { locale: uz })
     : "";
-  const formattedEndDate = end_date
-    ? format(new Date(end_date), "d MMMM", { locale: uz })
+  const formattedEndDate = end
+    ? format(new Date(end), "d MMMM", { locale: uz })
     : "";
   const isSameDate = formattedStartDate === formattedEndDate;
 
@@ -62,9 +62,9 @@ const SelectCoupleDate: React.FC<Props> = ({ disabled = false }) => {
     setOpen(false);
     const { startDate, endDate } = range[0];
 
-    // ✅ If only one date is selected, save `start_date` and set `end_date` as ""
+    // ✅ If only one date is selected, save `start` and set `end` as ""
     if (!endDate || format(startDate as Date, "yyyy-MM-dd") === format(endDate as Date, "yyyy-MM-dd")) {
-      setDateFilter(format(startDate as Date, "yyyy-MM-dd"), ""); // ✅ Set empty string for end_date
+      setDateFilter(format(startDate as Date, "yyyy-MM-dd"), ""); // ✅ Set empty string for end
     } else {
       setDateFilter(format(startDate as Date, "yyyy-MM-dd"), format(endDate as Date, "yyyy-MM-dd"));
     }
@@ -76,17 +76,17 @@ const SelectCoupleDate: React.FC<Props> = ({ disabled = false }) => {
         className="w-full flex justify-between min-w-[100px] text-sm border cursor-pointer range_open px-3 items-center"
         // onClick={() => !disabled && setOpen(true)}
       >
-        {!start_date && !end_date ? (
+        {!start && !end ? (
           <span className="text-black">Oraliqni tanlang</span>
         ) : (
           <div className="whitespace-nowrap flex gap-1">
             <span>{formattedStartDate}</span>
-            {!isSameDate && end_date && <span>/</span>}
-            {!isSameDate && end_date && <span>{formattedEndDate}</span>}
+            {!isSameDate && end && <span>/</span>}
+            {!isSameDate && end && <span>{formattedEndDate}</span>}
           </div>
         )}
         <div className="flex items-center">
-        {start_date && <X
+        {start && <X
           className="ml-2 h-4 w-4 object-contain hover:text-red-500"
           onClick={() => {
             setOpen(false);
