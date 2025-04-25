@@ -283,7 +283,9 @@ export type DashboardData = {
   user_count: number;
   user_delta: number;
   orders_count: number;
-  all_orders: number;
+  today_orders: number;
+  total_orders: number;
+  total_revenue: number;
   orders_delta: number;
   today_revenue: number;
   revenue_delta_percent: number;
@@ -292,6 +294,8 @@ export type DashboardData = {
   bot_orders: BotOrder[];
   recent_orders: RecentOrder[];
   this_month_revenue: number;
+  start: string;
+  end: string;
 };
 
 type BotOrder = {

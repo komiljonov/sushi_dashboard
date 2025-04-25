@@ -37,7 +37,7 @@ function EnhancedAnalyticsDashboard() {
     isLoading: statsLoading,
     isError: statsError,
   } = useQuery({
-    queryKey: ["statistics"],
+    queryKey: ["statistics", start, end],
     queryFn: () => fetchStatistics(start, end),
     refetchInterval: 60000,
   });
@@ -47,7 +47,7 @@ function EnhancedAnalyticsDashboard() {
     isLoading,
     isError,
   } = useQuery<IMainAnalytics>({
-    queryKey: ["date_analytics"],
+    queryKey: ["date_analytics", start, end],
     queryFn: () => fetchDateAnalytics(start, end),
   });
 
@@ -57,21 +57,21 @@ function EnhancedAnalyticsDashboard() {
   const orderStats = [
     {
       title: "Jami buyurtmalar soni",
-      count: statistics?.all_orders || 0,
+      count: statistics?.total_orders || 0,
       bot1: bot1?.order_count || 0,
       bot2: bot2?.order_count || 0,
       icon: AllOrders,
     },
     {
       title: "Jami daromad",
-      count: statistics?.this_month_revenue || 0,
-      bot1: bot1?.this_month_revenue || 0,
-      bot2: bot2?.this_month_revenue || 0,
+      count: statistics?.total_revenue || 0,
+      bot1: bot1?.today_revenue || 0,
+      bot2: bot2?.today_revenue || 0,
       icon: ProfitMonth,
     },
     {
       title: "Bugun buyurtmalar soni",
-      count: statistics?.orders_count || 0,
+      count: statistics?.today_orders || 0,
       bot1: bot1?.today_orders || 0,
       bot2: bot2?.today_orders || 0,
       icon: OrdersToday,
@@ -104,7 +104,12 @@ function EnhancedAnalyticsDashboard() {
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 w-full">
         {orderStats.map((stat) => (
-          <OrderStatsCard key={stat.title} {...stat} />
+          <OrderStatsCard
+            key={stat.title}
+            {...stat}
+            start={statistics?.start || ""}
+            end={statistics?.end || ""}
+          />
         ))}
       </div>
       <div className="grid grid-cols-2 gap-4 w-full">
