@@ -12,21 +12,44 @@ type Props = {
   end: string;
 };
 
-export default function OrderStatsCard({ icon, title, count, bot1, bot2, end, start }: Props) {
-  const {start: startFilter, end: endFilter} = useDateFilterStore();
-  
+export default function OrderStatsCard({
+  icon,
+  title,
+  count,
+  bot1,
+  bot2,
+  end,
+  start,
+}: Props) {
+  const { start: startFilter, end: endFilter } = useDateFilterStore();
+
+  const titles = ["Bugungi jami daromad", "Bugun buyurtmalar soni"];
+
   return (
     <div className="bg-white p-3 rounded-2xl w-full flex flex-col justify-between">
       <div className="flex justify-between items-start">
         <div>
           <p className="text-sm text-gray-700 max-w-[170px]">{title}</p>
-          <span className="text-xs text-gray-500">{ start && format(new Date(start), "dd - MMMM")} {(start || end) && startFilter && endFilter && "/"} { end && startFilter && endFilter&& format(new Date(end), "dd - MMMM")}</span>
+          {titles.includes(title) ? (
+            <span className="text-xs text-gray-500">{format(new Date(), "dd - MMMM")}</span>
+          ) : (
+            <span className="text-xs text-gray-500">
+              {start && format(new Date(start), "dd - MMMM")}{" "}
+              {(start || end) && startFilter && endFilter && "/"}{" "}
+              {end &&
+                startFilter &&
+                endFilter &&
+                format(new Date(end), "dd - MMMM")}
+            </span>
+          )}
         </div>
-          <Image  src={icon} alt={title} className=""/>
+        <Image src={icon} alt={title} className="" />
       </div>
 
       <div className="mt-2">
-        <p className="text-2xl font-bold text-black">{count?.toLocaleString()}</p>
+        <p className="text-2xl font-bold text-black">
+          {count?.toLocaleString()}
+        </p>
       </div>
 
       <div className="flex justify-between text-xs text-black mt-auto">
