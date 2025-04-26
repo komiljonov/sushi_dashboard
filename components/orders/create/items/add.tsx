@@ -137,15 +137,15 @@ export default function AddItemModal({
       const handleIncrease = () => {
         setProducts((prevProducts) =>
           prevProducts.map((p) =>
-            p.id === product.id ? { ...p, count: p.count + 1 } : p
+            p.id === product?.id ? { ...p, count: p?.count + 1 } : p
           )
         );
       };
       const handleDecrease = () => {
         setProducts((prevProducts) =>
-          prevProducts.map((p) =>
-            p.id === product.id && p.count > 1
-              ? { ...p, count: p.count - 1 }
+          prevProducts?.map((p) =>
+            p?.id === product?.id && p?.count > 1
+              ? { ...p, count: p?.count - 1 }
               : p
           )
         );

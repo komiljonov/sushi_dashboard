@@ -48,7 +48,7 @@ export default function OrderItems() {
 
   const handleProductChange = (product: IProduct, quantity: number) => {
     const existingIndex = selectedProducts.findIndex(
-      (item) => item?._product.id === product.id
+      (item) => item?._product?.id === product?.id
     );
     if (quantity < 1) {
       if (existingIndex >= 0) {

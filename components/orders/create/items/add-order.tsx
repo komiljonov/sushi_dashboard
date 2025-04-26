@@ -59,6 +59,9 @@ const AddProductModal = ({
     onChange(product, quantity);
   };
 
+  console.log(productsList);
+  
+
   const renderContent = () => {
     if (!currentCategory) {
       // Render root categories
@@ -136,7 +139,7 @@ const AddProductModal = ({
                         className="w-full opacity-0 h-[56px] object-cover"
                       />
                     </div>
-                    <div className="flex w-full flex-col justify-center items-center gap-1">
+                    <div className="flex w-full flex-col justify-center items-start gap-1">
                       <span className="whitespace-nowrap text-xs font-medium">
                         {product.name_uz}
                       </span>
