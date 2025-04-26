@@ -110,6 +110,12 @@ export interface ICart {
   payment: IPayment;
 }
 
+export interface NewUser {
+  id?: string;
+  name: string;
+  number: string;
+}
+
 export interface IUser {
   id: string;
   chat_id: number;

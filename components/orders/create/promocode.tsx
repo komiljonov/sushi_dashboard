@@ -1,15 +1,10 @@
 import { Label } from "@/components/ui/Label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { Skeleton } from "@/components/ui/skeleton";
 import { IPromocode } from "@/lib/types";
 import { useFormContext } from "react-hook-form";
 import { CreateOrderForm } from "./types";
+import Selector from "@/components/selector";
 
 export default function PromocodeSelect({
   promocodes,
@@ -26,25 +21,38 @@ export default function PromocodeSelect({
       {!promocodes ? (
         <Skeleton className="h-10 w-full" />
       ) : (
-        <Select
-          value={promocode}
-          onValueChange={(val) => {
+        <Selector
+          value={promocode || ""}
+          onChange={(val) => {
             setValue("promocode", val == "null" ? "" : val);
           }}
-        >
-          <SelectTrigger className="w-full h-[44px] input">
-            <SelectValue placeholder="Promokodni tanlang" />
-          </SelectTrigger>
-          <SelectContent>
-            {promocodes
-              ?.filter((promocode) => promocode?.is_active)
-              .map((promocode) => (
-                <SelectItem key={promocode.id} value={promocode.id}>
-                  {promocode.name_uz}
-                </SelectItem>
-              ))}
-          </SelectContent>
-        </Select>
+          placeholder="Promokodni tanlang"
+          options={promocodes
+            ?.filter((promocode) => promocode?.is_active)
+            .map((promocode) => ({
+              label: promocode.name_uz,
+              value: promocode.id,
+            }))}
+        />
+        // <Select
+        //   value={promocode}
+        //   onValueChange={(val) => {
+        //     setValue("promocode", val == "null" ? "" : val);
+        //   }}
+        // >
+        //   <SelectTrigger className="w-full h-[44px] input">
+        //     <SelectValue placeholder="Promokodni tanlang" />
+        //   </SelectTrigger>
+        //   <SelectContent>
+        //     {promocodes
+        //       ?.filter((promocode) => promocode?.is_active)
+        //       .map((promocode) => (
+        //         <SelectItem key={promocode.id} value={promocode.id}>
+        //           {promocode.name_uz}
+        //         </SelectItem>
+        //       ))}
+        //   </SelectContent>
+        // </Select>
       )}
     </div>
   );

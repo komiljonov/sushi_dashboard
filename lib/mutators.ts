@@ -1,5 +1,6 @@
 import { CreateOrderForm } from "@/components/orders/create/types";
 import { request } from '@/lib/api'
+import { NewUser } from "./types";
 
 
 
@@ -9,6 +10,13 @@ export const CreateOrder = async (data: CreateOrderForm) => {
 
 
     const { data: res_data } = await request.post('orders/create', data);
+    return res_data;
+}
+
+
+export const createUser = async (data: NewUser) => {
+
+    const { data: res_data } = await request.post('new-user/', data);
     return res_data;
 }
 

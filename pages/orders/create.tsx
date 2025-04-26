@@ -45,7 +45,6 @@ function CreateOrderPage() {
     handleSubmit,
     watch,
     reset,
-    formState: { errors },
   } = methods;
 
   const deliveryMethod = watch("delivery");
@@ -62,7 +61,7 @@ function CreateOrderPage() {
         latitude: watch("location.latitude"),
         longitude: watch("location.longitude"),
       }),
-    enabled: !!watch("location"),
+    enabled: !!watch("location.latitude") && !!watch("location.longitude"),
   });
 
   const createOrderMutation = useMutation({
@@ -114,22 +113,9 @@ function CreateOrderPage() {
         </h1>
         <FormProvider {...methods}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="col-span-2">
             <UserSelect />
-            <div className="space-y-2">
-              <Label htmlFor="phone">Telefon raqami</Label>
-              <Input
-                id="phone"
-                {...register("phone", {
-                  required: "Telefon raqamni kiritish majburiy.",
-                })}
-                className="input"
-                placeholder="Telefon raqamni kiriting"
-              />
-              {errors.phone && (
-                <p className="text-sm text-red-500 mt-1">
-                  {errors.phone.message as string}
-                </p>
-              )}
+
             </div>
             
             <div className="space-y-2 col-span-2">

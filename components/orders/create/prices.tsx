@@ -20,12 +20,6 @@ export default function TotalPrices({ _deliveryPrice, deliveryPriceLoading, prom
     const deliveryMethod = watch('delivery');
     const orderItems = watch("items");
 
-
-
-
-
-
-
     const deliveryPrice = deliveryMethod === 'DELIVER' ? (_deliveryPrice?.cost || 0) : 0;
 
 
