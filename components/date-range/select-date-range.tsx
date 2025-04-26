@@ -63,11 +63,11 @@ const SelectCoupleDate: React.FC<Props> = ({ disabled = false }) => {
     const { startDate, endDate } = range[0];
 
     // ✅ If only one date is selected, save `start` and set `end` as ""
-    if (!endDate || format(startDate as Date, "yyyy-MM-dd") === format(endDate as Date, "yyyy-MM-dd")) {
-      setDateFilter(format(startDate as Date, "yyyy-MM-dd"), ""); // ✅ Set empty string for end
-    } else {
-      setDateFilter(format(startDate as Date, "yyyy-MM-dd"), format(endDate as Date, "yyyy-MM-dd"));
-    }
+    // if (!endDate || format(startDate as Date, "yyyy-MM-dd") === format(endDate as Date, "yyyy-MM-dd")) {
+    //   setDateFilter(format(startDate as Date, "yyyy-MM-dd"), ""); // ✅ Set empty string for end
+    // } else {
+    // }
+    setDateFilter(format(startDate as Date, "yyyy-MM-dd"), format(endDate as Date, "yyyy-MM-dd"));
   };
 
   return (

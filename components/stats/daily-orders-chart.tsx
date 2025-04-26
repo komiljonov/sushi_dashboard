@@ -10,6 +10,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import { IMainAnalytics } from "@/lib/types";
+import { format } from "date-fns";
 // import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 // const months = [
@@ -18,10 +19,7 @@ import { IMainAnalytics } from "@/lib/types";
 // ];
 
 export default function DailyOrdersChart({data}: {data: IMainAnalytics}) {
-  const chartData = Array.from({ length: 31 }, (_, index) => ({
-    day: index + 1,
-    value: data?.sales?.[index] || 0,
-  }));
+  const chartData = data?.sales?.map((item) => ({date: format(new Date(item?.date), "d MMM"), count: item.count}))
   return (
     <div className="bg-white p-5 rounded-xl">
       <div className="flex justify-between items-center mb-4">
@@ -42,7 +40,7 @@ export default function DailyOrdersChart({data}: {data: IMainAnalytics}) {
         <BarChart data={chartData}>
           <CartesianGrid vertical={false} stroke="#F4F4F4" />
           <XAxis
-            dataKey="day"
+            dataKey="date"
             axisLine={false}
             tickLine={false}
             fontSize={10}
@@ -51,7 +49,7 @@ export default function DailyOrdersChart({data}: {data: IMainAnalytics}) {
           <YAxis hide />
           <Tooltip />
           <Bar
-            dataKey="value"
+            dataKey="count"
             fill="#F97316"
             radius={[4, 4, 0, 0]}
             barSize={16}

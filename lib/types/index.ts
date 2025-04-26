@@ -271,7 +271,7 @@ export interface IMainAnalytics {
     count: number;
   }[];
 
-  sales: number[];
+  sales: {count: number, date: string}[];
 
   sales_year: {
     [key: string]: string;
