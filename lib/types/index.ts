@@ -306,7 +306,7 @@ export type DashboardData = {
 
 type BotOrder = {
   bot: string;
-  order_count: number;
+  orders_count: number;
   success_orders: number;
   canceled_orders: number;
   today_orders: number;

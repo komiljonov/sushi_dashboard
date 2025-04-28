@@ -418,8 +418,17 @@ function ConfirmationButtons({ order }: { order: IOrder }) {
   });
 
   const handleConfirm = () => {
-    confirm(order.id);
-    setOpenConfirm(false);
+    if (order?.status === "PENDING_PAYMENT") {
+      toast({
+        title: "Nimadur noto'g'ri ketdi.",
+        description:
+          "Buyurtmani tasdiqlash uchun to'lovni amalga oshiring!",
+      });
+    }else {
+
+      confirm(order.id);
+      setOpenConfirm(false);
+    }
   };
 
   const handleCancel = () => {
@@ -433,7 +442,7 @@ function ConfirmationButtons({ order }: { order: IOrder }) {
         <AlertDialogTrigger asChild>
           <Button
             className="bg-[#1AD012] hover:bg-green-600 h-[44px] rounded-[10px] text-white"
-            disabled={confirmPending || order.status != "PENDING"}
+            disabled={confirmPending || !["PENDING", "PENDING_PAYMENT"]?.includes(order.status)}
           >
             Tasdiqlash
           </Button>
@@ -458,7 +467,7 @@ function ConfirmationButtons({ order }: { order: IOrder }) {
         <AlertDialogTrigger asChild>
           <Button
             className="bg-[#FF2735] h-[44px] rounded-[10px] hover:bg-red-600 text-white"
-            disabled={cancelPending || order.status != "PENDING"}
+            disabled={cancelPending || !["PENDING", "PENDING_PAYMENT"]?.includes(order.status)}
           >
             Bekor qilish
           </Button>

@@ -29,6 +29,14 @@ const fetchStatistics = async (
   return data;
 };
 
+const fetchTodayStats = async (
+
+): Promise<DashboardData> => {
+  const { data } = await request.get(`/statistics/today/`);
+  return data;
+};
+
+
 function EnhancedAnalyticsDashboard() {
   const { start, end } = useDateFilterStore();
 
@@ -43,6 +51,16 @@ function EnhancedAnalyticsDashboard() {
   });
 
   const {
+    data: today,
+    isLoading: todayLoading,
+    isError: todayError,
+  } = useQuery({
+    queryKey: ["statistics"],
+    queryFn: () => fetchTodayStats(),
+    refetchInterval: 60000,
+  });
+
+  const {
     data: analytics,
     isLoading,
     isError,
@@ -53,13 +71,18 @@ function EnhancedAnalyticsDashboard() {
 
   const bot1 = statistics?.bot_orders?.find((bot) => bot.bot === "BOT1");
   const bot2 = statistics?.bot_orders?.find((bot) => bot.bot === "BOT2");
+  const today_bot1 = today?.bot_orders?.find((bot) => bot.bot === "BOT1");
+  const today_bot2 = today?.bot_orders?.find((bot) => bot.bot === "BOT2");
+
+  console.log(today_bot1);
+  
 
   const orderStats = [
     {
       title: "Jami buyurtmalar soni",
       count: statistics?.total_orders || 0,
-      bot1: bot1?.order_count || 0,
-      bot2: bot2?.order_count || 0,
+      bot1: bot1?.orders_count || 0,
+      bot2: bot2?.orders_count || 0,
       icon: AllOrders,
     },
     {
@@ -71,25 +94,25 @@ function EnhancedAnalyticsDashboard() {
     },
     {
       title: "Bugun buyurtmalar soni",
-      count: statistics?.today_orders || 0,
-      bot1: bot1?.today_orders || 0,
-      bot2: bot2?.today_orders || 0,
+      count: today?.today_orders || 0,
+      bot1: today_bot1?.orders_count || 0,
+      bot2: today_bot2?.orders_count || 0,
       icon: OrdersToday,
     },
     {
       title: "Bugungi jami daromad",
-      count: statistics?.today_revenue || 0,
-      bot1: bot1?.today_revenue || 0,
-      bot2: bot2?.today_revenue || 0,
+      count: today?.total_revenue || 0,
+      bot1: today_bot1?.today_revenue || 0,
+      bot2: today_bot2?.today_revenue || 0,
       icon: OrdersThisMonth,
     },
   ];
 
-  if (isError || statsError) {
+  if (isError || statsError || todayError) {
     return <div>Ma'lumotlarni yuklashda xatolik yuz berdi!</div>;
   }
 
-  if (isLoading || statsLoading) {
+  if (isLoading || statsLoading || todayLoading) {
     return <AdminPanelSkeleton />;
   }
 
