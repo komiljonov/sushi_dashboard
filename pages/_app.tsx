@@ -9,7 +9,7 @@ import { queryClient } from '@/lib/query';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import "leaflet/dist/leaflet.css";
-import "@/components/date-range/select-date-range.css";
+import "@/components/helpers/select-date-range.css";
 
 // Extend the AppProps type to include the authRequired flag
 type MyAppProps = AppProps & {

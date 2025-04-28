@@ -27,7 +27,7 @@ const SelectCoupleDate: React.FC<Props> = ({ disabled = false }) => {
       key: "selection",
     },
   ]);
-  
+
   useEffect(() => {
     setRange([
       {
@@ -37,7 +37,6 @@ const SelectCoupleDate: React.FC<Props> = ({ disabled = false }) => {
       },
     ]);
   }, [start, end]);
-  
 
   // Auto-remove focus on open
   useEffect(() => {
@@ -67,15 +66,34 @@ const SelectCoupleDate: React.FC<Props> = ({ disabled = false }) => {
     //   setDateFilter(format(startDate as Date, "yyyy-MM-dd"), ""); // ✅ Set empty string for end
     // } else {
     // }
-    setDateFilter(format(startDate as Date, "yyyy-MM-dd"), format(endDate as Date, "yyyy-MM-dd"));
+    setDateFilter(
+      format(startDate as Date, "yyyy-MM-dd"),
+      format(endDate as Date, "yyyy-MM-dd")
+    );
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <div
-        className="w-full flex justify-between min-w-[100px] text-sm border cursor-pointer range_open px-3 items-center"
+        className="w-full flex justify-between min-w-[100px] h-12 text-sm border cursor-pointer range_open px-3 items-center"
         // onClick={() => !disabled && setOpen(true)}
       >
+           <div className="flex items-center">
+          <Calendar
+            className="mr-1 h-4 min-w-4 object-contain cursor-pointer"
+            onClick={() => !disabled && setOpen(true)}
+          />
+          {start && (
+            <X
+              className="mr-2 h-4 w-4 object-contain hover:text-red-500"
+              onClick={() => {
+                setOpen(false);
+                resetDateFilters();
+              }}
+            />
+          )}
+        
+        </div>
         {!start && !end ? (
           <span className="text-black">Oraliqni tanlang</span>
         ) : (
@@ -85,18 +103,7 @@ const SelectCoupleDate: React.FC<Props> = ({ disabled = false }) => {
             {!isSameDate && end && <span>{formattedEndDate}</span>}
           </div>
         )}
-        <div className="flex items-center">
-        {start && <X
-          className="ml-2 h-4 w-4 object-contain hover:text-red-500"
-          onClick={() => {
-            setOpen(false);
-            resetDateFilters()}}
-          />}
-        <Calendar
-          className="ml-1 h-4 min-w-4 object-contain cursor-pointer"
-          onClick={() => !disabled && setOpen(true)}
-          />
-          </div>
+       
       </div>
 
       <DialogContent className="max-w-[400px] px-2 sm:px-5">

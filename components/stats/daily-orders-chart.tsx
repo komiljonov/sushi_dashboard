@@ -19,7 +19,7 @@ import { format } from "date-fns";
 // ];
 
 export default function DailyOrdersChart({data}: {data: IMainAnalytics}) {
-  const chartData = data?.sales?.map((item) => ({date: format(new Date(item?.date), "d MMM"), count: item.count}))
+  const chartData = data?.sales?.map((item) => ({date: format(new Date(item?.date), "d MMM"), soni: item.count}))
   return (
     <div className="bg-white p-5 rounded-xl">
       <div className="flex justify-between items-center mb-4">
@@ -49,7 +49,7 @@ export default function DailyOrdersChart({data}: {data: IMainAnalytics}) {
           <YAxis hide />
           <Tooltip />
           <Bar
-            dataKey="count"
+            dataKey="soni"
             fill="#F97316"
             radius={[4, 4, 0, 0]}
             barSize={16}

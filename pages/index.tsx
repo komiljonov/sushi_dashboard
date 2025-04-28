@@ -19,7 +19,7 @@ import MonthlyOrdersChart from "@/components/stats/monthly-orders-chart";
 import { fetchDateAnalytics } from "@/lib/fetchers";
 import AdminPanelSkeleton from "@/components/stats/stats-skeleton";
 import { useDateFilterStore } from "@/lib/context/date-store";
-import SelectCoupleDate from "@/components/date-range/select-date-range";
+import SelectCoupleDate from "@/components/helpers/select-date-range";
 
 const fetchStatistics = async (
   start: string,

@@ -132,7 +132,7 @@ export function Sidebar({ collapsed, page }: SidebarProps) {
               />
             </Link>
             {!collapsed && (
-              <h2 className="text-2xl font-bold ml-5 overflow-clip">
+              <h2 className="text-2xl font-bold ml-5 overflow-clip whitespace-nowrap">
                 Sushi Yummy
               </h2>
             )}

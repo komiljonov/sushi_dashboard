@@ -42,9 +42,10 @@
 }
 
 .range_open {
-  background: #fff !important;
-  border-radius: 8px;
+  background: #F0F0F0 !important;
+  border-radius: 10px;
   outline: none;
+  border: none;
   min-height: 36px;
   box-shadow: none;
 }
