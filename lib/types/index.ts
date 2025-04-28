@@ -298,6 +298,7 @@ export type DashboardData = {
   active_users: number;
   active_users_delta: number;
   bot_orders: BotOrder[];
+  bot_stats: BotOrder[];
   recent_orders: RecentOrder[];
   this_month_revenue: number;
   start: string;
@@ -312,6 +313,7 @@ type BotOrder = {
   today_orders: number;
   this_month_orders: number;
   today_revenue: number;
+  revenue: number;
   this_month_revenue: number;
 };
 

@@ -69,8 +69,8 @@ function EnhancedAnalyticsDashboard() {
     queryFn: () => fetchDateAnalytics(start, end),
   });
 
-  const bot1 = statistics?.bot_orders?.find((bot) => bot.bot === "BOT1");
-  const bot2 = statistics?.bot_orders?.find((bot) => bot.bot === "BOT2");
+  const bot1 = statistics?.bot_stats?.find((bot) => bot.bot === "BOT1");
+  const bot2 = statistics?.bot_stats?.find((bot) => bot.bot === "BOT2");
   const today_bot1 = today?.bot_orders?.find((bot) => bot.bot === "BOT1");
   const today_bot2 = today?.bot_orders?.find((bot) => bot.bot === "BOT2");
 
@@ -88,13 +88,13 @@ function EnhancedAnalyticsDashboard() {
     {
       title: "Jami daromad",
       count: statistics?.total_revenue || 0,
-      bot1: bot1?.today_revenue || 0,
-      bot2: bot2?.today_revenue || 0,
+      bot1: bot1?.revenue || 0,
+      bot2: bot2?.revenue || 0,
       icon: ProfitMonth,
     },
     {
       title: "Bugun buyurtmalar soni",
-      count: today?.today_orders || 0,
+      count: today?.total_orders || 0,
       bot1: today_bot1?.orders_count || 0,
       bot2: today_bot2?.orders_count || 0,
       icon: OrdersToday,

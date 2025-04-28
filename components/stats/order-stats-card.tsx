@@ -1,4 +1,3 @@
-import { useDateFilterStore } from "@/lib/context/date-store";
 import { format } from "date-fns";
 import Image, { StaticImageData } from "next/image";
 
@@ -21,7 +20,6 @@ export default function OrderStatsCard({
   end,
   start,
 }: Props) {
-  const { start: startFilter, end: endFilter } = useDateFilterStore();
 
   const titles = ["Bugungi jami daromad", "Bugun buyurtmalar soni"];
 
@@ -35,10 +33,8 @@ export default function OrderStatsCard({
           ) : (
             <span className="text-xs text-gray-500">
               {start && format(new Date(start), "dd - MMMM")}{" "}
-              {(start || end) && startFilter && endFilter && "/"}{" "}
+              {(start || end) && "/"}{" "}
               {end &&
-                startFilter &&
-                endFilter &&
                 format(new Date(end), "dd - MMMM")}
             </span>
           )}
