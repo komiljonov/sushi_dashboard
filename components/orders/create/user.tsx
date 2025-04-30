@@ -8,7 +8,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import { CreateOrderForm } from "./types";
 import { Label } from "@/components/ui/Label";
 import { Input } from "@/components/ui/Input";
-import { Loader2,  } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { createUser } from "@/lib/mutators";
 
 export default function UserSelect() {
@@ -37,12 +37,9 @@ export default function UserSelect() {
     const fetchFirstPage = async () => {
       setIsFetching(true);
       pageRef.current = 1;
-      const data = await fetchPaginatedUsers(
-        1,
-        (searchValue || phone) as string
-      );
+      const data = await fetchPaginatedUsers(1, searchValue || phone || "");
       setUsers(data?.results || []);
-      setHasNextPage(!!data?.next);
+      setHasNextPage(data?.next ? true : false);
       setIsFetching(false);
     };
 
@@ -60,7 +57,7 @@ export default function UserSelect() {
       const nextData = await queryClient.fetchQuery({
         queryKey: ["users-pg", nextPage, searchValue, phone],
         queryFn: () =>
-          fetchPaginatedUsers(nextPage, (searchValue || phone) as string),
+          fetchPaginatedUsers(nextPage, searchValue || phone || ""),
       });
 
       if (nextData?.results) {
@@ -156,10 +153,10 @@ export default function UserSelect() {
             }}
           />
           {
-          // !user && searchValue && (
-          //   <span className="text-xs text-red-500">Foydalanuvchi tanlanmadi!</span>
-          // )
-        }
+            // !user && searchValue && (
+            //   <span className="text-xs text-red-500">Foydalanuvchi tanlanmadi!</span>
+            // )
+          }
         </div>
 
         {listStatus && (
@@ -168,29 +165,27 @@ export default function UserSelect() {
             className="border p-2 rounded w-full absolute bg-white top-[70px] z-20 max-h-64 overflow-y-auto"
             onMouseDown={(e) => e.preventDefault()} // 🟢 `onBlur` ni oldini olish
           >
-            {isFetching ? (
+            {users.map((user, index) => (
+              <div
+                key={index}
+                className="p-2 border-b cursor-pointer hover:bg-gray-100"
+                onClick={() => {
+                  setValue("user", user.id);
+                  setValue("phone", user.number);
+                  setListStatus(false);
+                  setSearchValue(user?.name);
+                }}
+              >
+                {user.name} ({user.number})
+              </div>
+            ))}
+            {isFetching && (
               <div className="w-full flex justify-center">
                 <Loader2 className="animate-spin" />
               </div>
-            ) : (
-              users.map((user, index) => (
-                <div
-                  key={index}
-                  className="p-2 border-b cursor-pointer hover:bg-gray-100"
-                  onClick={() => {
-                    setValue("user", user.id);
-                    setValue("phone", user.number);
-                    setListStatus(false);
-                    setSearchValue(user?.name);
-                  }}
-                >
-                  {user.name} ({user.number})
-                </div>
-              ))
             )}
           </div>
         )}
-        
       </div>
       <div className="space-y-2">
         <Label htmlFor="phone">Telefon raqami</Label>
@@ -205,7 +200,11 @@ export default function UserSelect() {
                 {...field}
                 className="input"
                 placeholder="Telefon raqamni kiriting"
-                onBlur={() => mutate({ name: searchValue, number: phone })}
+                maxLength={13}
+                onBlur={() =>
+                  users.length === 0 &&
+                  mutate({ name: searchValue, number: phone })
+                }
               />
             )}
           />
