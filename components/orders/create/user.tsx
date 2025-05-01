@@ -8,8 +8,15 @@ import { Controller, useFormContext } from "react-hook-form";
 import { CreateOrderForm } from "./types";
 import { Label } from "@/components/ui/Label";
 import { Input } from "@/components/ui/Input";
-import { Loader2 } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import { createUser } from "@/lib/mutators";
+import { Button } from "@/components/ui/Button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function UserSelect() {
   const [users, setUsers] = useState<IUser[]>([]);
@@ -125,7 +132,7 @@ export default function UserSelect() {
   const { mutate } = useMutation({
     mutationFn: createUser,
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["users-pg"] });
       setValue("user", data.id);
       setSearchValue(data.name);
     },
@@ -201,13 +208,27 @@ export default function UserSelect() {
                 className="input"
                 placeholder="Telefon raqamni kiriting"
                 maxLength={13}
-                onBlur={() =>
-                  users.length === 0 &&
-                  mutate({ name: searchValue, number: phone })
-                }
               />
             )}
           />
+          {users?.length === 0 && <TooltipProvider>
+            <Tooltip delayDuration={100}>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  size="icon"
+                  className="absolute right-1 top-1"
+                  onClick={() => {
+                    users.length === 0 &&
+                      mutate({ name: searchValue, number: phone });
+                  }}
+                >
+                  <Plus />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Foydalanuvchini yaratish</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>}
         </div>
         {errors.phone && (
           <p className="text-sm text-red-500 mt-1">

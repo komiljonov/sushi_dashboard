@@ -76,7 +76,7 @@ const SelectCoupleDate: React.FC<Props> = ({ disabled = false }) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <div
         className="w-full flex justify-between min-w-[100px] h-12 text-sm border cursor-pointer range_open px-3 items-center"
-        // onClick={() => !disabled && setOpen(true)}
+        onClick={() => !disabled && setOpen(true)}
       >
            <div className="flex items-center">
           <Calendar
