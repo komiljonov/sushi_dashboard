@@ -24,6 +24,7 @@ export default function UserSelect() {
   const [hasNextPage, setHasNextPage] = useState(true);
   const [isFetching, setIsFetching] = useState(false);
   const [listStatus, setListStatus] = useState(false);
+  const [status, setStatus] = useState(true);
   const pageRef = useRef(1);
   const listRef = useRef<HTMLDivElement | null>(null);
 
@@ -135,6 +136,7 @@ export default function UserSelect() {
       queryClient.invalidateQueries({ queryKey: ["users-pg"] });
       setValue("user", data.id);
       setSearchValue(data.name);
+      setStatus(false);
     },
   });
 
@@ -211,7 +213,7 @@ export default function UserSelect() {
               />
             )}
           />
-          {users?.length === 0 && <TooltipProvider>
+          {users?.length === 0 && status && <TooltipProvider>
             <Tooltip delayDuration={100}>
               <TooltipTrigger asChild>
                 <Button
