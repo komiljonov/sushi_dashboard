@@ -201,6 +201,17 @@ function OrderDetailsCard({ order }: { order: IOrder }) {
         <div className="flex items-center space-x-2 w-full justify-between">
           <div className="flex items-center text-[#A3A3A3] gap-2">
             {" "}
+            <PackageIcon className="h-4 w-4" />
+            <Label className="font-normal">Buyurtma turi:</Label>
+          </div>
+          {/* <span>{order.items?.reduce((sum, product) => sum + product.count, 0)}</span> */}
+          <span className="font-medium text-sm">
+            {order?.delivery === "DELIVER" ? "Yetkazib berish" : "Olib ketish"}
+          </span>
+        </div>
+        <div className="flex items-center space-x-2 w-full justify-between">
+          <div className="flex items-center text-[#A3A3A3] gap-2">
+            {" "}
             <CreditCardIcon className="h-4 w-4" />
             <Label className="font-normal">Buyurtma narxi:</Label>
           </div>

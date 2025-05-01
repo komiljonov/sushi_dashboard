@@ -128,15 +128,15 @@ const AddProductModal = ({
                   }`}
                 >
                   <div className="flex gap-2 items-center">
-                    <div className="min-w-[56px] h-[56px] rounded-md">
+                    <div className="min-w-[56px] h-[56px]">
                       <Image
                         src={
                           (product?.image as IFile)?.file || "/images/no_image.png"
                         }
                         alt="product image"
-                        width={40}
-                        height={40}
-                        className="w-full h-[56px] object-cover"
+                        width={100}
+                        height={100}
+                        className=" w-[56px] h-[56px] object-cover rounded-md"
                       />
                     </div>
                     <div className="flex w-full flex-col justify-center items-start gap-1">

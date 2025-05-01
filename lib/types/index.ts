@@ -19,9 +19,9 @@ export interface ICategory {
 export interface IFile {
   id: string;
   file: string;
-  filename: string;
-  created_at: string;
-  updated_at: string;
+  filename?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface IProduct {
@@ -35,7 +35,7 @@ export interface IProduct {
 
   category: string;
 
-  image?: IFile | string;
+  image?: IFile | string | null;
   count: number
   price: number;
   product: IProduct

@@ -9,7 +9,7 @@ import { CreateOrderForm } from "../types";
 import { splitToHundreds } from "@/lib/utils";
 import Image from "next/image";
 import AddProductModal from "./add-order";
-import { ICategory, IProduct } from "@/lib/types";
+import { ICategory, IFile, IProduct } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import { request } from "@/lib/api";
 
@@ -50,35 +50,44 @@ export default function OrderItems() {
     const existingIndex = selectedProducts.findIndex(
       (item) => item?._product?.id === product?.id
     );
+  
+    // 💡 Assign a fallback image if missing
+    const safeProduct = {
+      ...product,
+      image: product.image || {id: "", file: "/images/no_image.png" },
+    };
+  
     if (quantity < 1) {
       if (existingIndex >= 0) {
         remove(existingIndex);
       }
       return;
     }
+  
     if (existingIndex >= 0) {
       update(existingIndex, {
-        _product: product,
-        product: product?.name_uz,
+        _product: safeProduct,
+        product: safeProduct?.name_uz,
         quantity,
       });
     } else {
       append({
-        _product: product,
-        product: product?.name_uz,
+        _product: safeProduct,
+        product: safeProduct?.name_uz,
         quantity,
       });
     }
   };
+  
 
   return (
     <Card className="shadow-none border-none p-0 bg-transparent">
       <CardContent className="p-0">
-        <div className="grid grid-cols-9 py-3 border-b items-center">
+        <div className="grid grid-cols-8 py-3 border-b items-center">
           {headers?.map((header, index) => (
             <span
               className={`text-sm text-[#A3A3A3] font-medium ${
-                index === 0 ? "col-span-3" : " col-span-2"
+                index === 0 ? "col-span-4" : " col-span-1"
               }`}
               key={index}
             >
@@ -94,10 +103,10 @@ export default function OrderItems() {
           </span>
         </div>
         {orderItems.map((field, index) => (
-          <div key={index} className="grid grid-cols-7 py-4 border-b">
-            <div className="col-span-3 flex items-center gap-2">
+          <div key={index} className="grid grid-cols-9 py-4 border-b">
+            <div className="col-span-4 flex items-center gap-2">
               <Image
-                src={field._product.image as string}
+                src={(field._product.image as IFile)?.file || "/images/no_image.png"}
                 alt={field._product.name_uz}
                 width={40}
                 height={40}
@@ -105,7 +114,7 @@ export default function OrderItems() {
               />
               <span>{field._product.name_uz}</span>
             </div>
-            <div className="flex items-center space-x-2 col-span-2  ">
+            <div className="flex items-center justify-center space-x-2 col-span-2  ">
               <div className="border border-[#F0F0F0] rounded-lg p-2 flex gap-2 items-center">
                 <Button
                   type="button"
@@ -133,7 +142,7 @@ export default function OrderItems() {
                 </Button>
               </div>
             </div>
-            <div className="flex items-center justify-between w-full col-span-2">
+            <div className="flex items-center justify-between w-full col-span-3">
               <span>{splitToHundreds(field._product.price)} so&#39;m</span>
               <Button
                 type="button"
