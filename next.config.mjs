@@ -37,6 +37,9 @@ const nextConfig = {
           pathname: '/media/**',
         },
       ],
+      // experimental: {
+      //   esmExternals: true,
+      // },
     },
   };
   

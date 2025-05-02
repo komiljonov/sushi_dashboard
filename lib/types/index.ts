@@ -72,7 +72,7 @@ export interface ILocation {
   id: string;
   latitude: number;
   longitude: number;
-  address: null;
+  address: string;
 }
 
 export interface IPayment {

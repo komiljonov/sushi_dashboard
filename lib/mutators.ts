@@ -21,6 +21,13 @@ export const createUser = async (data: NewUser) => {
 }
 
 
+export const fetchUserLocations = async (user_id: string) => {
+
+    const { data: res_data } = await request.get(`/locations/?user_id=${user_id}`);
+    return res_data;
+}
+
+
 
 export const requestSync = async () => {
     await request.get('sync')
