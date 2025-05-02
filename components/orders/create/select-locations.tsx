@@ -89,7 +89,7 @@ const SelectLocations = () => {
             animate={{ opacity: 1 }}
             className="absolute z-50 mt-1 w-full bg-white border rounded shadow text-sm px-4 py-2 text-gray-500"
           >
-            Lokatsiyalar topilmadi!
+            {!user ? 'Foydalanuvchini tanlang!' : user && locations.length === 0 ? 'Lokatsiyalar mavjud emas' : 'Lokatsiyalar topilmadi'}
           </motion.div>
         )}
       </div>

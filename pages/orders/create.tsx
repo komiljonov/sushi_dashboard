@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from "react";
 import { useForm, Controller, FormProvider } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -22,10 +24,11 @@ import PaymentMethodSelector from "@/components/orders/create/select-payment-met
 import DeliveryMethodSelector from "@/components/orders/create/select-delivery-method";
 import { Loader2 } from "lucide-react";
 
+
 function CreateOrderPage() {
   const router = useRouter();
   const [isAddItemOpen, setIsAddItemOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);  // Step 1: Add state for button disable
+  const [isSubmitting, setIsSubmitting] = useState(false); // Step 1: Add state for button disable
 
   const { filials, promocodes, phone_numbers, products } = useFetchData();
 
@@ -39,13 +42,7 @@ function CreateOrderPage() {
     },
   });
 
-  const {
-    register,
-    control,
-    handleSubmit,
-    watch,
-    reset,
-  } = methods;
+  const { register, control, handleSubmit, watch, reset } = methods;
 
   const deliveryMethod = watch("delivery");
   const orderItems = watch("items");
@@ -69,25 +66,25 @@ function CreateOrderPage() {
     onSuccess: (data) => {
       console.log(data);
       router.push(`/orders/info?id=${data.id}`);
-      setIsSubmitting(false);  // Step 2: Re-enable button on success
+      setIsSubmitting(false); // Step 2: Re-enable button on success
       // reset()
       // alert("Buyurtma muvaffaqiyatli yaratildi!")
     },
     onError: (e) => {
       console.log(e);
       alert("Xatolik yuz berdi");
-      setIsSubmitting(false);  // Step 2: Re-enable button on error
+      setIsSubmitting(false); // Step 2: Re-enable button on error
     },
   });
 
   const onSubmit = (data: CreateOrderForm) => {
-    setIsSubmitting(true);  // Step 3: Disable button on first click
+    setIsSubmitting(true); // Step 3: Disable button on first click
     console.log("Buyurtma yuborildi", { ...data, orderItems });
     const {
       location, // destructure to potentially omit
       ...restData
     } = data;
-    
+
     const payload = {
       ...restData,
       delivery_price: _deliveryPrice?.cost || 0,
@@ -97,9 +94,8 @@ function CreateOrderPage() {
       })),
       ...(data.delivery !== "PICKUP" ? { location } : {}), // only add location if not PICKUP
     };
-    
+
     createOrderMutation.mutate(payload);
-    
   };
 
   return (
@@ -114,10 +110,9 @@ function CreateOrderPage() {
         <FormProvider {...methods}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="col-span-2">
-            <UserSelect />
-
+              <UserSelect />
             </div>
-            
+
             <div className="space-y-2 col-span-2">
               <Controller
                 name="delivery"
@@ -150,12 +145,10 @@ function CreateOrderPage() {
                 render={({ field }) => <PaymentMethodSelector {...field} />}
               />
             </div>
-
           </div>
           {deliveryMethod == "DELIVER" && (
             <div className={`space-y-2 `}>
               <Label>Yetkazib berish joyi</Label>
-
               <DeliveryMap />
             </div>
           )}
@@ -182,7 +175,10 @@ function CreateOrderPage() {
             <Button
               type="button"
               className="button bg-[#F0F0F0]"
-              onClick={() => {reset(); router.push("/orders")}}
+              onClick={() => {
+                reset();
+                router.push("/orders");
+              }}
               variant="ghost"
             >
               Bekor qilish
@@ -192,8 +188,11 @@ function CreateOrderPage() {
               className="button bg-green-500 hover:bg-green-600 w-[150px] text-center"
               disabled={isSubmitting} // Step 4: Disable button while submitting
             >
-              {!isSubmitting ? "Buyurtma yaratish" : <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              
+              {!isSubmitting ? (
+                "Buyurtma yaratish"
+              ) : (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
             </Button>
           </div>
         </FormProvider>

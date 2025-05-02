@@ -74,9 +74,15 @@ export default function OSMMapSearch() {
   const debouncedFetchSuggestions = debounce(async (query: string) => {
     try {
       const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
-          query
-        )}&format=json&addressdetails=1&limit=5`
+        `https://nominatim.openstreetmap.org/search?` +
+          new URLSearchParams({
+            q: query,
+            format: 'json',
+            addressdetails: '1',
+            limit: '5',
+            viewbox: '55.98,45.59,73.15,37.18', // Uzbekistan bbox
+            bounded: '1',
+          })
       );
       const data = await res.json();
       setSuggestions(data);
@@ -84,6 +90,7 @@ export default function OSMMapSearch() {
       console.error("OSM suggestion error:", err);
     }
   }, 300);
+  
 
   const fetchSuggestions = (query: string) => {
     debouncedFetchSuggestions(query);
