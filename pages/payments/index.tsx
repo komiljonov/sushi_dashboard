@@ -302,7 +302,7 @@ function EnhancedPaymentListing() {
                     <div className="flex items-center space-x-3">
                       <Avatar>
                         <AvatarFallback>
-                          {payment.user.name?.charAt(0)}
+                          {payment?.user?.name?.charAt(0)}
                         </AvatarFallback>
                       </Avatar>
                       <div>
@@ -310,7 +310,7 @@ function EnhancedPaymentListing() {
                           href={`/users/info?id=${payment?.user?.id}`}
                           className="font-medium"
                         >
-                          {payment.user.name}
+                          {payment?.user?.name}
                         </Link>
                       </div>
                     </div>

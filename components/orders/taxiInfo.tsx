@@ -9,7 +9,7 @@ import {
 import { Label } from "@/components/ui/Label";
 import { CarFront, CreditCard, Phone } from "lucide-react";
 import Link from "next/link";
-import { ITaxi } from "@/lib/types";
+import { IOrder, ITaxi } from "@/lib/types";
 import dynamic from "next/dynamic";
 
 // Importing the MapWithRoute component dynamically to avoid SSR issues with Leaflet
@@ -17,8 +17,10 @@ const TaxiLocation = dynamic(() => import("./taxi-location"), {
   ssr: false,
 });
 
-export function TaxiInfoCard({ taxi }: { taxi: ITaxi | null | undefined }) {
-  if (!taxi) {
+export function TaxiInfoCard({ order }: { order: IOrder | null | undefined }) {
+
+  const taxi = order?.taxi as ITaxi;
+  if (!order) {
     return (
       <Card className="md:col-span-2 border-none shadow-none rounded-2xl">
         <CardHeader>
@@ -84,7 +86,7 @@ export function TaxiInfoCard({ taxi }: { taxi: ITaxi | null | undefined }) {
         </div>
       </CardContent>
         <CardContent>
-            <TaxiLocation taxi={taxi as ITaxi}/>
+            <TaxiLocation order={order}/>
         </CardContent>
       </div>
     </Card>

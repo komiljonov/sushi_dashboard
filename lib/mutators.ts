@@ -27,6 +27,12 @@ export const fetchUserLocations = async (user_id: string) => {
     return res_data;
 }
 
+export const fetchTaxiLocations = async (order_id: number | string) => {
+
+    const { data: res_data } = await request.get(`/delivery/current-location/?order_id=${order_id}`);
+    return res_data;
+}
+
 
 
 export const requestSync = async () => {

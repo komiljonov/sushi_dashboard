@@ -360,7 +360,7 @@ function ProductListCard({ order: { items: items } }: { order: IOrder }) {
                     alt={item.product.name_uz}
                     width={64}
                     height={64}
-                    className="rounded-md object-cover"
+                    className="rounded-md w-[64px] h-[64px] object-cover"
                   />
                 ) : (
                   <div className="w-16 h-16"></div>
@@ -518,7 +518,7 @@ function OrderInfo({ order }: { order: IOrder }) {
         <UserInformationCard order={order} />
         <OrderDetailsCard order={order} />
         <ProductListCard order={order} />
-        {order.taxi && <TaxiInfoCard taxi={order.taxi} />}
+        {order.taxi && <TaxiInfoCard order={order} />}
       </div>
     </div>
   );
