@@ -137,7 +137,7 @@ function CreateOrderPage() {
               />
             </div>
 
-            <div className="col-span-2 hidden">
+            <div className="col-span-2">
               <Controller
                 name="payment_type"
                 control={control}
