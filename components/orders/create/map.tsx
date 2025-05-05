@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/Input";
 
 const DEFAULT_CENTER: [number, number] = [41.311081, 69.240562];
 
-export default function OSMMapSearch() {
+export default function DeliveryMap() {
   const { control, setValue, watch } = useFormContext<CreateOrderForm>();
   const lat = watch("location.latitude") ?? DEFAULT_CENTER[0];
   const lng = watch("location.longitude") ?? DEFAULT_CENTER[1];
@@ -89,21 +89,27 @@ export default function OSMMapSearch() {
     } catch (err) {
       console.error("OSM suggestion error:", err);
     }
-  }, 300);
+  }, 400); // 🔁 Updated to 400ms
+  
   
 
-  const fetchSuggestions = (query: string) => {
-    debouncedFetchSuggestions(query);
-  };
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (searchQuery.length >= 3) {
+        debouncedFetchSuggestions(searchQuery);
+      } else {
+        setSuggestions([]);
+      }
+    }, 400);
+  
+    return () => clearTimeout(delayDebounce); // cleanup on new keystroke
+  }, [searchQuery, debouncedFetchSuggestions]);
+  
 
   const handleSearchInput = (val: string) => {
     setSearchQuery(val);
-    if (val.length >= 3) {
-      fetchSuggestions(val);
-    } else {
-      setSuggestions([]);
-    }
   };
+  
 
   const handleSuggestionClick = (place: {
     display_name: string;

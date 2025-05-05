@@ -334,7 +334,7 @@ function EnhancedPaymentListing() {
                   <TableCell>
                     {format(
                       new Date(payment.created_at),
-                      "dd.MM.yyyy HH:mm:ss"
+                      "dd.MM.yyyy HH:mm"
                     )}
                   </TableCell>
                   <TableCell>
