@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CardContent} from "@/components/ui/Card";
+import { CardContent } from "@/components/ui/Card";
 import { PaginatedTaxi } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import { splitToHundreds } from "@/lib/utils";
@@ -33,22 +33,20 @@ export default function TaxiTable() {
         queryFn: () => fetchTaxiList(page),
       });
     }
-  }, [page, taxi,]);
+  }, [page, taxi]);
 
   const status = {
     finished: "Yakunlangan",
     driver_assigned: "Haydovchi biriktirildi",
     new_order: "Yangi buyurtma",
     car_at_place: "Oshxonaga yetib keldi",
-    aborted: "Bekor qilingan"
-  }
+    aborted: "Bekor qilingan",
+  };
 
   return (
     <div className="mx-auto w-full">
-
       <div className="bg-white rounded-xl">
         <CardContent className="!p-4">
-
           <Table>
             <TableHeader>
               <TableRow>
@@ -58,14 +56,8 @@ export default function TaxiTable() {
                 >
                   Mashina sifatlari
                 </TableHead>
-                <TableHead
-                  className="cursor-pointer"
-                >
-                  Mashina raqami
-                </TableHead>
-                <TableHead
-                  className="cursor-pointer"
-                >
+                <TableHead className="cursor-pointer">Mashina raqami</TableHead>
+                <TableHead className="cursor-pointer">
                   Haydovchi raqami
                 </TableHead>
                 <TableHead
@@ -83,28 +75,36 @@ export default function TaxiTable() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {taxi?.results?.map((item, index) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    {item?.car_mark} {item?.car_model} {item?.car_color}
-                  </TableCell>
-                  <TableCell>
-                    {item?.car_number}
-                  </TableCell>
-                  <TableCell>
-                    {item?.driver_phone_number}
-                  </TableCell>
-                  <TableCell>
-                    {splitToHundreds(item.total_sum)} so&apos;m
-                  </TableCell>
-                  <TableCell>
-                    {status[item?.state_kind as keyof typeof status]}
+              {taxi?.results?.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5}>
+                    <p className="text-center text-lg text-gray-600 font-medium">Taksilar mavjud emas!</p>
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                taxi?.results?.map((item, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      {item?.car_mark} {item?.car_model} {item?.car_color}
+                    </TableCell>
+                    <TableCell>{item?.car_number}</TableCell>
+                    <TableCell>{item?.driver_phone_number}</TableCell>
+                    <TableCell>
+                      {splitToHundreds(item.total_sum)} so&apos;m
+                    </TableCell>
+                    <TableCell>
+                      {status[item?.state_kind as keyof typeof status]}
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
-          <CustomPagination totalPages={Math.ceil((taxi?.count ?? 0) / (taxi?.page_size ?? 0))} page={page} setPage={setPage}/>
+          <CustomPagination
+            totalPages={Math.ceil((taxi?.count ?? 0) / (taxi?.page_size ?? 0))}
+            page={page}
+            setPage={setPage}
+          />
         </CardContent>
       </div>
     </div>

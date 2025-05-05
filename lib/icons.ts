@@ -17,6 +17,8 @@ import AllOrders from "@/public/images/all_orders.svg"
 import OrdersToday from "@/public/images/orders-today.svg"
 import OrdersThisMonth from "@/public/images/orders-month.svg";
 import ProfitMonth from "@/public/images/profit-month.svg";
+import Taxi from "@/public/images/taxi.svg";
+import TaxiActive from "@/public/images/taxi-active.svg"
 
 export {
     Home,
@@ -37,5 +39,7 @@ export {
     AllOrders,
     OrdersToday,
     OrdersThisMonth,
-    ProfitMonth
+    ProfitMonth,
+    Taxi,
+    TaxiActive
 };

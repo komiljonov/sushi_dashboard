@@ -18,6 +18,8 @@ import {
   PromocodesActive,
   Referrals,
   ReferralsActive,
+  Taxi,
+  TaxiActive,
   Users,
   UsersActive,
 } from "@/lib/icons";
@@ -93,10 +95,10 @@ const menuItems = [
     page: "referrals",
   },
   {
-    name: "Taksilar",
+    name: "Taksilar ro'yxati",
     href: "/taxi",
-    iconActive: ReferralsActive,
-    icon: Referrals,
+    iconActive: TaxiActive,
+    icon: Taxi,
     page: "taxi",
   },
 ];
