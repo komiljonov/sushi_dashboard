@@ -36,9 +36,9 @@ export interface IProduct {
   category: string;
 
   image?: IFile | string | null;
-  count: number
+  count: number;
   price: number;
-  product: IProduct
+  product: IProduct;
   sale_count: number;
 }
 
@@ -206,14 +206,18 @@ export type IOrderList = {
 
   items: IOrderItem[];
 };
-export type PaginatedOrderResponse = {
+
+export type PaginatedResponse<T> = {
   count: number; // Total number of orders
   current_page: number; // Current page number
   next: string | null; // URL for the next page
   previous: string | null; // URL for the previous page
   page_size: number; // Number of items per page
-  results: IOrderList[]; // List of orders for the current page
+  results: T[]; // List of orders for the current page
 };
+
+export type PaginatedOrderResponse = PaginatedResponse<IOrderList>
+
 
 type IOrderArray = Array<IOrderList>;
 
@@ -253,6 +257,8 @@ export interface ITaxi {
   car_model: string;
   car_color: string;
   car_number: string;
+  car_mark: string
+  state_kind: string
   total_sum: number;
   driver_phone_number: string;
   source_lat: number;
@@ -277,13 +283,12 @@ export interface IMainAnalytics {
     count: number;
   }[];
 
-  sales: {count: number, date: string}[];
+  sales: { count: number; date: string }[];
 
   sales_year: {
     [key: string]: string;
   }[];
 }
-
 
 export type DashboardData = {
   user_count: number;
@@ -339,3 +344,21 @@ type RecentOrder = {
   location: ILocation; // replace with a specific type if you have it
   taxi: ITaxi; // replace with a specific type if you have it
 };
+
+export interface ITaxiCall {
+  filial: string;
+  lon: number;
+  lat: number;
+  comment: string;
+  after: number;
+  location: ILocation;
+}
+
+export interface ITaxiCallForm {
+  filial: string;
+  location: ILocation;
+  comment: string;
+  after: number;
+}
+
+export type PaginatedTaxi = PaginatedResponse<ITaxi>

@@ -2,7 +2,7 @@
 
 import { YMaps, Map, Placemark } from "@pbe/react-yandex-maps";
 import { useFormContext, Controller } from "react-hook-form";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { CreateOrderForm } from "./types";
 import { MapPin } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/Input";
 
 const DEFAULT_CENTER: [number, number] = [41.311081, 69.240562];
 
-export default function DeliveryMap() {
+export default function DeliveryMap({taxi}:{taxi?:boolean}) {
   const { control, setValue, watch } = useFormContext<CreateOrderForm>();
   const lat = watch("location.latitude") ?? DEFAULT_CENTER[0];
   const lng = watch("location.longitude") ?? DEFAULT_CENTER[1];
@@ -71,40 +71,43 @@ export default function DeliveryMap() {
     if (coords) updateLocation(coords);
   };
 
-  const debouncedFetchSuggestions = debounce(async (query: string) => {
-    try {
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?` +
-          new URLSearchParams({
-            q: query,
-            format: 'json',
-            addressdetails: '1',
-            limit: '5',
-            viewbox: '55.98,45.59,73.15,37.18', // Uzbekistan bbox
-            bounded: '1',
-          })
-      );
-      const data = await res.json();
-      setSuggestions(data);
-    } catch (err) {
-      console.error("OSM suggestion error:", err);
-    }
-  }, 400); // 🔁 Updated to 400ms
-  
-  
-
-  useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      if (searchQuery.length >= 3) {
-        debouncedFetchSuggestions(searchQuery);
-      } else {
-        setSuggestions([]);
+  const debouncedFetchSuggestions = useMemo(() => 
+    debounce(async (query: string) => {
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?` +
+            new URLSearchParams({
+              q: query,
+              format: 'json',
+              addressdetails: '1',
+              limit: '5',
+              viewbox: '55.98,45.59,73.15,37.18',
+              bounded: '1',
+            })
+        );
+        const data = await res.json();
+        setSuggestions(data);
+      } catch (err) {
+        console.error("OSM suggestion error:", err);
       }
-    }, 400);
+    }, 500), // ← debounce for 500ms
+  []); // 👈 empty deps to memoize once
   
-    return () => clearTimeout(delayDebounce); // cleanup on new keystroke
+  // Handle search query changes
+  useEffect(() => {
+    if (searchQuery.length >= 3) {
+      debouncedFetchSuggestions(searchQuery);
+    } else {
+      setSuggestions([]);
+    }
   }, [searchQuery, debouncedFetchSuggestions]);
   
+  // Optional: cancel debounce on unmount
+  useEffect(() => {
+    return () => {
+      debouncedFetchSuggestions.cancel();
+    };
+  }, [debouncedFetchSuggestions]);
 
   const handleSearchInput = (val: string) => {
     setSearchQuery(val);
@@ -131,10 +134,10 @@ export default function DeliveryMap() {
               value={searchQuery}
               onChange={(e) => handleSearchInput(e.target.value)}
               placeholder="Qidirish..."
-              className="w-full p-2 border rounded-md input"
+              className={`${taxi ? "col-span-2" : "col-span-1"} w-full p-2 border rounded-md input`}
               autoComplete="off"
             />
-            <SelectLocations />
+            {!taxi && <SelectLocations />}
           </div>
 
           {/* 📍 Suggestions */}
@@ -165,7 +168,7 @@ export default function DeliveryMap() {
               name="location.longitude"
               control={control}
               render={() => (
-                <div className="h-[400px] w-full">
+                <div className={`${taxi ? "h-[300px]" : "h-[400px]"} w-full`}>
                   <Map
                     defaultState={{ center: DEFAULT_CENTER, zoom: 14 }}
                     className="w-full h-full"
@@ -189,7 +192,7 @@ export default function DeliveryMap() {
         />
 
         {/* 📌 Address Display */}
-        {selectedAddress && (
+        {selectedAddress && !taxi && (
           <div className="mt-3 text-sm flex items-center gap-2 p-4 rounded-lg border bg-[#FAFAFA]">
             <MapPin className="w-5 h-5 text-muted-foreground" />
             <span className="text-gray-700">{selectedAddress}</span>

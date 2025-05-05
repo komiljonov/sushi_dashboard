@@ -119,7 +119,7 @@ function EnhancedAnalyticsDashboard() {
   return (
     <div className=" space-y-4 w-full">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Admin panel</h1>
+        <h1 className="text-2xl font-bold">Admin panel</h1>
         <div className="flex items-center gap-4">
           <SelectCoupleDate />
           <StatisticsModal />

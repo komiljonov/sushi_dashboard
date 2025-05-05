@@ -92,6 +92,13 @@ const menuItems = [
     icon: Referrals,
     page: "referrals",
   },
+  {
+    name: "Taksilar",
+    href: "/taxi",
+    iconActive: ReferralsActive,
+    icon: Referrals,
+    page: "taxi",
+  },
 ];
 
 export function Sidebar({ collapsed, page }: SidebarProps) {

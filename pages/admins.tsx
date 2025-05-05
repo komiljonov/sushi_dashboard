@@ -444,7 +444,7 @@ const Admins: NextPage = () => {
   return (
     <div className="mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Foydalanuvchilar</h1>
+        <h1 className="text-2xl font-bold">Foydalanuvchilar</h1>
         <CreateAdminDialog />
       </div>
       <AdminsTable admins={admins} />

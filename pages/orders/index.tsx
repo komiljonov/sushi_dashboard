@@ -114,7 +114,7 @@ function OrderList({
   return (
     <div className="mx-auto ">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Buyurtmalar</h1>
+        <h1 className="text-2xl font-bold">Buyurtmalar</h1>
         {/* <CreateOrderButton /> */}
         {/* <Button ></Button> */}
 

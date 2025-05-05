@@ -1,6 +1,6 @@
 import { CreateOrderForm } from "@/components/orders/create/types";
 import { request } from '@/lib/api'
-import { NewUser } from "./types";
+import { ITaxiCall, NewUser } from "./types";
 
 
 
@@ -49,6 +49,11 @@ export const cancelOrder = async (orderId: string) => {
 
 export const acceptOrder = async (orderId: string) => {
     return await request.get(`orders/${orderId}/accept`);
+}
+
+
+export const callTaxi = async (data: ITaxiCall) => {
+    return await request.post(`/delivery/call`, data);
 }
 
 
