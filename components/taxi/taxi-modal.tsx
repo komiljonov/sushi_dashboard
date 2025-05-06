@@ -27,9 +27,11 @@ import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/Input";
 import DeliveryMap from "../orders/create/map";
 import { callTaxi } from "@/lib/mutators";
+import { Loader2 } from "lucide-react";
 
 const CallTaxiModal = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { data: filials } = useQuery({
     queryKey: ["filials"],
@@ -43,28 +45,31 @@ const CallTaxiModal = () => {
     reset,
     formState: { errors },
     control,
-  } = methods
+  } = methods;
 
-  const {mutate} = useMutation({
+  const { mutate } = useMutation({
     mutationFn: callTaxi,
     onSuccess: () => {
       queryClient.refetchQueries({ queryKey: ["taxi"] });
       setIsOpen(false);
       reset();
+      setIsLoading(false);
     },
     onError: (error) => {
       console.error("Error updating user:", error);
+      setIsLoading(false);
     },
   });
 
   const onSubmit = (data: ITaxiCallForm) => {
     const payload = {
-      ...data, 
+      ...data,
       lat: data?.location?.latitude,
       lon: data?.location?.longitude,
-      after: Number(data?.after)
-    }
-    mutate(payload)
+      after: Number(data?.after),
+    };
+    setIsLoading(true);
+    mutate(payload);
   };
 
   return (
@@ -89,18 +94,21 @@ const CallTaxiModal = () => {
                     control={control}
                     rules={{ required: "Filialni tanlash shart" }}
                     render={({ field }) => (
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger className="input h-[44px]">
-                      <SelectValue placeholder="Filialni tanlang" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {filials?.map((filial) => (
-                        <SelectItem key={filial.id} value={filial.id}>
-                          {filial.name_uz}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <SelectTrigger className="input h-[44px]">
+                          <SelectValue placeholder="Filialni tanlang" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {filials?.map((filial) => (
+                            <SelectItem key={filial.id} value={filial.id}>
+                              {filial.name_uz}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     )}
                   />
                   {errors.filial && (
@@ -140,7 +148,6 @@ const CallTaxiModal = () => {
                 <Controller
                   name="comment"
                   control={control}
-                  rules={{ required: "Parol kiritish shart" }}
                   render={({ field }) => (
                     <Textarea
                       id="comment"
@@ -149,11 +156,6 @@ const CallTaxiModal = () => {
                     />
                   )}
                 />
-                {errors.comment && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.comment.message}
-                  </p>
-                )}
               </div>
 
               <div className="flex justify-between gap-2">
@@ -166,9 +168,14 @@ const CallTaxiModal = () => {
                 </Button>
                 <Button
                   type="submit"
+                  disabled={isLoading}
                   className="w-full hover:bg-green-600 bg-[#0EA60A] button"
                 >
-                  Saqlash
+                  {isLoading ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <span>Yuborish</span>
+                  )}
                 </Button>
               </div>
             </form>
