@@ -132,7 +132,7 @@ const CallTaxiModal = () => {
 
               <div className={`space-y-2 `}>
                 <Label>Joylashuv</Label>
-                <DeliveryMap taxi />
+                <DeliveryMap taxi required />
               </div>
 
               <div>

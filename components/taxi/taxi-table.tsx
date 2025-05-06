@@ -85,10 +85,10 @@ export default function TaxiTable() {
                 taxi?.results?.map((item, index) => (
                   <TableRow key={index}>
                     <TableCell>
-                      {item?.car_mark} {item?.car_model} {item?.car_color}
+                      {item?.car_mark || "Qidirilmoqda..."} {item?.car_model} {item?.car_color}
                     </TableCell>
-                    <TableCell>{item?.car_number}</TableCell>
-                    <TableCell>{item?.driver_phone_number}</TableCell>
+                    <TableCell>{item?.car_number || "Qidirilmoqda..."}</TableCell>
+                    <TableCell>{item?.driver_phone_number || "Qidirilmoqda..."}</TableCell>
                     <TableCell>
                       {splitToHundreds(item.total_sum)} so&apos;m
                     </TableCell>
