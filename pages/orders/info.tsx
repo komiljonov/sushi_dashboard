@@ -436,7 +436,6 @@ function ConfirmationButtons({ order }: { order: IOrder }) {
           "Buyurtmani tasdiqlash uchun to'lovni amalga oshiring!",
       });
     }else {
-
       confirm(order.id);
       setOpenConfirm(false);
     }
@@ -453,7 +452,7 @@ function ConfirmationButtons({ order }: { order: IOrder }) {
         <AlertDialogTrigger asChild>
           <Button
             className="bg-[#1AD012] hover:bg-green-600 h-[44px] rounded-[10px] text-white"
-            disabled={confirmPending || !["PENDING", "PENDING_PAYMENT"]?.includes(order.status)}
+            disabled={confirmPending || !["PENDING"]?.includes(order.status)}
           >
             Tasdiqlash
           </Button>
