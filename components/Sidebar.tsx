@@ -18,8 +18,8 @@ import {
   PromocodesActive,
   Referrals,
   ReferralsActive,
-  Taxi,
-  TaxiActive,
+  // Taxi,
+  // TaxiActive,
   Users,
   UsersActive,
 } from "@/lib/icons";
@@ -94,13 +94,13 @@ const menuItems = [
     icon: Referrals,
     page: "referrals",
   },
-  {
-    name: "Taksilar ro'yxati",
-    href: "/taxi",
-    iconActive: TaxiActive,
-    icon: Taxi,
-    page: "taxi",
-  },
+  // {
+  //   name: "Taksilar ro'yxati",
+  //   href: "/taxi",
+  //   iconActive: TaxiActive,
+  //   icon: Taxi,
+  //   page: "taxi",
+  // },
 ];
 
 export function Sidebar({ collapsed, page }: SidebarProps) {
