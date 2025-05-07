@@ -208,6 +208,7 @@ export default function UserSelect() {
                 id="phone"
                 {...field}
                 className="input"
+                type="number"
                 placeholder="Telefon raqamni kiriting"
                 maxLength={13}
               />
@@ -222,7 +223,7 @@ export default function UserSelect() {
                   className="absolute right-1 top-1"
                   onClick={() => {
                     users.length === 0 &&
-                      mutate({ name: searchValue, number: phone });
+                      mutate({ name: searchValue || "Call center orqali", number: phone });
                   }}
                 >
                   <Plus />
