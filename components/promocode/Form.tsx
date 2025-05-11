@@ -141,7 +141,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                         id="count"
                         type="number"
                         className="no-spinner input"
-                        {...register("count", { required: "Son kiritish shart" })}
+                        {...register("count", { required: "Son kiritish shart", valueAsNumber: true })}
                         aria-invalid={errors.count ? "true" : "false"}
                     />
                     {errors.count && (
@@ -162,7 +162,7 @@ export const PromocodeForm = ({ onSubmit, defaultValues }: PromocodeFormProps) =
                                     <Button
                                         variant={"outline"}
                                         className={cn(
-                                            "w-full justify-start text-left font-normal",
+                                            "w-full justify-start input text-left font-normal",
                                             !field.value && "text-muted-foreground"
                                         )}
                                     >

@@ -17,6 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import PhoneInput from "@/components/helpers/phone-input";
 
 export default function UserSelect() {
   const [users, setUsers] = useState<IUser[]>([]);
@@ -27,6 +28,7 @@ export default function UserSelect() {
   const [status, setStatus] = useState(true);
   const pageRef = useRef(1);
   const listRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const queryClient = useQueryClient();
 
@@ -38,23 +40,20 @@ export default function UserSelect() {
   } = useFormContext<CreateOrderForm>();
 
   const phone = watch("phone");
-  // const user = watch("user");
 
-  // 1️⃣ Faqat birinchi sahifani fetch qiladi
   useEffect(() => {
     const fetchFirstPage = async () => {
       setIsFetching(true);
       pageRef.current = 1;
-      const data = await fetchPaginatedUsers(1, searchValue || phone || "");
+      const data = await fetchPaginatedUsers(1, searchValue || "");
       setUsers(data?.results || []);
-      setHasNextPage(data?.next ? true : false);
+      setHasNextPage(Boolean(data?.next));
       setIsFetching(false);
     };
 
     fetchFirstPage();
   }, [searchValue, phone]);
 
-  // 2️⃣ Yangi sahifa yuklash funksiyasi
   const loadMoreUsers = useCallback(async () => {
     if (!hasNextPage || isFetching) return;
 
@@ -64,26 +63,23 @@ export default function UserSelect() {
     try {
       const nextData = await queryClient.fetchQuery({
         queryKey: ["users-pg", nextPage, searchValue, phone],
-        queryFn: () =>
-          fetchPaginatedUsers(nextPage, searchValue || phone || ""),
+        queryFn: () => fetchPaginatedUsers(nextPage, searchValue || ""),
       });
 
       if (nextData?.results) {
         setUsers((prev) => [...prev, ...nextData.results]);
-        pageRef.current = nextPage; // Sahifani oshiramiz
-        setHasNextPage(!!nextData.next);
+        pageRef.current = nextPage;
+        setHasNextPage(Boolean(nextData.next));
       }
     } catch (error) {
       console.error("Error fetching next page:", error);
+    } finally {
+      setIsFetching(false);
     }
-
-    setIsFetching(false);
   }, [hasNextPage, isFetching, queryClient, searchValue, phone]);
 
-  // 3️⃣ Scroll event orqali yuklash
   useEffect(() => {
     if (!listStatus) return;
-
     const container = listRef.current;
     if (!container) return;
 
@@ -99,7 +95,6 @@ export default function UserSelect() {
 
     container.addEventListener("scroll", handleScroll);
 
-    // Also immediately check if already near bottom (short list)
     if (
       container.scrollHeight <= container.clientHeight + 5 &&
       hasNextPage &&
@@ -108,27 +103,8 @@ export default function UserSelect() {
       loadMoreUsers();
     }
 
-    return () => {
-      container.removeEventListener("scroll", handleScroll);
-    };
-  }, [listStatus, hasNextPage, isFetching, loadMoreUsers, users]);
-
-  // const phone = watch("phone");
-
-  // // Set searchValue only from phone
-  // useEffect(() => {
-  //   if (phone) setSearchValue(phone);
-  // }, [phone]);
-
-  // // Lookup user once users are updated
-  // useEffect(() => {
-  //   if (phone && users.length > 0) {
-  //     const phone2 = phone?.slice(1);
-  //     const user = users.find((user) => user.number === phone2);
-  //     setValue("user", user ? user.id : null);
-  //     if (user) setSelectedUser(user.name);
-  //   }
-  // }, [users, phone, setValue]);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [listStatus, hasNextPage, isFetching, loadMoreUsers]);
 
   const { mutate } = useMutation({
     mutationFn: createUser,
@@ -145,8 +121,8 @@ export default function UserSelect() {
       <div className="space-y-2 relative w-full flex justify-center items-start">
         <div className="space-y-2 w-full">
           <Label htmlFor="user">Foydalanuvchi</Label>
-          {/* {listStatus ? ( */}
           <Input
+            ref={inputRef}
             type="text"
             placeholder="Foydalanuvchilarni qidirish..."
             value={searchValue}
@@ -161,18 +137,13 @@ export default function UserSelect() {
               }, 100);
             }}
           />
-          {
-            // !user && searchValue && (
-            //   <span className="text-xs text-red-500">Foydalanuvchi tanlanmadi!</span>
-            // )
-          }
         </div>
 
         {listStatus && (
           <div
             ref={listRef}
             className="border p-2 rounded w-full absolute bg-white top-[70px] z-20 max-h-64 overflow-y-auto"
-            onMouseDown={(e) => e.preventDefault()} // 🟢 `onBlur` ni oldini olish
+            onMouseDown={(e) => e.preventDefault()}
           >
             {users.map((user, index) => (
               <div
@@ -182,7 +153,8 @@ export default function UserSelect() {
                   setValue("user", user.id);
                   setValue("phone", user.number);
                   setListStatus(false);
-                  setSearchValue(user?.name);
+                  setSearchValue(user.name);
+                  inputRef.current?.blur();
                 }}
               >
                 {user.name} ({user.number})
@@ -204,34 +176,36 @@ export default function UserSelect() {
             control={control}
             rules={{ required: "Telefon raqamni kiritish majburiy." }}
             render={({ field }) => (
-              <Input
-                id="phone"
+              <PhoneInput
                 {...field}
-                className="input"
-                type="number"
                 placeholder="Telefon raqamni kiriting"
-                maxLength={13}
               />
             )}
           />
-          {users?.length === 0 && status && <TooltipProvider>
-            <Tooltip delayDuration={100}>
-              <TooltipTrigger asChild>
-                <Button
-                  type="button"
-                  size="icon"
-                  className="absolute right-1 top-1"
-                  onClick={() => {
-                    users.length === 0 &&
-                      mutate({ name: searchValue || "Call center orqali", number: phone });
-                  }}
-                >
-                  <Plus />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Foydalanuvchini yaratish</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>}
+          {users?.length === 0 && status && (
+            <TooltipProvider>
+              <Tooltip delayDuration={100}>
+                <TooltipTrigger asChild>
+                  <Button
+                    type="button"
+                    size="icon"
+                    className="absolute right-1 top-1"
+                    onClick={() => {
+                      if (users.length === 0) {
+                        mutate({
+                          name: searchValue || "Call center orqali",
+                          number: phone,
+                        });
+                      }
+                    }}
+                  >
+                    <Plus />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Foydalanuvchini yaratish</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
         </div>
         {errors.phone && (
           <p className="text-sm text-red-500 mt-1">
