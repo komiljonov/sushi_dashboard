@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { fetchPaginatedUsers } from "@/lib/fetchers";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { IUser } from "@/lib/types";
 import { Controller, useFormContext } from "react-hook-form";
 import { CreateOrderForm } from "./types";
@@ -40,6 +40,22 @@ export default function UserSelect() {
   } = useFormContext<CreateOrderForm>();
 
   const phone = watch("phone");
+
+  console.log("phone", phone, phone?.length);
+
+  const {data: userSearched} = useQuery({
+    queryKey: ["userSearched", phone],
+    queryFn: () => fetchPaginatedUsers(1, phone?.slice(1) || ""),
+  })
+
+  useEffect(() => {
+    const user = userSearched?.results?.[0]
+    if (phone?.length === 13 && userSearched?.count > 0) {
+      setValue("user", user?.id);
+      setValue("phone", user?.number);
+      setSearchValue(user?.name);
+    }
+  }, [phone, userSearched, setValue]);
 
   useEffect(() => {
     const fetchFirstPage = async () => {
@@ -182,7 +198,7 @@ export default function UserSelect() {
               />
             )}
           />
-          {users?.length === 0 && status && (
+          {userSearched?.count === 0 && status && (
             <TooltipProvider>
               <Tooltip delayDuration={100}>
                 <TooltipTrigger asChild>

@@ -97,7 +97,7 @@ function UserInformationCard({
             </div>
             <Link
               href={`https://t.me/${user.username?.substring(1)}`}
-              className="flex items-center text-blue-500 hover:text-blue-700"
+              className="flex items-center text-blue-500 hover:text-blue-700 gap-2"
             >
               {user.tg_name || user.name}{" "}
               <ExternalLink className="h-4 w-4 mr-1" />
