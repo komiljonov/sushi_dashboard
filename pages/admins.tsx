@@ -92,7 +92,10 @@ const CreateAdminDialog = () => {
 
   const onSubmit = async (data: CreateAdminData) => {
     try {
-      await request.post("admins/", {...data, password_repeat: data.password});
+      await request.post("admins/", {
+        ...data,
+        password_repeat: data.password,
+      });
       queryClient.invalidateQueries({
         queryKey: ["admins"],
       });
@@ -118,7 +121,7 @@ const CreateAdminDialog = () => {
           <div>
             <Label htmlFor="first_name">Ism</Label>
             <Input
-            className="input"
+              className="input"
               id="first_name"
               {...register("first_name", { required: "Ism kiritish shart" })}
             />
@@ -131,7 +134,7 @@ const CreateAdminDialog = () => {
           <div>
             <Label htmlFor="last_name">Familya</Label>
             <Input
-            className="input"
+              className="input"
               id="last_name"
               {...register("last_name", {
                 required: "Familya kiritish shart",
@@ -147,7 +150,7 @@ const CreateAdminDialog = () => {
           <div>
             <Label htmlFor="username">Foydalanuvchi nomi</Label>
             <Input
-            className="input"
+              className="input"
               id="username"
               {...register("username", { required: "Username kiritish shart" })}
             />
@@ -259,7 +262,7 @@ const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
     formState: { errors },
     watch,
     setValue,
-    control
+    control,
   } = useForm<CreateAdminData>();
 
   useEffect(() => {
@@ -298,7 +301,7 @@ const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
   });
 
   const onSubmit = (data: CreateAdminData) => {
-    updateAdminMutation.mutate({...data, password_repeat: password});
+    updateAdminMutation.mutate({ ...data, password_repeat: password });
   };
 
   const onDelete = () => {
@@ -318,44 +321,44 @@ const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
         </DialogTrigger>
         <DialogContent className="bg-white">
           <DialogHeader>
-            <DialogTitle>Update User</DialogTitle>
+            <DialogTitle>Xodimni tahrirlash</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <div>
-                <Label htmlFor="first_name">Ism</Label>
-                <Input
+            <div>
+              <Label htmlFor="first_name">Ism</Label>
+              <Input
                 className="input"
-                  id="first_name"
-                  {...register("first_name", {
-                    required: "Ism kiritish shart",
-                  })}
-                />
-                {errors.first_name && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.first_name.message}
-                  </p>
-                )}
-              </div>
-              <div>
-                <Label htmlFor="last_name">Familya</Label>
-                <Input
+                id="first_name"
+                {...register("first_name", {
+                  required: "Ism kiritish shart",
+                })}
+              />
+              {errors.first_name && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.first_name.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <Label htmlFor="last_name">Familya</Label>
+              <Input
                 className="input"
-                  id="last_name"
-                  {...register("last_name", {
-                    required: "Familya kiritish shart",
-                  })}
-                />
-                {errors.last_name && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.last_name.message}
-                  </p>
-                )}
-              </div>
+                id="last_name"
+                {...register("last_name", {
+                  required: "Familya kiritish shart",
+                })}
+              />
+              {errors.last_name && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.last_name.message}
+                </p>
+              )}
+            </div>
 
             <div>
               <Label htmlFor="username">Username</Label>
               <Input
-              className="input"
+                className="input"
                 id="username"
                 {...register("username", {
                   required: "Username kiritish shart",
@@ -391,19 +394,21 @@ const UpdateAdminDialog = ({ admin }: { admin: IAdmin }) => {
             </div>
 
             <div>
-            <Label htmlFor="password">Parol</Label>
-            <Controller
-              name="password"
-              control={control}
-              rules={{ required: "Parol kiritish shart" }}
-              render={({ field }) => <PasswordInput id="password" {...field} />}
-            />
-            {errors.password && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.password.message}
-              </p>
-            )}
-          </div>
+              <Label htmlFor="password">Parol</Label>
+              <Controller
+                name="password"
+                control={control}
+                rules={{ required: "Parol kiritish shart" }}
+                render={({ field }) => (
+                  <PasswordInput id="password" {...field} />
+                )}
+              />
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
             <div className="flex justify-between gap-2">
               <Button
                 variant="destructive"
@@ -444,7 +449,7 @@ const Admins: NextPage = () => {
   return (
     <div className="mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Foydalanuvchilar</h1>
+        <h1 className="text-2xl font-bold">Xodimlar</h1>
         <CreateAdminDialog />
       </div>
       <AdminsTable admins={admins} />
