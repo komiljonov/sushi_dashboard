@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from "react";
-import { useForm, Controller, FormProvider } from "react-hook-form";
+import { useForm, Controller, FormProvider, FieldErrors, FieldValues } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
@@ -23,6 +23,7 @@ import { useRouter } from "next/router";
 import PaymentMethodSelector from "@/components/orders/create/select-payment-method";
 import DeliveryMethodSelector from "@/components/orders/create/select-delivery-method";
 import { Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 
 function CreateOrderPage() {
@@ -31,6 +32,8 @@ function CreateOrderPage() {
   const [isSubmitting, setIsSubmitting] = useState(false); // Step 1: Add state for button disable
 
   const { filials, promocodes, phone_numbers, products } = useFetchData();
+
+  const { toast } = useToast();
 
   const methods = useForm<CreateOrderForm>({
     defaultValues: {
@@ -43,6 +46,16 @@ function CreateOrderPage() {
   });
 
   const { register, control, handleSubmit, watch, reset } = methods;
+
+  const onError = (errors: FieldErrors<FieldValues>) => {
+    if (Object.keys(errors).length > 0) {
+      toast({
+        title: "Xatolik",
+        description: "Barcha majburiy maydonlarni to‘ldiring",
+        variant: "destructive",
+      });
+    }
+  };
 
   const deliveryMethod = watch("delivery");
   const orderItems = watch("items");
@@ -101,7 +114,7 @@ function CreateOrderPage() {
   return (
     <div className="mx-auto">
       <form
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmit, onError)}
         className="space-y-6 bg-white rounded-xl p-6"
       >
         <h1 className="text-2xl font-bold mb-10 text-center">
