@@ -8,15 +8,8 @@ import { Controller, useFormContext } from "react-hook-form";
 import { CreateOrderForm } from "./types";
 import { Label } from "@/components/ui/Label";
 import { Input } from "@/components/ui/Input";
-import { Loader2, Plus } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { createUser } from "@/lib/mutators";
-import { Button } from "@/components/ui/Button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import PhoneInput from "@/components/helpers/phone-input";
 
 export default function UserSelect() {
@@ -25,7 +18,6 @@ export default function UserSelect() {
   const [hasNextPage, setHasNextPage] = useState(true);
   const [isFetching, setIsFetching] = useState(false);
   const [listStatus, setListStatus] = useState(false);
-  const [status, setStatus] = useState(true);
   const pageRef = useRef(1);
   const listRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -48,14 +40,15 @@ export default function UserSelect() {
     queryFn: () => fetchPaginatedUsers(1, phone?.slice(1) || ""),
   })
 
+  const user = userSearched?.results?.[0]
+
   useEffect(() => {
-    const user = userSearched?.results?.[0]
     if (phone?.length === 13 && userSearched?.count > 0) {
       setValue("user", user?.id);
       setValue("phone", user?.number);
       setSearchValue(user?.name);
     }
-  }, [phone, userSearched, setValue]);
+  }, [phone, userSearched, setValue, user]);
 
   useEffect(() => {
     const fetchFirstPage = async () => {
@@ -128,7 +121,6 @@ export default function UserSelect() {
       queryClient.invalidateQueries({ queryKey: ["users-pg"] });
       setValue("user", data.id);
       setSearchValue(data.name);
-      setStatus(false);
     },
   });
 
@@ -195,33 +187,18 @@ export default function UserSelect() {
               <PhoneInput
                 {...field}
                 placeholder="Telefon raqamni kiriting"
+                onBlur={() => {
+                  if (userSearched.count === 0) {
+                    mutate({
+                      name: searchValue || "Call center orqali",
+                      number: phone,
+                    });
+                  }
+                }}
               />
             )}
           />
-          {userSearched?.count === 0 && status && (
-            <TooltipProvider>
-              <Tooltip delayDuration={100}>
-                <TooltipTrigger asChild>
-                  <Button
-                    type="button"
-                    size="icon"
-                    className="absolute right-1 top-1"
-                    onClick={() => {
-                      if (users.length === 0) {
-                        mutate({
-                          name: searchValue || "Call center orqali",
-                          number: phone,
-                        });
-                      }
-                    }}
-                  >
-                    <Plus />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Foydalanuvchini yaratish</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
+          { user && phone?.length === 13 && <span className="absolute right-2 top-1/2 transform -translate-y-1/2 font-mono text-sm">({user?.name})</span>}
         </div>
         {errors.phone && (
           <p className="text-sm text-red-500 mt-1">

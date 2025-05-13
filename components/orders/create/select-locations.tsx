@@ -11,6 +11,15 @@ import { Input } from '@/components/ui/Input'
 const SelectLocations = () => {
   const { watch, setValue } = useFormContext()
   const user = watch('user')
+  const phone = watch('phone')
+
+  console.log('phone', phone, phone?.length);
+
+  useEffect(() => {
+    if (phone?.length < 13) {
+      setValue('user', "")
+    }
+  }, [phone, setValue])
 
   const { data: locations = [], isLoading } = useQuery<ILocation[]>({
     queryKey: ['locations', user],

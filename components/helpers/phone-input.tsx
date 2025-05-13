@@ -24,13 +24,16 @@ const PhoneInput = ({
   placeholder,
   disabled,
   styles,
+  onBlur,
+  onFocus,
 }: {
   value?: string;
   onChange: (value: string) => void;
   placeholder?: string;
   disabled?: boolean;
   styles?: {paddingLeft: string}
-  check?: boolean
+  onBlur?: () => void;
+  onFocus?: () => void;
 }) => {
   const [inputValue, setInputValue] = useState("");
 
@@ -58,6 +61,8 @@ const PhoneInput = ({
         className="input"
         maxLength={17}
         onChange={handleChange}
+        onBlur={onBlur}
+        onFocus={onFocus}
         placeholder={placeholder}
         aria-describedby="phone-hint"
         style={{...styles}}
