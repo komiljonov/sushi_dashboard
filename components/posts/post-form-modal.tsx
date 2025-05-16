@@ -1,128 +1,107 @@
-"use client";
-
+import React from "react";
+import { Controller, useForm } from "react-hook-form";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
+  DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import { Label } from "@/components/ui/Label";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { Textarea } from "../ui/textarea";
+import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/textarea";
+import { Plus } from "lucide-react";
+import { FileUploader } from "./post-uploader";
 
-export interface PostFormData {
+interface FormData {
   title: string;
-  description: string;
-  file?: FileList;
-}
-    
-interface Props {
-  open: boolean;
-  onClose: () => void;
-  onSubmit: (data: FormData) => void;
-  initialData?: PostFormData | null;
-  loading?: boolean;
+  text: string;
+  file: string;
 }
 
-export default function PostFormModal({
-  open,
-  onClose,
-  onSubmit,
-  initialData,
-  loading,
-}: Props) {
+export function PostForm() {
+  const [open, setOpen] = React.useState(false);
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
-    watch,
-  } = useForm<PostFormData>({
-    defaultValues: {
-      title: "",
-      description: "",
-    },
-  });
+    reset,
+    control,
+  } = useForm<FormData>();
 
-  useEffect(() => {
-    if (initialData) {
-      reset({
-        title: initialData.title,
-        description: initialData.description || "",
-      });
-    } else {
-      reset();
-    }
-  }, [initialData, reset]);
+  // Reset form on close
+  React.useEffect(() => {
+    if (!open) reset();
+  }, [open, reset]);
 
-  const file = watch("file")?.[0];
-
-  const submitHandler = (values: PostFormData) => {
-    const formData = new FormData();
-    formData.append("title", values.title);
-    formData.append("description", values.description);
-    if (values.file?.[0]) {
-      formData.append("file", values.file[0]);
-    }
-    onSubmit(formData);
+  const submitHandler = (data: FormData) => {
+    console.log(data);
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger>
+        <Button className="flex items-center gap-2 justify-center button">
+          <Plus /> Post qo’shish
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[450px]">
         <DialogHeader>
-          <DialogTitle>
-            {initialData ? "Postni tahrirlash" : "Yangi post yaratish"}
-          </DialogTitle>
+          <DialogTitle>Post qo’shish</DialogTitle>
         </DialogHeader>
+
         <form onSubmit={handleSubmit(submitHandler)} className="space-y-4">
           <div>
-            <Label>Sarlavha</Label>
+            <label className="text-sm mb-2 font-medium" htmlFor="title">
+              Post sarlavhasi
+            </label>
             <Input
-              {...register("title", { required: "Sarlavha majburiy" })}
-              placeholder="Sarlavha"
+              id="title"
+              placeholder="Post sarlavhasi"
+              className="input"
+              {...register("title", { required: "Post sarlavhasi majburiy" })}
             />
             {errors.title && (
-              <p className="text-sm text-red-500 mt-1">
+              <p className="text-red-600 text-sm mt-1">
                 {errors.title.message}
               </p>
             )}
           </div>
 
           <div>
-            <Label>Tavsif</Label>
+            <label className="text-sm mb-2 font-medium" htmlFor="text">
+              Post mazmuni
+            </label>
             <Textarea
-              {...register("description")}
-              placeholder="Post tavsifi (ixtiyoriy)"
+              id="text"
+              placeholder="Post mazmuni"
+              className="input resize-none min-h-24"
+              {...register("text", { required: "Post mazmuni majburiy" })}
+              rows={4}
             />
-          </div>
-
-          <div>
-            <Label>Fayl (rasm, video yoki fayl)</Label>
-            <Input
-              type="file"
-              accept="image/*,video/*,.pdf,.doc,.docx"
-              {...register("file")}
-            />
-            {file && (
-              <p className="text-sm text-muted-foreground mt-1">
-                Tanlangan: <strong>{file.name}</strong>
-              </p>
+            {errors.text && (
+              <p className="text-red-600 text-sm mt-1">{errors.text.message}</p>
             )}
           </div>
 
-          <Button type="submit" disabled={loading} className="w-full">
-            {loading
-              ? initialData
-                ? "Tahrirlanmoqda..."
-                : "Yaratilmoqda..."
-              : initialData
-              ? "Tahrirlash"
-              : "Yaratish"}
-          </Button>
+          <Controller
+            control={control}
+            name="file"
+            render={({ field }) => <FileUploader {...field} />}
+          />
+
+          <DialogFooter className="flex w-full gap-2">
+            <Button
+              className="hover:bg-gray-200 w-full shadow-none text-black bg-[#F5F5F5] button"
+              onClick={() => setOpen(false)}
+            >
+              Bekor qilish
+            </Button>
+            <Button className="hover:bg-green-600 bg-[#0EA60A] button w-full">
+              Qo’shish
+            </Button>
+          </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>

@@ -53,7 +53,7 @@ export default function UserSelect() {
   useEffect(() => {
     const fetchFirstPage = async () => {
       setIsFetching(true);
-      pageRef.current = 1;
+      pageRef.current = 1;    
       const data = await fetchPaginatedUsers(1, searchValue || "");
       setUsers(data?.results || []);
       setHasNextPage(Boolean(data?.next));
