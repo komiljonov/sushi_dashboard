@@ -29,6 +29,7 @@ import { Layout } from "@/components/Layout";
 import { splitToHundreds } from "@/lib/utils";
 import { format } from "date-fns";
 import { RxArrowTopRight } from "react-icons/rx";
+import { useCrumb } from "@/lib/context/crumb-provider";
 
 export const ProviderIcon = ({ provider }: { provider: IPayment["provider"] }) => {
   switch (provider) {
@@ -352,6 +353,13 @@ function EnhancedPaymentListing() {
 }
 
 export default function Page() {
+    const { setCrumb } = useCrumb();
+  
+    useEffect(() => {
+      setCrumb([
+        { label: "To'lovlar", path: "/payments" },
+      ]);
+    }, [setCrumb]);
   return (
     <Layout page="payments">
       <EnhancedPaymentListing />

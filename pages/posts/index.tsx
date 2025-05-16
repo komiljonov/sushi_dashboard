@@ -109,7 +109,7 @@
 
 // function createPost(variables: void): Promise<unknown> {
 //     console.log(variables);
-    
+
 //     throw new Error("Function not implemented.");
 // }
 
@@ -122,14 +122,16 @@
 //   return fetch("/api/posts").then((res) => res.json());
 // }
 
-import React from 'react'
+import { useCrumb } from "@/lib/context/crumb-provider";
+import React, { useEffect } from "react";
 
-const index = () => {
-  return (
-    <div>
-      
-    </div>
-  )
-}
+const Posts = () => {
+  const { setCrumb } = useCrumb();
 
-export default index
+  useEffect(() => {
+    setCrumb([{ label: "Postlar", path: "/posts" }]);
+  }, [setCrumb]);
+  return <div></div>;
+};
+
+export default Posts;

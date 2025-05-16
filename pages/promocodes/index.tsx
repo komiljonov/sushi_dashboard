@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import { Button } from "@/components/ui/Button"
 // import { Dialog } from "@/components/ui/dialog"
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -13,6 +13,7 @@ import { Layout } from "@/components/Layout";
 import { queryClient } from "@/lib/query";
 import { fetchPromocodesType } from "@/lib/fetchers";
 import CustomTabs from "@/components/custom-tabs";
+import { useCrumb } from "@/lib/context/crumb-provider";
 
 // const createPromocode = async (promocode: Omit<IPromocode, "id">) => {
 
@@ -94,7 +95,15 @@ export function Promocodes() {
           </DialogContent>
         </Dialog> */}
       {/* </div> */}
-      <CustomTabs triggers={[{title: "Faol", value: "active" }, { title: "Faol emas", value: "inactive" }]} selectedTab={selectedTab} setSelectedTab={setSelectedTab} storageKey="promocodes" />
+      <CustomTabs
+        triggers={[
+          { title: "Faol", value: "active" },
+          { title: "Faol emas", value: "inactive" },
+        ]}
+        selectedTab={selectedTab}
+        setSelectedTab={setSelectedTab}
+        storageKey="promocodes"
+      />
       <div className="bg-white p-4 rounded-xl mt-4">
         <PromocodeTable
           promocodes={promocodes}
@@ -117,6 +126,11 @@ export function Promocodes() {
 }
 
 export default function Page() {
+  const { setCrumb } = useCrumb();
+
+  useEffect(() => {
+    setCrumb([{ label: "Promokodlar", path: "/promocodes" }]);
+  }, [setCrumb]);
   return (
     <Layout page={"promocodes"}>
       <Promocodes />

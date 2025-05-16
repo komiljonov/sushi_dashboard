@@ -23,7 +23,7 @@ import {
   CreditCard,
 } from "lucide-react";
 import { Layout } from "@/components/Layout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { request } from "@/lib/api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { IFile, IOrder } from "@/lib/types";
@@ -48,6 +48,7 @@ import { acceptOrder, cancelOrder } from "@/lib/mutators";
 import { queryClient } from "@/lib/query";
 import { useToast } from "@/hooks/use-toast";
 import { statuses } from ".";
+import { useCrumb } from "@/lib/context/crumb-provider";
 
 function UserInformationCard({
   order,
@@ -234,17 +235,19 @@ function OrderDetailsCard({ order }: { order: IOrder }) {
           </div>
         </div>
 
-        { order?.delivery === "DELIVER" && <div className="flex items-center space-x-2 w-full justify-between">
-          <div className="flex items-center text-[#A3A3A3] gap-2">
-            {" "}
-            <CreditCardIcon className="h-4 w-4" />
-            <Label className="font-normal">Yetkazish narxi:</Label>
+        {order?.delivery === "DELIVER" && (
+          <div className="flex items-center space-x-2 w-full justify-between">
+            <div className="flex items-center text-[#A3A3A3] gap-2">
+              {" "}
+              <CreditCardIcon className="h-4 w-4" />
+              <Label className="font-normal">Yetkazish narxi:</Label>
+            </div>
+            {/* <span>{order.items?.reduce((sum, product) => sum + product.count, 0)}</span> */}
+            <Badge variant="secondary" className="text-green-600 bg-green-100">
+              {splitToHundreds(order.delivery_price)} so&apos;m
+            </Badge>
           </div>
-          {/* <span>{order.items?.reduce((sum, product) => sum + product.count, 0)}</span> */}
-          <Badge variant="secondary" className="text-green-600 bg-green-100">
-            {splitToHundreds(order.delivery_price)} so&apos;m
-          </Badge>
-        </div>}
+        )}
 
         <div className="flex items-center space-x-2 w-full justify-between">
           <div className="flex items-center text-[#A3A3A3] gap-2">
@@ -432,10 +435,9 @@ function ConfirmationButtons({ order }: { order: IOrder }) {
     if (order?.status === "PENDING_PAYMENT") {
       toast({
         title: "Nimadur noto'g'ri ketdi.",
-        description:
-          "Buyurtmani tasdiqlash uchun to'lovni amalga oshiring!",
+        description: "Buyurtmani tasdiqlash uchun to'lovni amalga oshiring!",
       });
-    }else {
+    } else {
       confirm(order.id);
       setOpenConfirm(false);
     }
@@ -477,7 +479,10 @@ function ConfirmationButtons({ order }: { order: IOrder }) {
         <AlertDialogTrigger asChild>
           <Button
             className="bg-[#FF2735] h-[44px] rounded-[10px] hover:bg-red-600 text-white"
-            disabled={cancelPending || !["PENDING", "PENDING_PAYMENT"]?.includes(order.status)}
+            disabled={
+              cancelPending ||
+              !["PENDING", "PENDING_PAYMENT"]?.includes(order.status)
+            }
           >
             Bekor qilish
           </Button>
@@ -540,6 +545,15 @@ const fetchOrderInfo = async (id: string): Promise<IOrder> => {
 
 export default function Page() {
   const [orderId] = useState(getOrderIdFromUrl);
+
+  const { setCrumb } = useCrumb();
+
+  useEffect(() => {
+    setCrumb([
+      { label: "Buyurtmalar", path: "/orders" },
+      { label: "Buyurtma ma'lumotlari", path: `/orders/info?id=${orderId}` },
+    ]);
+  }, [setCrumb, orderId]);
 
   const { data: order } = useQuery({
     queryKey: ["orders", orderId],

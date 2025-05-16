@@ -11,6 +11,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { FormattedInput } from '@/components/ui/formattedInput';
 import { IFile, IProduct } from '@/lib/types';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { useCrumb } from '@/lib/context/crumb-provider';
 
 
 
@@ -119,9 +120,9 @@ function Products() {
     }
 
     return (
-        <div className="w-full max-w-4xl p-6">
+        <div className="w-full p-6 bg-white rounded-lg">
             <h1 className="text-2xl font-bold mb-6">Mahsulotni tahrirlash</h1>
-            <form onSubmit={handleSubmit(handleCreateProduct)} className="space-y-6">
+            <form onSubmit={handleSubmit(handleCreateProduct)} className="space-y-6 w-full">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <Label htmlFor="name_uz">Nomi (O&apos;zbekcha)</Label>
@@ -193,6 +194,14 @@ function Products() {
 
 
 export default function Page() {
+    const { setCrumb } = useCrumb();
+        
+          useEffect(() => {
+            setCrumb([
+                { label: "Kategoriyalar", path: "/categories" },
+                { label: "Mahsulotni tahrirlash", path: "/products/edit" }
+            ]);
+          }, [setCrumb]);
     return (
         <Layout page='categories'>
             <Products />

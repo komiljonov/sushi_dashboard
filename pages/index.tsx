@@ -20,6 +20,8 @@ import { fetchDateAnalytics } from "@/lib/fetchers";
 import AdminPanelSkeleton from "@/components/stats/stats-skeleton";
 import { useDateFilterStore } from "@/lib/context/date-store";
 import SelectCoupleDate from "@/components/helpers/select-date-range";
+import { useCrumb } from "@/lib/context/crumb-provider";
+import { useEffect } from "react";
 
 const fetchStatistics = async (
   start: string,
@@ -29,13 +31,10 @@ const fetchStatistics = async (
   return data;
 };
 
-const fetchTodayStats = async (
-
-): Promise<DashboardData> => {
+const fetchTodayStats = async (): Promise<DashboardData> => {
   const { data } = await request.get(`/statistics/today/`);
   return data;
 };
-
 
 function EnhancedAnalyticsDashboard() {
   const { start, end } = useDateFilterStore();
@@ -75,7 +74,6 @@ function EnhancedAnalyticsDashboard() {
   const today_bot2 = today?.bot_orders?.find((bot) => bot.bot === "BOT2");
 
   console.log(today_bot1);
-  
 
   const orderStats = [
     {
@@ -145,6 +143,11 @@ function EnhancedAnalyticsDashboard() {
 }
 
 const Home: NextPage = () => {
+  const { setCrumb } = useCrumb();
+
+  useEffect(() => {
+    setCrumb([{ label: "Hisobotlar", path: "/" }]);
+  }, [setCrumb]);
   return (
     <Layout page="home">
       <EnhancedAnalyticsDashboard />

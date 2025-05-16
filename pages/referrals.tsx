@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import {
@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useCrumb } from "@/lib/context/crumb-provider";
 
 interface IReferral {
   id: string;
@@ -265,6 +266,11 @@ function ReferralLinksCRUD() {
 }
 
 export default function Page() {
+  const { setCrumb } = useCrumb();
+
+  useEffect(() => {
+    setCrumb([{ label: "Referal havolalari", path: "/referrals" }]);
+  }, [setCrumb]);
   return (
     <Layout page="referrals">
       <ReferralLinksCRUD />

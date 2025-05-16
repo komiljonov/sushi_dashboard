@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/Label";
 import { Badge } from "@/components/ui/badge";
 import { Layout } from "@/components/Layout";
 import { IOrder, IUser } from "@/lib/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { request } from "@/lib/api";
 import Link from "next/link";
@@ -14,6 +14,7 @@ import { CalendarIcon, CreditCardIcon, DollarSign } from "lucide-react";
 import { splitToHundreds } from "@/lib/utils";
 import { ProviderIcon } from "../payments";
 import { statuses } from "../orders";
+import { useCrumb } from "@/lib/context/crumb-provider";
 
 const UserInfoCard = ({ user }: { user: IUser }) => (
   <Card>
@@ -64,7 +65,7 @@ const CurrentOrderCard = ({ order }: { order?: IOrder }) => (
         <div className="space-y-4">
           {[
             { label: "Buyurtma ID", value: order.id },
-            { label: "Holati", value: order.status},
+            { label: "Holati", value: order.status },
             { label: "Yaratilgan vaqti", value: String(order.order_time) },
             { label: "Yetkazib berish", value: order.delivery },
             { label: "To'lov usuli", value: order.payment?.provider },
@@ -96,7 +97,12 @@ const CurrentOrderCard = ({ order }: { order?: IOrder }) => (
               ) : ["PICKUP", "DELIVER"]?.includes(field?.value as string) ? (
                 findDeliverType(field?.value as string)
               ) : field?.label === "Holati" ? (
-                <Badge>{statuses?.find((status) => status.value === field?.value)?.name}</Badge>
+                <Badge>
+                  {
+                    statuses?.find((status) => status.value === field?.value)
+                      ?.name
+                  }
+                </Badge>
               ) : (
                 <span>{field.value}</span>
               )}
@@ -195,6 +201,15 @@ const fetchUserInfo = async (id: string): Promise<IUser> => {
 
 export default function Page() {
   const [userId] = useState(getUserIdFromUrl);
+
+  const { setCrumb } = useCrumb();
+
+  useEffect(() => {
+    setCrumb([
+      { label: "Foydalanuvchilar", path: "/users" },
+      { label: "Foydalanuvchi ma'lumotlari", path: `/users/info?id=${userId}` },
+    ]);
+  }, [setCrumb, userId]);
 
   const { data: user } = useQuery({
     queryKey: ["users", userId],

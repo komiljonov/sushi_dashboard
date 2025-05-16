@@ -19,6 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/Input";
 import { RxArrowTopRight } from "react-icons/rx";
 import { Search } from "lucide-react";
+import { useCrumb } from "@/lib/context/crumb-provider";
 
 function UsersTable() {
   const { push } = useRouter();
@@ -219,6 +220,13 @@ const fetchUsers = async (
 };
 
 export default function UsersListPage() {
+  const { setCrumb } = useCrumb();
+      
+        useEffect(() => {
+          setCrumb([
+            { label: "Foydalanuvchilar", path: "/users" },
+          ]);
+        }, [setCrumb]);
   return (
     <Layout page="users">
       <div className="mx-auto">

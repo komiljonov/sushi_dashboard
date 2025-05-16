@@ -16,7 +16,7 @@ export function Layout({
 
   return (
     <div
-      className="flex h-screen  bg-white text-black"
+      className="flex h-screen  bg-white text-black w-full"
       style={{ maxHeight: "100vh" }}
     >
       {" "}

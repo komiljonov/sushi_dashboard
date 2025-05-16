@@ -24,6 +24,7 @@ import { queryClient } from "@/lib/query";
 import CustomPagination from "@/components/pagination";
 import Search from "@/components/search";
 import { useLoading } from "@/lib/context/Loading";
+import { useCrumb } from "@/lib/context/crumb-provider";
 
 export const statuses = [
   {
@@ -76,7 +77,6 @@ export const statuses = [
   },
 ];
 
-
 function OrderList({
   orders,
   setCurrentPage,
@@ -106,7 +106,7 @@ function OrderList({
   const totalPages = Math.ceil(orders?.count / ordersPerPage);
   const { push } = useRouter();
 
-  const {collapsed} = useLoading()
+  const { collapsed } = useLoading();
 
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = (currentPage - 1) * ordersPerPage;
@@ -118,7 +118,11 @@ function OrderList({
         {/* <CreateOrderButton /> */}
         {/* <Button ></Button> */}
 
-        <Button variant="default" className="button bg-green-500 hover:bg-green-600" onClick={() => router.push("/orders/create")}>
+        <Button
+          variant="default"
+          className="button bg-green-500 hover:bg-green-600"
+          onClick={() => router.push("/orders/create")}
+        >
           Buyurtma yaratish
         </Button>
       </div>
@@ -185,9 +189,13 @@ function OrderList({
             {statuses.map((status) => (
               <Button
                 key={status.name}
-                variant={selectedStatus === status.value ? "default" : "outline"}
+                variant={
+                  selectedStatus === status.value ? "default" : "outline"
+                }
                 onClick={() => setSelectedStatus(status.value)}
-                className={`transition-colors duration-200 hover:${status.color} ${
+                className={`transition-colors duration-200 hover:${
+                  status.color
+                } ${
                   selectedStatus === status.value
                     ? `${status.color} text-white border-2 ${status.border}`
                     : `bg-white `
@@ -198,11 +206,14 @@ function OrderList({
             ))}
           </div>
           <div className="max-w-[400px]">
-          <Search search={searchTerm} setSearch={setSearchTerm} />
-
+            <Search search={searchTerm} setSearch={setSearchTerm} />
           </div>
         </div>
-        <div className={`rounded-md ${collapsed ? "table_width_collapsed" : "table_width"} `}>
+        <div
+          className={`rounded-md ${
+            collapsed ? "table_width_collapsed" : "table_width"
+          } `}
+        >
           {isLoading ? (
             <OrderSkeleton />
           ) : (
@@ -225,24 +236,18 @@ function OrderList({
               </TableHeader>
               <TableBody>
                 {orders?.results?.map((order) => (
-                  <TableRow key={order.id} className="cursor-pointer whitespace-nowrap" onClick={() => {
-                    push(`orders/info?id=${order.id}`);
-                  }}>
-                    <TableCell
-                    >
-                      {order.iiko_order_id}
-                    </TableCell>
+                  <TableRow
+                    key={order.id}
+                    className="cursor-pointer whitespace-nowrap"
+                    onClick={() => {
+                      push(`orders/info?id=${order.id}`);
+                    }}
+                  >
+                    <TableCell>{order.iiko_order_id}</TableCell>
 
-                    <TableCell
-                    >
-                      {order.user}
-                    </TableCell>
-                    <TableCell
-                    >
-                      {order.phone_number}
-                    </TableCell>
-                    <TableCell
-                    >
+                    <TableCell>{order.user}</TableCell>
+                    <TableCell>{order.phone_number}</TableCell>
+                    <TableCell>
                       <div className="flex items-center space-x-2">
                         {order.price && (
                           <Badge
@@ -279,30 +284,30 @@ function OrderList({
                     "-"
                   )}
                 </TableCell> */}
-                    <TableCell
-                    >
-                      {order?.filial?.name_uz}
-                    </TableCell>
+                    <TableCell>{order?.filial?.name_uz}</TableCell>
                     <TableCell>
                       {order.delivery == "DELIVER"
                         ? "Yetkazib berish"
                         : "Olib ketish"}
                     </TableCell>
-                    <TableCell>{String(order.order_time === null ? "-" : order.order_time)}</TableCell>
+                    <TableCell>
+                      {String(
+                        order.order_time === null ? "-" : order.order_time
+                      )}
+                    </TableCell>
 
-                    <TableCell
-                    >
-                     <div className="flex w-full justify-start">
-                     <div
-                        className={
-                          `px-2 py-1 rounded-full text-white text-xs whitespace-nowrap ${statuses.find(
-                            (status) => status.value === order.status
-                          )?.color}`
-                        }
-                      >
-                        {statuses.find((s) => s.value === order.status)?.name}
+                    <TableCell>
+                      <div className="flex w-full justify-start">
+                        <div
+                          className={`px-2 py-1 rounded-full text-white text-xs whitespace-nowrap ${
+                            statuses.find(
+                              (status) => status.value === order.status
+                            )?.color
+                          }`}
+                        >
+                          {statuses.find((s) => s.value === order.status)?.name}
+                        </div>
                       </div>
-                     </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -315,7 +320,11 @@ function OrderList({
             {orders?.count} ta buyurtmalardan {indexOfFirstOrder + 1} dan{" "}
             {Math.min(indexOfLastOrder)} gacha
           </div>
-          <CustomPagination totalPages={totalPages} setPage={setCurrentPage} page={currentPage} />
+          <CustomPagination
+            totalPages={totalPages}
+            setPage={setCurrentPage}
+            page={currentPage}
+          />
         </div>
       </div>
     </div>
@@ -372,6 +381,12 @@ export default function Page() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
+
+  const { setCrumb } = useCrumb();
+
+  useEffect(() => {
+    setCrumb([{ label: "Buyurtmalar", path: "/orders" }]);
+  }, [setCrumb]);
 
   // const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({
   //   from: undefined,

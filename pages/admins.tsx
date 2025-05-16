@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/select";
 import { IAdmin, IAdminRole } from "@/lib/types";
 import PasswordInput from "@/components/password-input";
+import { useCrumb } from "@/lib/context/crumb-provider";
 
 interface CreateAdminData extends IAdmin {
   password: string;
@@ -477,6 +478,11 @@ const LoadingSkeleton = () => (
 );
 
 const Page = () => {
+  const { setCrumb } = useCrumb();
+
+  useEffect(() => {
+    setCrumb([{ label: "Xodimlar", path: "/admins" }]);
+  }, [setCrumb]);
   return (
     <Layout page={"admins"}>
       <Admins />

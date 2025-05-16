@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
-import { useEffect, useMemo, useState } from "react"
-import { useQuery, useMutation } from "@tanstack/react-query"
-import { Button } from "@/components/ui/Button"
-import { Input } from "@/components/ui/Input"
+import { useEffect, useMemo, useState } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import {
   Table,
   TableBody,
@@ -11,7 +11,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
@@ -19,67 +19,92 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Label } from "@/components/ui/Label"
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api'
-import Link from "next/link"
-import { ExternalLink, Edit } from "lucide-react"
-import { Layout } from "@/components/Layout"
-import { request } from "@/lib/api"
-import { queryClient } from "@/lib/query"
-import { Controller, useForm } from "react-hook-form"
-import { Skeleton } from "@/components/ui/skeleton"
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/Label";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import Link from "next/link";
+import { ExternalLink, Edit } from "lucide-react";
+import { Layout } from "@/components/Layout";
+import { request } from "@/lib/api";
+import { queryClient } from "@/lib/query";
+import { Controller, useForm } from "react-hook-form";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useCrumb } from "@/lib/context/crumb-provider";
 
 interface ILocation {
-  id: string
-  latitude: number
-  longitude: number
-  address: string | null
+  id: string;
+  latitude: number;
+  longitude: number;
+  address: string | null;
 }
 
 interface IFilial {
-  id: string
-  name_uz: string
-  name_ru: string
+  id: string;
+  name_uz: string;
+  name_ru: string;
   phone_number: string;
-  location: ILocation
+  location: ILocation;
 }
 
-type FilialCreate = Omit<Omit<IFilial, 'id'>, 'location'> & {
-  loc_latitude: number,
-  loc_longitude: number
-}
+type FilialCreate = Omit<Omit<IFilial, "id">, "location"> & {
+  loc_latitude: number;
+  loc_longitude: number;
+};
 
 const generateRandomWord = (length: number = 8): string => {
-  const characters = 'abcdefghijklmnopqrstuvwxyz'
-  return Array.from({ length }, () => characters[Math.floor(Math.random() * characters.length)]).join('')
-}
+  const characters = "abcdefghijklmnopqrstuvwxyz";
+  return Array.from(
+    { length },
+    () => characters[Math.floor(Math.random() * characters.length)]
+  ).join("");
+};
 
 const deleteFilialAttachment = async (filialId: string): Promise<void> => {
-  await request.delete(`filials/${filialId}`)
-}
+  await request.delete(`filials/${filialId}`);
+};
 
 const createFilial = async (filial: FilialCreate): Promise<IFilial> => {
-  const { data } = await request.post<IFilial>('filials', filial)
-  return data
-}
+  const { data } = await request.post<IFilial>("filials", filial);
+  return data;
+};
 
-const updateFilial = async ({ filial, data }: { filial: IFilial, data: FilialCreate }): Promise<IFilial> => {
-  const { data: req_data } = await request.put<IFilial>(`filials/${filial.id}`, data)
-  return req_data
-}
+const updateFilial = async ({
+  filial,
+  data,
+}: {
+  filial: IFilial;
+  data: FilialCreate;
+}): Promise<IFilial> => {
+  const { data: req_data } = await request.put<IFilial>(
+    `filials/${filial.id}`,
+    data
+  );
+  return req_data;
+};
 
 const fetchFilials = async (): Promise<IFilial[]> => {
-  const { data } = await request.get<IFilial[]>('filials')
-  return data
-}
+  const { data } = await request.get<IFilial[]>("filials");
+  return data;
+};
 
-const LocationPicker = ({ location }: { location: { loc_latitude: number, loc_longitude: number } }) => {
-  const position = { lat: location.loc_latitude, lng: location.loc_longitude }
-  return <Marker position={position} />
-}
+const LocationPicker = ({
+  location,
+}: {
+  location: { loc_latitude: number; loc_longitude: number };
+}) => {
+  const position = { lat: location.loc_latitude, lng: location.loc_longitude };
+  return <Marker position={position} />;
+};
 
-const FilialTable = ({ filials, onDelete, onEdit }: { filials: IFilial[], onDelete: (filial: IFilial) => void, onEdit: (filial: IFilial) => void }) => (
+const FilialTable = ({
+  filials,
+  onDelete,
+  onEdit,
+}: {
+  filials: IFilial[];
+  onDelete: (filial: IFilial) => void;
+  onEdit: (filial: IFilial) => void;
+}) => (
   <Table>
     <TableHeader>
       <TableRow>
@@ -97,12 +122,19 @@ const FilialTable = ({ filials, onDelete, onEdit }: { filials: IFilial[], onDele
           <TableCell>{filial.name_ru}</TableCell>
           <TableCell>{filial.phone_number}</TableCell>
           <TableCell>
-            <Link className="flex items-center text-blue-500 hover:text-blue-700" href={`https://www.google.com/maps/@${filial.location.latitude},${filial.location.longitude},17z`}>
+            <Link
+              className="flex items-center text-blue-500 hover:text-blue-700"
+              href={`https://www.google.com/maps/@${filial.location.latitude},${filial.location.longitude},17z`}
+            >
               <ExternalLink className="h-4 w-4 mr-1" /> Joylashuv
             </Link>
           </TableCell>
           <TableCell>
-            <Button variant="outline" onClick={() => onEdit(filial)} className="mr-2">
+            <Button
+              variant="outline"
+              onClick={() => onEdit(filial)}
+              className="mr-2"
+            >
               <Edit className="h-4 w-4 mr-1" /> Tahrirlash
             </Button>
             <Button variant="destructive" onClick={() => onDelete(filial)}>
@@ -113,30 +145,38 @@ const FilialTable = ({ filials, onDelete, onEdit }: { filials: IFilial[], onDele
       ))}
     </TableBody>
   </Table>
-)
+);
 
-function DeleteModal({ isOpen, onClose, onConfirm }: { isOpen: boolean, onClose: () => void, onConfirm: () => void }) {
-  const [confirmWord, setConfirmWord] = useState('')
-  const [userInput, setUserInput] = useState('')
-  const [isMatch, setIsMatch] = useState(false)
+function DeleteModal({
+  isOpen,
+  onClose,
+  onConfirm,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}) {
+  const [confirmWord, setConfirmWord] = useState("");
+  const [userInput, setUserInput] = useState("");
+  const [isMatch, setIsMatch] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
-      setConfirmWord(generateRandomWord())
-      setUserInput('')
-      setIsMatch(false)
+      setConfirmWord(generateRandomWord());
+      setUserInput("");
+      setIsMatch(false);
     }
-  }, [isOpen])
+  }, [isOpen]);
 
   useEffect(() => {
-    setIsMatch(userInput.toLowerCase() === confirmWord.toLowerCase())
-  }, [userInput, confirmWord])
+    setIsMatch(userInput.toLowerCase() === confirmWord.toLowerCase());
+  }, [userInput, confirmWord]);
 
   const handleConfirm = () => {
     if (isMatch) {
-      onConfirm()
+      onConfirm();
     }
-  }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -144,11 +184,15 @@ function DeleteModal({ isOpen, onClose, onConfirm }: { isOpen: boolean, onClose:
         <DialogHeader>
           <DialogTitle>Aniq filialni o&apos;chirmoqchimisiz?</DialogTitle>
           <DialogDescription>
-            Filialni aniq o&apos;chirmoqchimisiz? Filialni o&apos;chirgandan keyin u foydalanuvchilarga ko&apos;rinmaydi.
+            Filialni aniq o&apos;chirmoqchimisiz? Filialni o&apos;chirgandan
+            keyin u foydalanuvchilarga ko&apos;rinmaydi.
           </DialogDescription>
         </DialogHeader>
         <div className="my-4">
-          <p className="mb-2">O&apos;chirishni tasdiqlash uchun &quot;{confirmWord}&quot; so&apos;zini kiriting:</p>
+          <p className="mb-2">
+            O&apos;chirishni tasdiqlash uchun &quot;{confirmWord}&quot;
+            so&apos;zini kiriting:
+          </p>
           <Input
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
@@ -157,54 +201,72 @@ function DeleteModal({ isOpen, onClose, onConfirm }: { isOpen: boolean, onClose:
           />
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>Bekor qilish</Button>
-          <Button variant="destructive" onClick={handleConfirm} disabled={!isMatch}>O&apos;chirish</Button>
+          <Button variant="outline" onClick={onClose}>
+            Bekor qilish
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={handleConfirm}
+            disabled={!isMatch}
+          >
+            O&apos;chirish
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
 
-const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
-  isOpen: boolean
-  onClose: () => void
-  onSubmit: (data: FilialCreate) => void
-  filial?: IFilial
-  mode: 'create' | 'edit'
+const FilialModal = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  filial,
+  mode,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (data: FilialCreate) => void;
+  filial?: IFilial;
+  mode: "create" | "edit";
 }) => {
-  const { register, control, handleSubmit, reset } = useForm<FilialCreate>()
-
-
+  const { register, control, handleSubmit, reset } = useForm<FilialCreate>();
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!,
-    libraries: ['places']
+    libraries: ["places"],
   });
 
-
-  const mapCenter = useMemo(() => ({
-    lat: filial ? filial.location.latitude : 1,
-    lng: filial ? filial.location.longitude : 1
-  }), [filial])
+  const mapCenter = useMemo(
+    () => ({
+      lat: filial ? filial.location.latitude : 1,
+      lng: filial ? filial.location.longitude : 1,
+    }),
+    [filial]
+  );
 
   useEffect(() => {
     if (filial) {
       reset({
-        "name_uz": filial.name_uz,
-        "name_ru": filial.name_ru,
-        "phone_number": filial.phone_number,
-        "loc_latitude": filial.location.latitude,
-        "loc_longitude": filial.location.longitude
-      })
+        name_uz: filial.name_uz,
+        name_ru: filial.name_ru,
+        phone_number: filial.phone_number,
+        loc_latitude: filial.location.latitude,
+        loc_longitude: filial.location.longitude,
+      });
     }
-  }, [filial, reset])
+  }, [filial, reset]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-[1000px] max-h-[1000px] bg-white">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogHeader>
-            <DialogTitle>{mode === 'create' ? "Yangi filial qo'shish" : "Filialni tahrirlash"}</DialogTitle>
+            <DialogTitle>
+              {mode === "create"
+                ? "Yangi filial qo'shish"
+                : "Filialni tahrirlash"}
+            </DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
@@ -213,11 +275,12 @@ const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
               </Label>
               <Input
                 id="name_uz"
-                {...register("name_uz", { required: "Nomi bo'sh bo'lishi mumkin emas." })}
+                {...register("name_uz", {
+                  required: "Nomi bo'sh bo'lishi mumkin emas.",
+                })}
                 className="col-span-3 input"
               />
             </div>
-
 
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name_ru" className="text-right">
@@ -225,7 +288,9 @@ const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
               </Label>
               <Input
                 id="name_ru"
-                {...register("name_ru", { required: "Nomi bo'sh bo'lishi mumkin emas." })}
+                {...register("name_ru", {
+                  required: "Nomi bo'sh bo'lishi mumkin emas.",
+                })}
                 className="col-span-3 input"
               />
             </div>
@@ -235,12 +300,12 @@ const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
               </Label>
               <Input
                 id="phone_number"
-                {...register("phone_number", { required: "Telefon raqam bo'sh bo'lmasligi kerak." })}
+                {...register("phone_number", {
+                  required: "Telefon raqam bo'sh bo'lmasligi kerak.",
+                })}
                 className="col-span-3 input"
               />
             </div>
-
-
 
             <div className="grid grid-cols-4 items-center gap-4">
               <Label className="text-right">
@@ -260,12 +325,20 @@ const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
                             center={mapCenter}
                             zoom={13}
                             onClick={(e: google.maps.MapMouseEvent) => {
-                              latitude.onChange(e.latLng?.lat())
-                              longitude.onChange(e.latLng?.lng())
+                              latitude.onChange(e.latLng?.lat());
+                              longitude.onChange(e.latLng?.lng());
                             }}
-                            mapContainerStyle={{ height: '100%', width: '100%' }}
+                            mapContainerStyle={{
+                              height: "100%",
+                              width: "100%",
+                            }}
                           >
-                            <LocationPicker location={{ loc_longitude: longitude.value, loc_latitude: latitude.value }} />
+                            <LocationPicker
+                              location={{
+                                loc_longitude: longitude.value,
+                                loc_latitude: latitude.value,
+                              }}
+                            />
                           </GoogleMap>
                         )}
                       />
@@ -276,77 +349,86 @@ const FilialModal = ({ isOpen, onClose, onSubmit, filial, mode }: {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">{mode === 'create' ? 'Yaratish' : 'Saqlash'}</Button>
+            <Button type="submit">
+              {mode === "create" ? "Yaratish" : "Saqlash"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
 function FilialManagement() {
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
-  const [filialToDelete, setFilialToDelete] = useState<IFilial | null>(null)
-  const [isFilialModalOpen, setIsFilialModalOpen] = useState<boolean>(false)
-  const [modalMode, setModalMode] = useState<'create' | 'edit'>('create')
-  const [currentFilial, setCurrentFilial] = useState<IFilial | undefined>()
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [filialToDelete, setFilialToDelete] = useState<IFilial | null>(null);
+  const [isFilialModalOpen, setIsFilialModalOpen] = useState<boolean>(false);
+  const [modalMode, setModalMode] = useState<"create" | "edit">("create");
+  const [currentFilial, setCurrentFilial] = useState<IFilial | undefined>();
 
-  const { data: filials, isLoading, isError } = useQuery<IFilial[]>({ queryFn: fetchFilials, queryKey: ['filials'] })
+  const {
+    data: filials,
+    isLoading,
+    isError,
+  } = useQuery<IFilial[]>({ queryFn: fetchFilials, queryKey: ["filials"] });
 
   const deleteMutation = useMutation({
     mutationFn: deleteFilialAttachment,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['filials'] })
+      queryClient.invalidateQueries({ queryKey: ["filials"] });
     },
-  })
+  });
 
   const createMutation = useMutation({
     mutationFn: createFilial,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['filials'] })
+      queryClient.invalidateQueries({ queryKey: ["filials"] });
     },
-  })
+  });
 
   const updateMutation = useMutation({
     mutationFn: updateFilial,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['filials'] })
+      queryClient.invalidateQueries({ queryKey: ["filials"] });
     },
-  })
+  });
 
   const handleDelete = (filial: IFilial) => {
-    setFilialToDelete(filial)
-    setIsDeleteModalOpen(true)
-  }
+    setFilialToDelete(filial);
+    setIsDeleteModalOpen(true);
+  };
 
   const confirmDelete = () => {
     if (filialToDelete) {
-      deleteMutation.mutate(filialToDelete.id)
-      setIsDeleteModalOpen(false)
+      deleteMutation.mutate(filialToDelete.id);
+      setIsDeleteModalOpen(false);
     }
-  }
+  };
 
   const handleEdit = (filial: IFilial) => {
-    setModalMode('edit')
-    setCurrentFilial(filial)
-    setIsFilialModalOpen(true)
-  }
+    setModalMode("edit");
+    setCurrentFilial(filial);
+    setIsFilialModalOpen(true);
+  };
 
   const handleSubmit = (data: FilialCreate) => {
-    if (modalMode === 'create') {
+    if (modalMode === "create") {
       createMutation.mutate(data, {
         onSuccess: () => {
-          setIsFilialModalOpen(false)
-        }
-      })
+          setIsFilialModalOpen(false);
+        },
+      });
     } else if (currentFilial) {
-      updateMutation.mutate({ data: data, filial: currentFilial }, {
-        onSuccess: () => {
-          setIsFilialModalOpen(false)
+      updateMutation.mutate(
+        { data: data, filial: currentFilial },
+        {
+          onSuccess: () => {
+            setIsFilialModalOpen(false);
+          },
         }
-      })
+      );
     }
-  }
+  };
 
   if (isLoading) {
     return (
@@ -361,11 +443,11 @@ function FilialManagement() {
           ))}
         </div>
       </div>
-    )
+    );
   }
 
   if (isError) {
-    return <div>Error loading filials</div>
+    return <div>Error loading filials</div>;
   }
 
   return (
@@ -377,7 +459,13 @@ function FilialManagement() {
         </Button> */}
       </div>
 
-      {filials && <FilialTable filials={filials} onDelete={handleDelete} onEdit={handleEdit} />}
+      {filials && (
+        <FilialTable
+          filials={filials}
+          onDelete={handleDelete}
+          onEdit={handleEdit}
+        />
+      )}
 
       <DeleteModal
         isOpen={isDeleteModalOpen}
@@ -393,13 +481,18 @@ function FilialManagement() {
         mode={modalMode}
       />
     </div>
-  )
+  );
 }
 
 export default function Page() {
+  const { setCrumb } = useCrumb();
+
+  useEffect(() => {
+    setCrumb([{ label: "Filiallar", path: "/filials" }]);
+  }, [setCrumb]);
   return (
     <Layout page="filials">
       <FilialManagement />
     </Layout>
-  )
+  );
 }

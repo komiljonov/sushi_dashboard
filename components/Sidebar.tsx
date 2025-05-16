@@ -2,8 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/lib/context/Auth";
-import { useRouter } from "next/router";
 import {
   Categories,
   CategoriesActive,
@@ -23,7 +21,6 @@ import {
   Users,
   UsersActive,
 } from "@/lib/icons";
-import { LogOut } from "lucide-react";
 import { useState } from "react";
 import {
   Tooltip,
@@ -104,22 +101,11 @@ const menuItems = [
 ];
 
 export function Sidebar({ collapsed, page }: SidebarProps) {
-  const { push } = useRouter();
-  const { logout } = useAuth();
-
-  // collapsed = true;
-
-  const handleLogout = () => {
-    // Implement logout logic here
-    console.log("Logout clicked");
-    logout();
-    push("/login");
-  };
 
   return (
     <aside
       className={cn(
-        "bg-white text-black border-r border-gray-200 transition-all duration-300 ease-in-out fixed top-0 h-screen", // Ensured light mode adaptation
+        "bg-white text-black border-r border-gray-200 fixed top-0 h-screen", // Ensured light mode adaptation
         collapsed ? "w-16" : "w-64"
       )}
     >
@@ -174,42 +160,7 @@ export function Sidebar({ collapsed, page }: SidebarProps) {
             />
           ))}
         </div>
-        <div className={`${collapsed ? "" : "p-2"}  h-full flex items-end`}>
-          {collapsed ? (
-            <TooltipProvider>
-              <Tooltip delayDuration={100}>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className={cn(
-                      "w-full hover:text-red-500",
-                      collapsed ? "px-4" : "px-4 justify-start"
-                    )}
-                    onClick={handleLogout}
-                  >
-                    <LogOut className="h-4 w-4" />
-                    {!collapsed && <span className="ml-2">Chiqish</span>}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="right" className="text-sm">
-                  Chiqish
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          ) : (
-            <Button
-              variant="ghost"
-              className={cn(
-                "w-full hover:text-red-500",
-                collapsed ? "px-4" : "px-4 justify-start"
-              )}
-              onClick={handleLogout}
-            >
-              <LogOut className="h-4 w-4" />
-              {!collapsed && <span className="ml-2">Chiqish</span>}
-            </Button>
-          )}
-        </div>
+        
       </div>
     </aside>
   );

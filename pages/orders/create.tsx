@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, Controller, FormProvider, FieldErrors, FieldValues } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Input } from "@/components/ui/Input";
@@ -24,6 +24,7 @@ import PaymentMethodSelector from "@/components/orders/create/select-payment-met
 import DeliveryMethodSelector from "@/components/orders/create/select-delivery-method";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useCrumb } from "@/lib/context/crumb-provider";
 
 
 function CreateOrderPage() {
@@ -215,6 +216,14 @@ function CreateOrderPage() {
 }
 
 export default function Page() {
+    const { setCrumb } = useCrumb();
+  
+    useEffect(() => {
+      setCrumb([{ label: "Buyurtmalar", path: "/orders" }, 
+        { label: "Buyurtma yaratish", path: "/orders/create" },
+      ]);
+    }, [setCrumb]);
+
   return (
     <Layout page="orders">
       <CreateOrderPage />

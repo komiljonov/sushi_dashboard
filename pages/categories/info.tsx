@@ -30,6 +30,7 @@ import { Products } from "@/components/product/list";
 import { splitToHundreds } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
+import { useCrumb } from "@/lib/context/crumb-provider";
 // import HierarchyList from '@/components/category/HierarchyList';
 
 ChartJS.register(
@@ -309,6 +310,15 @@ function CategoryInfo({ category }: { category?: ICategoryWithStats }) {
 export default function Page() {
   const [activeTab, setActiveTab] = useState("category-info");
   const categoryId = getCategoryIdFromUrl();
+
+  const {setCrumb} = useCrumb()
+
+    useEffect(() => {
+        setCrumb([
+            { label: "Kategoriyalar", path: "/categories" },
+            { label: "Kategoriya ma'lumotlari", path: `/categories/info?id=${categoryId}` },
+        ])
+    }, [ setCrumb, categoryId]);
 
   const { data: category } = useQuery({
     queryKey: ["category", categoryId],

@@ -1,22 +1,21 @@
-import type { AppProps } from 'next/app';
-import '@/styles/globals.css';
-import { AuthProvider, useAuth } from '@/lib/context/Auth';
-import { LoadingProvider } from '@/lib/context/Loading';
+import type { AppProps } from "next/app";
+import "@/styles/globals.css";
+import { AuthProvider, useAuth } from "@/lib/context/Auth";
+import { LoadingProvider } from "@/lib/context/Loading";
 import { Toaster } from "@/components/ui/Toaster";
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { queryClient } from '@/lib/query';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { queryClient } from "@/lib/query";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import "leaflet/dist/leaflet.css";
 import "@/components/helpers/select-date-range.css";
+import { CrumbProvider } from "@/lib/context/crumb-provider";
 
 // Extend the AppProps type to include the authRequired flag
 type MyAppProps = AppProps & {
-  Component: AppProps['Component'] & { authRequired?: boolean };
+  Component: AppProps["Component"] & { authRequired?: boolean };
 };
-
-
 
 function MainApp({ Component, pageProps }: MyAppProps) {
   const { isAuthenticated } = useAuth();
@@ -51,13 +50,15 @@ function MainApp({ Component, pageProps }: MyAppProps) {
 function MyApp(props: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
-        <LoadingProvider>
-          <MainApp {...props} />
-          <Toaster />
-        </LoadingProvider>
-      </AuthProvider>
+      <CrumbProvider>
+        <AuthProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
+          <LoadingProvider>
+            <MainApp {...props} />
+            <Toaster />
+          </LoadingProvider>
+        </AuthProvider>
+      </CrumbProvider>
     </QueryClientProvider>
   );
 }

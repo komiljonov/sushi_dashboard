@@ -1,9 +1,15 @@
 import { Layout } from "@/components/Layout";
 import CallTaxiModal from "@/components/taxi/taxi-modal";
 import TaxiTable from "@/components/taxi/taxi-table";
-import React from "react";
+import { useCrumb } from "@/lib/context/crumb-provider";
+import React, { useEffect } from "react";
 
 const Taxi = () => {
+  const { setCrumb } = useCrumb();
+
+  useEffect(() => {
+    setCrumb([{ label: "Taksilar tarixi", path: "/taxi" }]);
+  }, [setCrumb]);
   return (
     <Layout page="taxi">
       <div className="flex flex-col gap-6 w-full">
@@ -11,7 +17,7 @@ const Taxi = () => {
           <h1 className="text-2xl font-bold">Taksilar tarixi</h1>
           <CallTaxiModal />{" "}
         </div>
-        <TaxiTable/>
+        <TaxiTable />
       </div>
     </Layout>
   );
