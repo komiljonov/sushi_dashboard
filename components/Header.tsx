@@ -16,7 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {  ChevronDown, LogOut } from "lucide-react";
+import { ChevronDown, LogOut } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/lib/context/Auth";
 import { request } from "@/lib/api";
@@ -97,15 +97,15 @@ export function Header({ collapsed, setCollapsed }: HeaderProps) {
         >
           <Image src={CrumbImage} alt="crumb" width={20} height={20} />
         </Button>
-        <Crumb/>
+        <Crumb />
       </div>
       <div className="flex items-center space-x-4">
         <Popover>
           <PopoverTrigger asChild>
             <div className="flex items-center gap-2 cursor-pointer">
-                <Image src={Logo} alt="logo" className="h-8 w-8" />
+              <Image src={Logo} alt="logo" className="h-8 w-8" />
               <p className="font-semibold">{userInfo?.name || "Admin"}</p>
-              <ChevronDown className="h-4 w-4"/>
+              <ChevronDown className="h-4 w-4" />
             </div>
           </PopoverTrigger>
           <PopoverContent className="w-56">
