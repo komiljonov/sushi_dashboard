@@ -97,7 +97,7 @@ function UserInformationCard({
               <Label className="font-normal">Telegram:</Label>
             </div>
             <Link
-              href={`https://t.me/${user.username?.substring(1)}`}
+              href={`https://t.me/${user.username?.replaceAll("@", "")}`}
               className="flex items-center text-blue-500 hover:text-blue-700 gap-2"
             >
               {user.tg_name || user.name}{" "}
