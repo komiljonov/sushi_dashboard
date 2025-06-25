@@ -20,6 +20,8 @@ import {
   // TaxiActive,
   Users,
   UsersActive,
+  Feedback,
+  FeedbackActive,
 } from "@/lib/icons";
 import { useState } from "react";
 import {
@@ -98,10 +100,16 @@ const menuItems = [
   //   icon: Taxi,
   //   page: "taxi",
   // },
+  {
+    name: "Izohlar",
+    href: "/feadbacks",
+    iconActive: FeedbackActive,
+    icon: Feedback,
+    page: "feadbacks",
+  },
 ];
 
 export function Sidebar({ collapsed, page }: SidebarProps) {
-
   return (
     <aside
       className={cn(
@@ -160,7 +168,6 @@ export function Sidebar({ collapsed, page }: SidebarProps) {
             />
           ))}
         </div>
-        
       </div>
     </aside>
   );
