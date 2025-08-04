@@ -158,7 +158,7 @@ export type IOrder = {
   products_count?: number;
   delivery_price?: number;
   promocode?: IPromocode;
-  order_time: Date;
+  order_time: string;
   time?: Date | null;
   status: string;
   price?: number;
@@ -188,7 +188,7 @@ export type IOrderList = {
   phone_number?: string;
   products_count?: number;
   promocode?: IPromocode;
-  order_time: Date;
+  order_time: string;
   time?: Date | null;
   status: string;
   price?: number;

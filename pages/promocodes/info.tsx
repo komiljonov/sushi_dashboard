@@ -224,7 +224,7 @@ function EditPromocode() {
                   <div className="space-y-1 text-sm">
                     <div className="flex items-center text-muted-foreground">
                       <CalendarIcon className="mr-1 h-4 w-4" />
-                      <span>{new Date().toLocaleDateString()}</span>
+                      <span>{order?.order_time}</span>
                     </div>
                     <Link
                       href={`/orders/info?id=${order.id}`}
@@ -257,7 +257,7 @@ export default function Page() {
       { label: "Promokodni tahrirlash", path: "/promocodes/edit" },
     ]);
   }, [setCrumb]);
-  
+
   return (
     <Layout page={"promocodes"}>
       <EditPromocode />
