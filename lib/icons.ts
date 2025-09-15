@@ -13,33 +13,37 @@ import PromocodesActive from "@/public/images/promocodes-active.svg";
 import Referrals from "@/public/images/referrals.svg";
 import ReferralsActive from "@/public/images/referrals-active.svg";
 import Logo from "@/public/images/logo2.svg";
-import AllOrders from "@/public/images/all_orders.svg"
-import OrdersToday from "@/public/images/orders-today.svg"
+import AllOrders from "@/public/images/all_orders.svg";
+import OrdersToday from "@/public/images/orders-today.svg";
 import OrdersThisMonth from "@/public/images/orders-month.svg";
 import ProfitMonth from "@/public/images/profit-month.svg";
 import Taxi from "@/public/images/taxi.svg";
-import TaxiActive from "@/public/images/taxi-active.svg"
+import TaxiActive from "@/public/images/taxi-active.svg";
+import Feedback from "@/public/images/Iconly.png";
+import FeedbackActive from "@/public/images/Star.png";
 
 export {
-    Home,
-    HomeActive,
-    Users,
-    UsersActive,
-    Orders,
-    OrdersActive,
-    Payments,
-    PaymentsActive,
-    Categories,
-    CategoriesActive,
-    Promocodes,
-    PromocodesActive,
-    Referrals,
-    ReferralsActive,
-    Logo,
-    AllOrders,
-    OrdersToday,
-    OrdersThisMonth,
-    ProfitMonth,
-    Taxi,
-    TaxiActive
+  Home,
+  HomeActive,
+  Users,
+  UsersActive,
+  Orders,
+  OrdersActive,
+  Payments,
+  PaymentsActive,
+  Categories,
+  CategoriesActive,
+  Promocodes,
+  PromocodesActive,
+  Referrals,
+  ReferralsActive,
+  Logo,
+  AllOrders,
+  OrdersToday,
+  OrdersThisMonth,
+  ProfitMonth,
+  Taxi,
+  TaxiActive,
+  Feedback,
+  FeedbackActive,
 };
