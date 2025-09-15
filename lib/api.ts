@@ -15,7 +15,7 @@ request.interceptors.request.use(
     const token = localStorage.getItem('access_token');
     // Modify the request config before sending it
     config.headers['Authorization'] = `Bearer ${token}`;
-    // config.headers["ngrok-skip-browser-warning"] = "true";
+    config.headers["ngrok-skip-browser-warning"] = "true";
     // console.log('Request Interceptor', config);
     return config;
   },

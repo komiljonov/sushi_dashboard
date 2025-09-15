@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
+// import { Input } from "@/components/ui/Input";
 import {
   Table,
   TableBody,
@@ -30,6 +30,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useCrumb } from "@/lib/context/crumb-provider";
+import AddReferralModal from "@/components/referrals/add-referral";
 
 interface IReferral {
   id: string;
@@ -45,10 +46,10 @@ const fetchReferrals = async (): Promise<IReferral[]> => {
   return data;
 };
 
-const createReferral = async (name: string) => {
-  const { data } = await request.post("referrals", { name });
-  return data;
-};
+// const createReferral = async (name: string) => {
+//   const { data } = await request.post("referrals", { name });
+//   return data;
+// };
 
 const deleteReferral = async (id: string) => {
   const { data } = await request.delete(`referrals/${id}`);
@@ -56,7 +57,7 @@ const deleteReferral = async (id: string) => {
 };
 
 function ReferralLinksCRUD() {
-  const [newReferralName, setNewReferralName] = useState("");
+  // const [newReferralName, setNewReferralName] = useState("");
   const [deleteConfirmation, setDeleteConfirmation] = useState<{
     isOpen: boolean;
     referralId: string | null;
@@ -75,16 +76,16 @@ function ReferralLinksCRUD() {
     refetchInterval: 10000,
   });
 
-  const createMutation = useMutation({
-    mutationFn: createReferral,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["referrals"] });
-      toast({
-        title: "Muvaffaqiyat",
-        description: "Referal havolasi muvaffaqiyatli yaratildi.",
-      });
-    },
-  });
+  // const createMutation = useMutation({
+  //   mutationFn: createReferral,
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: ["referrals"] });
+  //     toast({
+  //       title: "Muvaffaqiyat",
+  //       description: "Referal havolasi muvaffaqiyatli yaratildi.",
+  //     });
+  //   },
+  // });
 
   const deleteMutation = useMutation({
     mutationFn: deleteReferral,
@@ -97,19 +98,19 @@ function ReferralLinksCRUD() {
     },
   });
 
-  const handleCreateReferral = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (newReferralName.trim() === "") {
-      toast({
-        title: "Xato",
-        description: "Iltimos, referal havolasi uchun nom kiriting.",
-        variant: "destructive",
-      });
-      return;
-    }
-    createMutation.mutate(newReferralName);
-    setNewReferralName("");
-  };
+  // const handleCreateReferral = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   if (newReferralName.trim() === "") {
+  //     toast({
+  //       title: "Xato",
+  //       description: "Iltimos, referal havolasi uchun nom kiriting.",
+  //       variant: "destructive",
+  //     });
+  //     return;
+  //   }
+  //   createMutation.mutate(newReferralName);
+  //   setNewReferralName("");
+  // };
 
   const handleCopyLink = (referral: IReferral) => {
     navigator.clipboard
@@ -155,10 +156,13 @@ function ReferralLinksCRUD() {
 
   return (
     <div className="mx-auto space-y-8">
-      <h1 className="text-2xl font-bold">Referal Havolalarini Boshqarish</h1>
+      <div>
+        <h1 className="text-2xl font-bold">Referal Havolalarini Boshqarish</h1>
+        <AddReferralModal />
+      </div>
 
       <div className="p-4 rounded-xl bg-white space-y-4">
-        <form onSubmit={handleCreateReferral} className="space-y-4">
+        {/* <form onSubmit={handleCreateReferral} className="space-y-4">
           <div className="flex items-center space-x-2">
             <Input
               type="text"
@@ -169,7 +173,7 @@ function ReferralLinksCRUD() {
             />
             <Button type="submit">Havola Yaratish</Button>
           </div>
-        </form>
+        </form> */}
 
         <Table>
           <TableHeader>
