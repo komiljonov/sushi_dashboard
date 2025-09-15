@@ -1,7 +1,7 @@
 "use client";
 
-import {  useState } from "react";
-import {  useForm } from "react-hook-form";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
@@ -19,7 +19,7 @@ import React from "react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
 
-export interface ReferralData{
+export interface ReferralData {
   name: string;
   title: string;
 }
@@ -29,16 +29,16 @@ const createReferral = async (payload: ReferralData) => {
   return data;
 };
 
-
 const AddReferralModal = () => {
   const [isOpen, setIsOpen] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<ReferralData>();
 
-    const createMutation = useMutation({
+  const createMutation = useMutation({
     mutationFn: createReferral,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["referrals"] });
@@ -46,6 +46,8 @@ const AddReferralModal = () => {
         title: "Muvaffaqiyat",
         description: "Referal havolasi muvaffaqiyatli yaratildi.",
       });
+      setIsOpen(false);
+      reset();
     },
     onError: () => {
       toast({
@@ -53,13 +55,13 @@ const AddReferralModal = () => {
         description: "Referal havolasi yaratishda xatolik yuz berdi.",
         variant: "destructive",
       });
-    }
+    },
   });
 
   const onSubmit = async (data: ReferralData) => {
     createMutation.mutate({
-        name: data.name,
-        title: data.title,
+      name: data.name,
+      title: data.title,
     });
   };
 
@@ -67,7 +69,7 @@ const AddReferralModal = () => {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="button">
-          <Plus className="mr-2 w-4 h-4" /> Xodim qo'shish
+          <Plus className="mr-2 w-4 h-4" /> Referal qo'shish
         </Button>
       </DialogTrigger>
       <DialogContent className="bg-white">
@@ -76,16 +78,14 @@ const AddReferralModal = () => {
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <Label htmlFor="name">Npmi</Label>
+            <Label htmlFor="name">Nomi</Label>
             <Input
               className="input"
               id="name"
-              {...register("name", { required: "Ism kiritish shart" })}
+              {...register("name", { required: "Nomini kiritish shart" })}
             />
             {errors.name && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.name.message}
-              </p>
+              <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
             )}
           </div>
           <div>
@@ -94,7 +94,7 @@ const AddReferralModal = () => {
               className="input"
               id="title"
               {...register("title", {
-                required: "Familya kiritish shart",
+                required: "Sarlavhasini kiritish shart",
               })}
             />
             {errors.title && (
@@ -126,4 +126,3 @@ const AddReferralModal = () => {
 };
 
 export default AddReferralModal;
-

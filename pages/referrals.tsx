@@ -156,7 +156,7 @@ function ReferralLinksCRUD() {
 
   return (
     <div className="mx-auto space-y-8">
-      <div>
+      <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Referal Havolalarini Boshqarish</h1>
         <AddReferralModal />
       </div>
