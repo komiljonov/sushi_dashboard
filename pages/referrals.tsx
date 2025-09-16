@@ -39,6 +39,7 @@ interface IReferral {
   link: string;
   not_ordered_users_count: number;
   ordered_users_count: number;
+  flag: string;
 }
 
 const fetchReferrals = async (): Promise<IReferral[]> => {
@@ -157,7 +158,7 @@ function ReferralLinksCRUD() {
   return (
     <div className="mx-auto space-y-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Referal Havolalarini Boshqarish</h1>
+        <h1 className="text-2xl font-bold">UTM metka</h1>
         <AddReferralModal />
       </div>
 
@@ -180,9 +181,13 @@ function ReferralLinksCRUD() {
             <TableRow className="bg-[#F5F5F5] border-none">
               <TableHead className="rounded-l-[10px]">T/R</TableHead>
               <TableHead>Nomi</TableHead>
-              <TableHead>Foydalanuvchilar Soni</TableHead>
-              <TableHead>Buyurtma berganar</TableHead>
-              <TableHead>Buyurtma bermaganar</TableHead>
+              <TableHead>Havola</TableHead>
+              {/* <TableHead>Buyurtma berganlar</TableHead> */}
+              {/* <TableHead>Buyurtma bermaganar</TableHead> */}
+              <TableHead>Yangi foydalanuvchilar</TableHead>
+              <TableHead>Yangi foydalanuvchilar buyurtmalari</TableHead>
+              <TableHead>Qaytib kirgan foydalanuvchilar</TableHead>
+              <TableHead>Qaytib kirgan foydalanuchilar buyurtmalari</TableHead>
               <TableHead className="rounded-r-[10px]"></TableHead>
             </TableRow>
           </TableHeader>
@@ -208,8 +213,11 @@ function ReferralLinksCRUD() {
                   <TableRow key={referral.id}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{referral.name}</TableCell>
-                    <TableCell>{referral.users_count}</TableCell>
-                    <TableCell>{referral.ordered_users_count}</TableCell>
+                    {/* {/* <TableCell>{referral.users_count}</TableCell> */}
+                    <TableCell>{referral.flag}</TableCell> 
+                    <TableCell>{referral.not_ordered_users_count}</TableCell>
+                    <TableCell>{referral.not_ordered_users_count}</TableCell>
+                    <TableCell>{referral.not_ordered_users_count}</TableCell>
                     <TableCell>{referral.not_ordered_users_count}</TableCell>
                     <TableCell>
                       <div className="flex space-x-2">

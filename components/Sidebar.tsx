@@ -87,7 +87,7 @@ const menuItems = [
     page: "payments",
   },
   {
-    name: "Referallar",
+    name: "UTM metka",
     href: "/referrals",
     iconActive: ReferralsActive,
     icon: Referrals,

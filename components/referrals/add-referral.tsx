@@ -21,7 +21,7 @@ import { toast } from "@/hooks/use-toast";
 
 export interface ReferralData {
   name: string;
-  title: string;
+  flag: string;
 }
 
 const createReferral = async (payload: ReferralData) => {
@@ -61,7 +61,7 @@ const AddReferralModal = () => {
   const onSubmit = async (data: ReferralData) => {
     createMutation.mutate({
       name: data.name,
-      title: data.title,
+      flag: data.flag,
     });
   };
 
@@ -69,12 +69,12 @@ const AddReferralModal = () => {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="button">
-          <Plus className="mr-2 w-4 h-4" /> Referal qo'shish
+          <Plus className="mr-2 w-4 h-4" /> UTM metka qo'shish
         </Button>
       </DialogTrigger>
       <DialogContent className="bg-white">
         <DialogHeader>
-          <DialogTitle>Referal qo'shish</DialogTitle>
+          <DialogTitle>UTM metka qo'shish</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
@@ -93,13 +93,13 @@ const AddReferralModal = () => {
             <Input
               className="input"
               id="title"
-              {...register("title", {
+              {...register("flag", {
                 required: "Sarlavhasini kiritish shart",
               })}
             />
-            {errors.title && (
+            {errors.flag && (
               <p className="text-red-500 text-sm mt-1">
-                {errors.title.message}
+                {errors.flag.message}
               </p>
             )}
           </div>
