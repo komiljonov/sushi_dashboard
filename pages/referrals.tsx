@@ -40,6 +40,16 @@ interface IReferral {
   not_ordered_users_count: number;
   ordered_users_count: number;
   flag: string;
+  stats: ReferralStats;
+}
+
+interface ReferralStats {
+  first_users: number;
+  first_users_ordered: number;
+  not_first_users: number;
+  not_first_users_ordered: number;
+  total_ordered_users: number;
+  total_users: number;
 }
 
 const fetchReferrals = async (): Promise<IReferral[]> => {
@@ -214,11 +224,11 @@ function ReferralLinksCRUD() {
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{referral.name}</TableCell>
                     {/* {/* <TableCell>{referral.users_count}</TableCell> */}
-                    <TableCell>{referral.flag}</TableCell> 
-                    <TableCell>{referral.not_ordered_users_count}</TableCell>
-                    <TableCell>{referral.not_ordered_users_count}</TableCell>
-                    <TableCell>{referral.not_ordered_users_count}</TableCell>
-                    <TableCell>{referral.not_ordered_users_count}</TableCell>
+                    <TableCell>{referral.flag}</TableCell>
+                    <TableCell>{referral.stats?.first_users}</TableCell>
+                    <TableCell>{referral.stats?.first_users_ordered}</TableCell>
+                    <TableCell>{referral.stats?.not_first_users}</TableCell>
+                    <TableCell>{referral.stats?.not_first_users_ordered}</TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
                         <Button
