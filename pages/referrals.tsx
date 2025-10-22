@@ -172,7 +172,7 @@ function ReferralLinksCRUD() {
         <AddReferralModal />
       </div>
 
-      <div className="p-4 rounded-xl bg-white space-y-4">
+      <div className="p-4 rounded-xl bg-white space-y-4 overflow-x-auto">
         {/* <form onSubmit={handleCreateReferral} className="space-y-4">
           <div className="flex items-center space-x-2">
             <Input
@@ -186,7 +186,7 @@ function ReferralLinksCRUD() {
           </div>
         </form> */}
 
-        <Table>
+        <Table className="w-full min-w-[1200px]">
           <TableHeader>
             <TableRow className="bg-[#F5F5F5] border-none">
               <TableHead className="rounded-l-[10px]">T/R</TableHead>

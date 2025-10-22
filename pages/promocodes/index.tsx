@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-// import { Button } from "@/components/ui/Button"
-// import { Dialog } from "@/components/ui/dialog"
+// import { Button } from "@/components/ui/Button";
+// import { Dialog } from "@/components/ui/dialog";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { request } from "@/lib/api";
-// import { PromocodeForm } from "@/components/promocode/Form"
+// import { PromocodeForm } from "@/components/promocode/Form";
 import { PromocodeTable } from "@/components/promocode/Table";
 import { DeleteDialog } from "@/components/promocode/DeleteDialog";
 import { IPromocode } from "@/lib/types";
@@ -80,21 +80,7 @@ export function Promocodes() {
     <div className="mx-auto text-black">
       <h1 className="text-2xl font-bold mb-5">Promokodlar</h1>
       {/* <div className="flex justify-end mb-5"> */}
-      {/* <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>Promokod qo&apos;shish</Button>
-          </DialogTrigger>
-          <DialogContent className="bg-white">
-            <DialogHeader>
-              <DialogTitle>Promocode qo&apos;shish</DialogTitle>
-            </DialogHeader>
-            <PromocodeForm
-              onSubmit={handleCreatePromocode}
-              defaultValues={{ name_uz: "", name_ru: "", code: "", measurement: "ABSOLUTE", amount: 0, count: 0, end_date: null, min_amount: 0, max_amount: 0, is_limited: false, is_max_limited: false } as IPromocode}
-            />
-          </DialogContent>
-        </Dialog> */}
-      {/* </div> */}
+
       <CustomTabs
         triggers={[
           { title: "Faol", value: "active" },
@@ -113,14 +99,16 @@ export function Promocodes() {
           }}
         />
       </div>
-      {/* <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}> */}
+      {/* <Dialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+      ></Dialog> */}
       <DeleteDialog
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
         promocode={promocodeToDelete}
         onDelete={handleDeletePromocode}
       />
-      {/* </Dialog> */}
     </div>
   );
 }

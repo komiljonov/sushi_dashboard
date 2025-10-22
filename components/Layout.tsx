@@ -29,8 +29,7 @@ export function Layout({
           collapsed={sidebarCollapsed}
           setCollapsed={setSidebarCollapsed}
         />
-        <main className="flex-1 p-4 bg-[#F5F5F5] text-black">
-          {" "}
+        <main className="flex-1 p-4 bg-[#F5F5F5] text-black" style={{ maxWidth: `calc(100vw - ${sidebarCollapsed ? '64px' : '255px'})`, overflowY: 'auto' }}>
           {/* Main content light styling */}
           {children}
         </main>
