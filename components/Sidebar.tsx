@@ -101,6 +101,13 @@ const menuItems = [
   //   page: "taxi",
   // },
   {
+    name: "Sigmentlar",
+    href: "/sigments",
+    iconActive: CategoriesActive,
+    icon: Categories,
+    page: "sigments",
+  },
+  {
     name: "Izohlar",
     href: "/feadbacks",
     iconActive: FeedbackActive,
