@@ -14,6 +14,9 @@ import { queryClient } from "@/lib/query";
 import { fetchPromocodesType } from "@/lib/fetchers";
 import CustomTabs from "@/components/custom-tabs";
 import { useCrumb } from "@/lib/context/crumb-provider";
+import { Button } from "@/components/ui/Button";
+import { Plus } from "lucide-react";
+import { useRouter } from "next/router";
 
 // const createPromocode = async (promocode: Omit<IPromocode, "id">) => {
 
@@ -45,6 +48,7 @@ export function Promocodes() {
     queryKey: ["promocodes", selectedTab],
     queryFn: () => fetchPromocodesType(selectedTab),
   });
+  const router = useRouter();
 
   // const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -78,8 +82,16 @@ export function Promocodes() {
 
   return (
     <div className="mx-auto text-black">
-      <h1 className="text-2xl font-bold mb-5">Promokodlar</h1>
-      {/* <div className="flex justify-end mb-5"> */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Promokodlar</h1>
+
+        <Button
+          className="button"
+          onClick={() => router.push("/promocodes/create")}
+        >
+          <Plus className="mr-2 w-4 h-4" /> Promokod qo'shish
+        </Button>
+      </div>
 
       <CustomTabs
         triggers={[
