@@ -70,6 +70,7 @@ const CreatePromocodePage = () => {
     reset,
     control,
     setValue,
+    watch,
     formState: { errors },
   } = methods;
 
@@ -84,8 +85,10 @@ const CreatePromocodePage = () => {
   };
 
   const onSubmit = (data: ICreatePromocode) => {
-    mutate(data);
+    mutate({ ...data, is_active: true });
   };
+
+  const measurement = watch("measurement");
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onError)}>
@@ -185,31 +188,10 @@ const CreatePromocodePage = () => {
               )}
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="is_active">Promokod holati</Label>
-              <Select
-                value={methods.watch("is_active") ? "true" : "false"}
-                onValueChange={(value) =>
-                  setValue("is_active", value === "true")
-                }
-              >
-                <SelectTrigger className="input h-[44px]">
-                  <SelectValue placeholder="Promokod turini tanlang" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="true">Aktiv</SelectItem>
-                  <SelectItem value="false">Faol emas</SelectItem>
-                </SelectContent>
-              </Select>
-              {errors.is_active && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.is_active.message}
-                </p>
-              )}
-            </div>
-
             <div className="space-y-2 ">
-              <Label htmlFor="amount">Narxi</Label>
+              <Label htmlFor="amount">
+                {measurement === "ABSOLUTE" ? "Narxi" : "Foiz"}
+              </Label>
               <Controller
                 name="amount"
                 control={control}
@@ -221,7 +203,35 @@ const CreatePromocodePage = () => {
                   },
                 }}
                 render={({ field }) => (
-                  <CommaInput {...field} placeholder={"0"} />
+                  <CommaInput
+                    {...field}
+                    placeholder="0"
+                    maxLength={measurement === "PERCENT" ? 3 : undefined}
+                    onChange={(value) => {
+                      // allow empty while editing
+                      if (value === "" || value == null) {
+                        field.onChange("");
+                        return;
+                      }
+                      const n = Number(value);
+                      if (Number.isNaN(n)) return; // ignore invalid
+
+                      if (measurement === "PERCENT") {
+                        const next = Math.min(n, 100); // hard cap while typing
+                        field.onChange(next);
+                        setValue("amount", next, {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                      } else {
+                        field.onChange(n);
+                        setValue("amount", n, {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                      }
+                    }}
+                  />
                 )}
               />
               {errors.amount && (

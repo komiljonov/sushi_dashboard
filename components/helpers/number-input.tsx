@@ -48,7 +48,7 @@ interface CommaInputProps {
   disabled?: boolean;
   readOnly?: boolean;
   minus?: boolean;
-  maxValue?: number; // currently used as max length; rename to maxLength if that’s the intent
+  maxLength?: number; // currently used as max length; rename to maxLength if that’s the intent
   required?: string;
 }
 
@@ -58,7 +58,7 @@ const CommaInput: React.FC<CommaInputProps> = ({
   placeholder,
   disabled,
   readOnly,
-  maxValue,
+  maxLength: maxValue,
   required,
   minus,
 }) => {

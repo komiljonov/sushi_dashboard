@@ -1,4 +1,5 @@
 import { OrderItem } from "@/components/orders/create/types";
+import { IPromocodeProduct, IPromocodeProductDetails } from "./promocode.types";
 
 export interface ICategory {
   id: string;
@@ -216,8 +217,7 @@ export type PaginatedResponse<T> = {
   results: T[]; // List of orders for the current page
 };
 
-export type PaginatedOrderResponse = PaginatedResponse<IOrderList>
-
+export type PaginatedOrderResponse = PaginatedResponse<IOrderList>;
 
 type IOrderArray = Array<IOrderList>;
 
@@ -242,6 +242,7 @@ export type IPromocode<T = IOrderArray> = {
   total_sold: number;
 
   orders: T;
+  promocode_products: IPromocodeProductDetails[] | IPromocodeProduct[];
 };
 
 export interface IFilial {
@@ -257,8 +258,8 @@ export interface ITaxi {
   car_model: string;
   car_color: string;
   car_number: string;
-  car_mark: string
-  state_kind: string
+  car_mark: string;
+  state_kind: string;
   total_sum: number;
   driver_phone_number: string;
   source_lat: number;
@@ -361,4 +362,4 @@ export interface ITaxiCallForm {
   after: number;
 }
 
-export type PaginatedTaxi = PaginatedResponse<ITaxi>
+export type PaginatedTaxi = PaginatedResponse<ITaxi>;

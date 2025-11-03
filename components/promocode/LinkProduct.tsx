@@ -111,15 +111,15 @@ const LinkProduct: React.FC<ILinkProductProps> = ({ setPromocodeProducts }) => {
               <div className="col-span-4 flex items-center gap-2">
                 <Image
                   src={
-                    (field._product.image as IFile)?.file ||
+                    (field._product?.image as IFile)?.file ||
                     "/images/no_image.png"
                   }
-                  alt={field._product.name_uz}
+                  alt={field._product?.name_uz}
                   width={40}
                   height={40}
                   className="w-12 h-12 rounded-lg object-cover"
                 />
-                <span>{field._product.name_uz}</span>
+                <span>{field._product?.name_uz}</span>
               </div>
               <div className="flex items-center gap-4">
                 <div>

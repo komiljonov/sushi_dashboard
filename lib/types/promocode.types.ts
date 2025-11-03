@@ -1,5 +1,13 @@
+import { IProduct } from ".";
+
 export interface IPromocodeProduct {
   product: string;
+  quantity: number;
+}
+
+export interface IPromocodeProductDetails {
+  product: IProduct;
+  id: string;
   quantity: number;
 }
 

@@ -26,6 +26,7 @@ import { queryClient } from "@/lib/query";
 import { splitToHundreds } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { useCrumb } from "@/lib/context/crumb-provider";
+import { IPromocodeProductDetails } from "@/lib/types/promocode.types";
 
 const getCategoryIdFromUrl = (): string | null => {
   if (typeof window !== "undefined") {
@@ -151,7 +152,12 @@ function EditPromocode() {
             ) : (
               <PromocodeForm
                 onSubmit={handleSave}
-                defaultValues={promocode as Omit<IPromocode, "id">}
+                defaultValues={{...promocode, items: (promocode?.promocode_products as IPromocodeProductDetails[])?.map(item=> ({
+                  id: item?.id,
+                  product: item?.product?.id,
+                  _product: item?.product,
+                  quantity: item?.quantity
+                }))} as Omit<IPromocode, "id">}
               />
             )}
             <Card className="mt-6">
