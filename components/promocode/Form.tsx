@@ -42,15 +42,12 @@ export const PromocodeForm = ({
     formState: { errors },
     control,
     setValue,
-    reset
+    reset,
   } = form;
 
   useEffect(() => {
-    reset({...defaultValues});
+    reset({ ...defaultValues });
   }, [defaultValues, reset]);
-
-  console.log(defaultValues.amount);
-  
 
   const measurement = watch("measurement");
   const is_limited = watch("is_limited");
@@ -120,6 +117,9 @@ export const PromocodeForm = ({
                   <SelectContent>
                     <SelectItem value="ABSOLUTE">Absolute</SelectItem>
                     <SelectItem value="PERCENT">Foiz</SelectItem>
+                    <SelectItem value="GIFT_PRODUCT">
+                      Sovg'aga mahsulot berish
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               )}
@@ -130,18 +130,21 @@ export const PromocodeForm = ({
               </p>
             )}
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="amount">Miqdor</Label>
-             <Controller
+          {measurement !== "GIFT_PRODUCT" && (
+            <div className="space-y-2">
+              <Label htmlFor="amount">Miqdor</Label>
+              <Controller
                 name="amount"
                 control={control}
-                rules={{
-                  required: "Promokod narxi kiritish majburiy",
-                  min: {
-                    value: 1,
-                    message: "Narxi 0 dan katta bo‘lishi kerak",
-                  },
-                }}
+                rules={
+                  {
+                    // required: measurement === "GIFT_PRODUCT" ? false : "Promokod narxi kiritish majburiy",
+                    // min: {
+                    //   value: 1,
+                    //   message: "Narxi 0 dan katta bo‘lishi kerak",
+                    // },
+                  }
+                }
                 render={({ field }) => (
                   <CommaInput
                     {...field}
@@ -175,12 +178,13 @@ export const PromocodeForm = ({
                 )}
               />
 
-            {errors.amount && (
-              <p className="text-red-500 text-sm" id="amount-error">
-                {errors.amount.message}
-              </p>
-            )}
-          </div>
+              {errors.amount && (
+                <p className="text-red-500 text-sm" id="amount-error">
+                  {errors.amount.message}
+                </p>
+              )}
+            </div>
+          )}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
@@ -319,11 +323,13 @@ export const PromocodeForm = ({
           </div>
         )}
 
-        <LinkProduct
-          setPromocodeProducts={(products) =>
-            setValue("promocode_products", products)
-          }
-        />
+        {measurement === "GIFT_PRODUCT" && (
+          <LinkProduct
+            setPromocodeProducts={(products) =>
+              setValue("promocode_products", products)
+            }
+          />
+        )}
 
         <Button type="submit" className="w-full">
           O&apos;zgarishlarni saqlash

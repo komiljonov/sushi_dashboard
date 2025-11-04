@@ -226,7 +226,7 @@ export type IPromocode<T = IOrderArray> = {
   name_uz: string;
   name_ru: string;
   code: string;
-  measurement: "ABSOLUTE" | "PERCENT";
+  measurement: "ABSOLUTE" | "PERCENT" | "GIFT_PRODUCT";
   amount: number;
   count: number;
   end_date: Date | string | null;

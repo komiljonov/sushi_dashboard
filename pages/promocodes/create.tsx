@@ -179,6 +179,9 @@ const CreatePromocodePage = () => {
                 <SelectContent>
                   <SelectItem value="ABSOLUTE">Absolut</SelectItem>
                   <SelectItem value="PERCENT">Foiz</SelectItem>
+                  <SelectItem value="GIFT_PRODUCT">
+                    Sovg'aga mahsulot berish
+                  </SelectItem>
                 </SelectContent>
               </Select>
               {errors.measurement && (
@@ -187,59 +190,60 @@ const CreatePromocodePage = () => {
                 </p>
               )}
             </div>
+            {measurement !== "GIFT_PRODUCT" && (
+              <div className="space-y-2 ">
+                <Label htmlFor="amount">
+                  {measurement === "ABSOLUTE" ? "Narxi" : "Foiz"}
+                </Label>
+                <Controller
+                  name="amount"
+                  control={control}
+                  rules={{
+                    required: "Promokod narxi kiritish majburiy",
+                    min: {
+                      value: 1,
+                      message: "Narxi 0 dan katta bo‘lishi kerak",
+                    },
+                  }}
+                  render={({ field }) => (
+                    <CommaInput
+                      {...field}
+                      placeholder="0"
+                      maxLength={measurement === "PERCENT" ? 3 : undefined}
+                      onChange={(value) => {
+                        // allow empty while editing
+                        if (value === "" || value == null) {
+                          field.onChange("");
+                          return;
+                        }
+                        const n = Number(value);
+                        if (Number.isNaN(n)) return; // ignore invalid
 
-            <div className="space-y-2 ">
-              <Label htmlFor="amount">
-                {measurement === "ABSOLUTE" ? "Narxi" : "Foiz"}
-              </Label>
-              <Controller
-                name="amount"
-                control={control}
-                rules={{
-                  required: "Promokod narxi kiritish majburiy",
-                  min: {
-                    value: 1,
-                    message: "Narxi 0 dan katta bo‘lishi kerak",
-                  },
-                }}
-                render={({ field }) => (
-                  <CommaInput
-                    {...field}
-                    placeholder="0"
-                    maxLength={measurement === "PERCENT" ? 3 : undefined}
-                    onChange={(value) => {
-                      // allow empty while editing
-                      if (value === "" || value == null) {
-                        field.onChange("");
-                        return;
-                      }
-                      const n = Number(value);
-                      if (Number.isNaN(n)) return; // ignore invalid
-
-                      if (measurement === "PERCENT") {
-                        const next = Math.min(n, 100); // hard cap while typing
-                        field.onChange(next);
-                        setValue("amount", next, {
-                          shouldDirty: true,
-                          shouldValidate: true,
-                        });
-                      } else {
-                        field.onChange(n);
-                        setValue("amount", n, {
-                          shouldDirty: true,
-                          shouldValidate: true,
-                        });
-                      }
-                    }}
-                  />
+                        if (measurement === "PERCENT") {
+                          const next = Math.min(n, 100); // hard cap while typing
+                          field.onChange(next);
+                          setValue("amount", next, {
+                            shouldDirty: true,
+                            shouldValidate: true,
+                          });
+                        } else {
+                          field.onChange(n);
+                          setValue("amount", n, {
+                            shouldDirty: true,
+                            shouldValidate: true,
+                          });
+                        }
+                      }}
+                    />
+                  )}
+                />
+                {errors.amount && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.amount.message}
+                  </p>
                 )}
-              />
-              {errors.amount && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.amount.message}
-                </p>
-              )}
-            </div>
+              </div>
+            )}
 
             <div className="space-y-2 ">
               <Label htmlFor="count">Soni</Label>
@@ -298,11 +302,13 @@ const CreatePromocodePage = () => {
               />
             </div>
 
-            <LinkProduct
-              setPromocodeProducts={(products) =>
-                setValue("promocode_products", products)
-              }
-            />
+            {measurement === "GIFT_PRODUCT" && (
+              <LinkProduct
+                setPromocodeProducts={(products) =>
+                  setValue("promocode_products", products)
+                }
+              />
+            )}
           </div>
         </div>
       </FormProvider>
