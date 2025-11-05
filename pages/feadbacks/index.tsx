@@ -25,6 +25,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { IUser } from "@/lib/types";
+import { format } from "date-fns";
 
 interface Ifeedback {
   id: string;
@@ -36,6 +37,7 @@ interface Ifeedback {
   comment: string;
   user: IUser;
   service: Iservice;
+  created_at: string;
 }
 
 interface Iservice {
@@ -89,8 +91,9 @@ export function Index() {
             <TableRow className="bg-[#F5F5F5] border-none">
               <TableHead className="rounded-l-[10px]">T/R</TableHead>
               <TableHead>Foydalanuvchi ismi</TableHead>
-              <TableHead>Xizmat</TableHead>
+              <TableHead>Foydalanuvchi raqami</TableHead>
               <TableHead>Izoh</TableHead>
+              <TableHead>Vaqti</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -109,14 +112,18 @@ export function Index() {
                     <TableCell>
                       <Skeleton className="h-4 w-[100px]" />
                     </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-[100px]" />
+                    </TableCell>
                   </TableRow>
                 ))
               : feedbacks?.map((feedback, index) => (
                   <TableRow key={feedback.id}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{feedback?.user?.name}</TableCell>
-                    <TableCell>{feedback?.service?.name_uz}</TableCell>
+                    <TableCell>{feedback?.user?.number}</TableCell>
                     <TableCell className="max-w-[500px]">{feedback?.comment}</TableCell>
+                    <TableCell >{format(new Date(feedback?.created_at), "dd.MM.yyyy | HH:mm")}</TableCell>
                   </TableRow>
                 ))}
           </TableBody>
