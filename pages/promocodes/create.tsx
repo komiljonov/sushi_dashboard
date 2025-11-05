@@ -17,6 +17,7 @@ import { createPromocode } from "@/lib/actions/promocodes.action";
 import { useCrumb } from "@/lib/context/crumb-provider";
 import { ICreatePromocode } from "@/lib/types/promocode.types";
 import { useMutation } from "@tanstack/react-query";
+import { format } from "date-fns";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import {
@@ -85,7 +86,7 @@ const CreatePromocodePage = () => {
   };
 
   const onSubmit = (data: ICreatePromocode) => {
-    mutate({ ...data, is_active: true });
+    mutate({ ...data, is_active: true, end_date: format(new Date(data.end_date), "yyyy-MM-dd") });
   };
 
   const measurement = watch("measurement");

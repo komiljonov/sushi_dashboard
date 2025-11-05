@@ -230,7 +230,7 @@ export type IPromocode<T = IOrderArray> = {
   amount: number;
   count: number;
   end_date: Date | string | null;
-
+  products_count: number;
   min_amount: number;
   max_amount: number;
   is_active: boolean;
