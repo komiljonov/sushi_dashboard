@@ -100,13 +100,13 @@ const menuItems = [
   //   icon: Taxi,
   //   page: "taxi",
   // },
-  // {
-  //   name: "Sigmentlar",
-  //   href: "/sigments",
-  //   iconActive: CategoriesActive,
-  //   icon: Categories,
-  //   page: "sigments",
-  // },
+  {
+    name: "Sigmentlar",
+    href: "/sigments",
+    iconActive: CategoriesActive,
+    icon: Categories,
+    page: "sigments",
+  },
   {
     name: "Izohlar",
     href: "/feadbacks",

@@ -27,9 +27,10 @@ interface ISigmentsForm {
   max_orders: number | "";
 }
 
-const SigmentsModal = () => {
+const SigmentsAddModal = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
+
   const {
     register,
     handleSubmit,
@@ -45,22 +46,21 @@ const SigmentsModal = () => {
     },
   });
 
-  const { mutate, isPending } = useMutation({
+  const { mutate: createMutation, isPending: isCreating } = useMutation({
     mutationFn: createSigment,
     onSuccess: () => {
-      setIsOpen(false);
       queryClient.invalidateQueries({ queryKey: ["sigments"] });
       toast({
         title: "Muvaffaqiyatli",
         description: "Sigment muvaffaqiyatli yaratildi",
       });
-
+      setIsOpen(false);
       reset();
     },
   });
 
   const onSubmit = (data: ISigmentsForm) => {
-    mutate({
+    createMutation({
       name: data.name,
       days: Number(data.days),
       min_orders: Number(data.min_orders),
@@ -75,16 +75,18 @@ const SigmentsModal = () => {
           <Plus className="mr-2 w-4 h-4" /> Sigment qo'shish
         </Button>
       </DialogTrigger>
+
       <DialogContent className="bg-white">
         <DialogHeader>
           <DialogTitle>Sigment qo'shish</DialogTitle>
         </DialogHeader>
+
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <Label htmlFor="name">Nomi</Label>
             <Input
-              className="input"
               id="name"
+              className="input"
               {...register("name", { required: "Ism kiritish shart" })}
             />
             {errors.name && (
@@ -95,9 +97,9 @@ const SigmentsModal = () => {
           <div>
             <Label htmlFor="days">Oxirgi nechi kun</Label>
             <Input
-              className="input"
               id="days"
               type="number"
+              className="input"
               {...register("days", {
                 required: "Oxirgi nechi kun kiritish shart",
                 valueAsNumber: true,
@@ -167,7 +169,7 @@ const SigmentsModal = () => {
             <Button
               type="submit"
               className="w-full hover:bg-green-600 bg-[#0EA60A] button"
-              disabled={isPending}
+              disabled={isCreating}
             >
               Qo&apos;shish
             </Button>
@@ -178,4 +180,4 @@ const SigmentsModal = () => {
   );
 };
 
-export default SigmentsModal;
+export default SigmentsAddModal;

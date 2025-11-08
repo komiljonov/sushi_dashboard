@@ -1,9 +1,8 @@
 export interface ISigment {
-  id?: number;
+  id: string;
   name: string;
   day: number;
-  range_from: number;
-  range_to: number;
-  from_to: string;
-  users?: number;
+  min_orders: number;
+  max_orders: number;
+  users_count: number;
 }

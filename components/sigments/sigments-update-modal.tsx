@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -12,13 +12,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus } from "lucide-react";
+import { Edit } from "lucide-react";
 import React from "react";
 import CommaInput from "../helpers/number-input";
 import { useMutation } from "@tanstack/react-query";
-import { createSigment } from "@/lib/actions/sigments.action";
+import { updateSigment } from "@/lib/actions/sigments.action";
 import { queryClient } from "@/lib/query";
 import { useToast } from "@/hooks/use-toast";
+import { ISigment } from "@/lib/types/sigments.types";
 
 interface ISigmentsForm {
   name: string;
@@ -27,64 +28,69 @@ interface ISigmentsForm {
   max_orders: number | "";
 }
 
-const SigmentsModal = () => {
+const SigmentsUpdateModal = ({ sigment }: { sigment: ISigment }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
     control,
-  } = useForm<ISigmentsForm>({
-    defaultValues: {
-      name: "",
-      days: "",
-      min_orders: "",
-      max_orders: "",
-    },
-  });
+  } = useForm<ISigmentsForm>();
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: createSigment,
+  useEffect(() => {
+    if (sigment) {
+      reset({
+        name: sigment.name,
+        days: sigment.day,
+        min_orders: sigment.min_orders,
+        max_orders: sigment.max_orders,
+      });
+    }
+  }, [sigment, reset]);
+
+  const { mutate: updateMutation, isPending: isUpdating } = useMutation({
+    mutationFn: (data: ISigmentsForm) =>
+      updateSigment(sigment.id, {
+        name: data.name,
+        days: Number(data.days),
+        min_orders: Number(data.min_orders),
+        max_orders: Number(data.max_orders),
+      }),
     onSuccess: () => {
-      setIsOpen(false);
       queryClient.invalidateQueries({ queryKey: ["sigments"] });
       toast({
-        title: "Muvaffaqiyatli",
-        description: "Sigment muvaffaqiyatli yaratildi",
+        title: "Yangilandi",
+        description: "Sigment muvaffaqiyatli yangilandi",
       });
-
+      setIsOpen(false);
       reset();
     },
   });
 
-  const onSubmit = (data: ISigmentsForm) => {
-    mutate({
-      name: data.name,
-      days: Number(data.days),
-      min_orders: Number(data.min_orders),
-      max_orders: Number(data.max_orders),
-    });
-  };
+  const onSubmit = (data: ISigmentsForm) => updateMutation(data);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="button">
-          <Plus className="mr-2 w-4 h-4" /> Sigment qo'shish
+        <Button variant="outline" size="icon">
+          <Edit className="h-4 w-4" />
         </Button>
       </DialogTrigger>
+
       <DialogContent className="bg-white">
         <DialogHeader>
-          <DialogTitle>Sigment qo'shish</DialogTitle>
+          <DialogTitle>Sigmentni tahrirlash</DialogTitle>
         </DialogHeader>
+
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <Label htmlFor="name">Nomi</Label>
             <Input
-              className="input"
               id="name"
+              className="input"
               {...register("name", { required: "Ism kiritish shart" })}
             />
             {errors.name && (
@@ -95,9 +101,9 @@ const SigmentsModal = () => {
           <div>
             <Label htmlFor="days">Oxirgi nechi kun</Label>
             <Input
-              className="input"
               id="days"
               type="number"
+              className="input"
               {...register("days", {
                 required: "Oxirgi nechi kun kiritish shart",
                 valueAsNumber: true,
@@ -160,16 +166,16 @@ const SigmentsModal = () => {
             <Button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="w-full bg-[#F5F5F5] button hover:bg-gray-100 text-black shadow-none"
+              className="w-full bg-[#F5F5F5] hover:bg-gray-100 text-black shadow-none"
             >
               Bekor qilish
             </Button>
             <Button
               type="submit"
-              className="w-full hover:bg-green-600 bg-[#0EA60A] button"
-              disabled={isPending}
+              className="w-full hover:bg-green-600 bg-[#0EA60A]"
+              disabled={isUpdating}
             >
-              Qo&apos;shish
+              Yangilash
             </Button>
           </div>
         </form>
@@ -178,4 +184,4 @@ const SigmentsModal = () => {
   );
 };
 
-export default SigmentsModal;
+export default SigmentsUpdateModal;
