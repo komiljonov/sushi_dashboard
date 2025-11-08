@@ -69,61 +69,63 @@ const SigmentsTable = ({ sigments }: SigmentsTableProps) => {
 
   return (
     <>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Nomi</TableHead>
-            <TableHead>Oxirgi nechi kun</TableHead>
-            <TableHead>Foydalanuvchilar diapazoni</TableHead>
-            <TableHead>Soni</TableHead>
-            <TableHead>Amallar</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {sigments === undefined
-            ? [...Array(5)].map((_, index) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    <Skeleton className="h-4 w-[100px]" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-4 w-[80px]" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-4 w-[60px]" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-4 w-[40px]" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-10 w-[180px]" />
-                  </TableCell>
-                </TableRow>
-              ))
-            : sigments.map((sigment) => (
-                <TableRow key={sigment.id}>
-                  <TableCell>{sigment.name}</TableCell>
-                  <TableCell>{sigment.day}</TableCell>
-                  <TableCell>
-                    {sigment.min_orders} - {sigment.max_orders}
-                  </TableCell>
-                  <TableCell>{sigment.users_count}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center space-x-2">
-                      <SigmentsUpdateModal sigment={sigment} />
-                      <Button
-                        variant="destructive"
-                        size="icon"
-                        onClick={() => handleOpenDeleteDialog(sigment)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-        </TableBody>
-      </Table>
+      <div className="p-4 rounded-2xl bg-white">
+        <Table>
+          <TableHeader>
+            <TableRow className="border-none h-[50px] bg-[#F5F5F5]">
+              <TableHead>Nomi</TableHead>
+              <TableHead>Oxirgi nechi kun</TableHead>
+              <TableHead>Foydalanuvchilar diapazoni</TableHead>
+              <TableHead>Soni</TableHead>
+              <TableHead>Amallar</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {sigments === undefined
+              ? [...Array(5)].map((_, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <Skeleton className="h-4 w-[100px]" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-[80px]" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-[60px]" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-[40px]" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-10 w-[180px]" />
+                    </TableCell>
+                  </TableRow>
+                ))
+              : sigments.map((sigment) => (
+                  <TableRow key={sigment.id}>
+                    <TableCell>{sigment.name}</TableCell>
+                    <TableCell>{sigment.day}</TableCell>
+                    <TableCell>
+                      {sigment.min_orders} - {sigment.max_orders}
+                    </TableCell>
+                    <TableCell>{sigment.users_count}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center space-x-2">
+                        <SigmentsUpdateModal sigment={sigment} />
+                        <Button
+                          variant="destructive"
+                          size="icon"
+                          onClick={() => handleOpenDeleteDialog(sigment)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+          </TableBody>
+        </Table>
+      </div>
 
       <AlertDialog
         open={showDeleteDialog}
