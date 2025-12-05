@@ -339,7 +339,7 @@ function EnhancedPaymentListing() {
                     )}
                   </TableCell>
                   <TableCell>
-                    {splitToHundreds(payment.amount / 100)} so&apos;m
+                    {splitToHundreds(payment.provider === "CLICK" ? payment.amount : payment.amount / 100)} so&apos;m
                   </TableCell>
                 </TableRow>
               ))}
