@@ -1,71 +1,128 @@
 "use client";
 
-import { GoogleMap, LoadScript, HeatmapLayer } from "@react-google-maps/api";
-import { useState, useEffect } from "react";
+import { GoogleMap, LoadScript } from "@react-google-maps/api";
+import {
+  MarkerClusterer,
+  SuperClusterAlgorithm,
+} from "@googlemaps/markerclusterer";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchOrderLocations } from "@/lib/actions/stats.actions";
 
-const mapContainerStyle = {
-  width: "100%",
-  height: "500px",
-};
+const mapContainerStyle = { width: "100%", height: "1000px" };
+const center = { lat: 41.3111, lng: 69.2797 };
 
-const center = {
-  lat: 41.3111, // Centered in Tashkent
-  lng: 69.2797,
-};
+type Coord = { latitude: number; longitude: number };
 
-const coords = [
-  { lat: 41.3111, long: 69.2797, radius: 1 },
-  { lat: 39.6545, long: 66.9759, radius: 3 },
-  { lat: 40.1033, long: 65.3683, radius: 5 },
-  { lat: 37.5731, long: 67.0, radius: 30 },
-  { lat: 40.786, long: 72.3119, radius: 35 },
-  { lat: 41.55, long: 60.6333, radius: 20 },
-  { lat: 38.8367, long: 65.7931, radius: 45 },
-  { lat: 40.3777, long: 71.7889, radius: 10 },
-  { lat: 40.1221, long: 67.828, radius: 20 },
-  { lat: 39.775, long: 64.425, radius: 50 },
-];
+export default function MapWithClusters() {
+  const [radius, setRadius] = useState(80);
 
-const Heatmap = () => {
-  const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [heatMapData, setHeatMapData] = useState<google.maps.LatLng[]>([]);
+  const mapRef = useRef<google.maps.Map | null>(null);
+  const markersRef = useRef<google.maps.Marker[]>([]);
+  const clustererRef = useRef<MarkerClusterer | null>(null);
 
+  const { data: coords } = useQuery<Coord[]>({
+    queryKey: ["order-locations"],
+    queryFn: fetchOrderLocations,
+  });
+
+  // Create markers once (when coords arrive)
   useEffect(() => {
-    if (typeof window !== "undefined" && window.google) {
-      setHeatMapData(
-        coords.map((coord) => new google.maps.LatLng(coord.lat, coord.long))
+    if (!coords || coords.length === 0) return;
+    if (!(window).google) return;
+
+    // clear old markers
+    markersRef.current.forEach((m) => m.setMap(null));
+    markersRef.current = coords
+      // .filter(
+      //   (p) =>
+      //     Number.isFinite(p.latitude) &&
+      //     Number.isFinite(p.longitude) &&
+      //     Math.abs(p.latitude) <= 90 &&
+      //     Math.abs(p.longitude) <= 180
+      // )
+      .map(
+        (p) =>
+          new google.maps.Marker({
+            position: { lat: p.latitude, lng: p.longitude },
+          })
       );
-    }
+  }, [coords]);
+
+  const algorithm = useMemo(
+    () =>
+      new SuperClusterAlgorithm({
+        radius,
+        maxZoom: 17,
+      }),
+    [radius]
+  );
+
+  // (Re)build clusterer whenever radius changes (or map/markers ready)
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    if (!markersRef.current.length) return;
+
+    clustererRef.current?.clearMarkers();
+
+    clustererRef.current = new MarkerClusterer({
+      map,
+      markers: markersRef.current,
+      algorithm,
+    });
+  }, [algorithm]);
+
+  // cleanup on unmount
+  useEffect(() => {
+    return () => {
+      clustererRef.current?.clearMarkers();
+      markersRef.current.forEach((m) => m.setMap(null));
+    };
   }, []);
 
   return (
-    <LoadScript
-      googleMapsApiKey="AIzaSyDWszbdg491237CN57Xk4bE4E50Ve-Wk00"
-      libraries={["visualization"]}
-      onLoad={() => {
-        setHeatMapData(
-          coords.map((coord) => new google.maps.LatLng(coord.lat, coord.long))
-        );
-      }}
-    >
-      <GoogleMap
-        mapContainerStyle={mapContainerStyle}
-        center={center}
-        zoom={6}
-        onLoad={setMap}
+    <div style={{ position: "relative" }}>
+      {/* slider UI */}
+      <div
+        style={{
+          position: "absolute",
+          zIndex: 10,
+          top: 12,
+          left: 12,
+          background: "white",
+          padding: 12,
+          borderRadius: 10,
+          boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
+          width: 260,
+        }}
       >
-        {map && heatMapData.length > 0 && (
-          <HeatmapLayer
-            data={heatMapData}
-            options={{
-              radius: 30,
-              opacity: 0.7,
+        <div style={{ fontSize: 14, marginBottom: 8 }}>
+          Cluster radius: <b>{radius}</b>
+        </div>
+        <input
+          type="range"
+          min={20}
+          max={250}
+          step={5}
+          value={radius}
+          onChange={(e) => setRadius(Number(e.target.value))}
+          style={{ width: "100%" }}
+        />
+      </div>
+
+      {coords && (
+        <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""}>
+          <GoogleMap
+            mapContainerStyle={mapContainerStyle}
+            center={center}
+            zoom={12}
+            onLoad={(map) => {
+              mapRef.current = map;
             }}
           />
-        )}
-      </GoogleMap>
-    </LoadScript>
+        </LoadScript>
+      )}
+    </div>
   );
-};
-
-export default Heatmap;
+}

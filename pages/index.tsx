@@ -22,6 +22,7 @@ import { useDateFilterStore } from "@/lib/context/date-store";
 import SelectCoupleDate from "@/components/helpers/select-date-range";
 import { useCrumb } from "@/lib/context/crumb-provider";
 import { useEffect } from "react";
+import Heatmap from "@/components/home/heatmap";
 
 const fetchStatistics = async (
   start: string,
@@ -123,6 +124,7 @@ function EnhancedAnalyticsDashboard() {
           <StatisticsModal />
         </div>
       </div>
+      <Heatmap />
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 w-full">
         {orderStats.map((stat) => (
           <OrderStatsCard
