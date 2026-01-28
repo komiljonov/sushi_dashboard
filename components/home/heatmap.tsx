@@ -16,6 +16,7 @@ type Coord = { latitude: number; longitude: number };
 
 export default function MapWithClusters() {
   const [radius, setRadius] = useState(80);
+  const [mapsReady, setMapsReady] = useState(false);
 
   const mapRef = useRef<google.maps.Map | null>(null);
   const markersRef = useRef<google.maps.Marker[]>([]);
@@ -26,29 +27,6 @@ export default function MapWithClusters() {
     queryFn: fetchOrderLocations,
   });
 
-  // Create markers once (when coords arrive)
-  useEffect(() => {
-    if (!coords || coords.length === 0) return;
-    if (!(window).google) return;
-
-    // clear old markers
-    markersRef.current.forEach((m) => m.setMap(null));
-    markersRef.current = coords
-      // .filter(
-      //   (p) =>
-      //     Number.isFinite(p.latitude) &&
-      //     Number.isFinite(p.longitude) &&
-      //     Math.abs(p.latitude) <= 90 &&
-      //     Math.abs(p.longitude) <= 180
-      // )
-      .map(
-        (p) =>
-          new google.maps.Marker({
-            position: { lat: p.latitude, lng: p.longitude },
-          })
-      );
-  }, [coords]);
-
   const algorithm = useMemo(
     () =>
       new SuperClusterAlgorithm({
@@ -58,22 +36,34 @@ export default function MapWithClusters() {
     [radius]
   );
 
-  // (Re)build clusterer whenever radius changes (or map/markers ready)
+  // Create markers + (re)cluster when: maps script ready + map ready + coords ready + radius changed
   useEffect(() => {
+    if (!mapsReady) return;
     const map = mapRef.current;
     if (!map) return;
-    if (!markersRef.current.length) return;
+    if (!coords || coords.length === 0) return;
 
+    // clear previous
     clustererRef.current?.clearMarkers();
+    markersRef.current.forEach((m) => m.setMap(null));
+    markersRef.current = [];
+
+    // build markers (now google exists for sure)
+    markersRef.current = coords.map(
+      (p) =>
+        new google.maps.Marker({
+          position: { lat: p.latitude, lng: p.longitude },
+        })
+    );
 
     clustererRef.current = new MarkerClusterer({
       map,
       markers: markersRef.current,
       algorithm,
     });
-  }, [algorithm]);
+  }, [mapsReady, coords, algorithm]);
 
-  // cleanup on unmount
+  // cleanup
   useEffect(() => {
     return () => {
       clustererRef.current?.clearMarkers();
@@ -81,9 +71,10 @@ export default function MapWithClusters() {
     };
   }, []);
 
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
+
   return (
     <div style={{ position: "relative" }}>
-      {/* slider UI */}
       <div
         style={{
           position: "absolute",
@@ -111,18 +102,16 @@ export default function MapWithClusters() {
         />
       </div>
 
-      {coords && (
-        <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""}>
-          <GoogleMap
-            mapContainerStyle={mapContainerStyle}
-            center={center}
-            zoom={12}
-            onLoad={(map) => {
-              mapRef.current = map;
-            }}
-          />
-        </LoadScript>
-      )}
+      <LoadScript googleMapsApiKey={apiKey} onLoad={() => setMapsReady(true)}>
+        <GoogleMap
+          mapContainerStyle={mapContainerStyle}
+          center={center}
+          zoom={12}
+          onLoad={(map) => {
+            mapRef.current = map;
+          }}
+        />
+      </LoadScript>
     </div>
   );
 }
