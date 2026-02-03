@@ -1,6 +1,6 @@
 "use client";
 
-import { GoogleMap, LoadScript } from "@react-google-maps/api";
+import { GoogleMap, LoadScript, InfoWindow } from "@react-google-maps/api";
 import {
   MarkerClusterer,
   SuperClusterAlgorithm,
@@ -9,22 +9,38 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchOrderLocations } from "@/lib/actions/stats.actions";
 
-const mapContainerStyle = { width: "100%", height: "1000px" };
+const mapContainerStyle = { width: "100%", height: "70vh" };
 const center = { lat: 41.3111, lng: 69.2797 };
 
-type Coord = { latitude: number; longitude: number };
+type Coord = {
+  latitude: number;
+  longitude: number;
+  address: string;
+  // xohlasang keyin qo‘shasan:
+  // orderId?: string;
+  // count?: number;
+};
 
-export default function MapWithClusters() {
+export default function MapWithClusters({
+  from,
+  to,
+}: {
+  from: string;
+  to: string;
+}) {
   const [radius, setRadius] = useState(80);
   const [mapsReady, setMapsReady] = useState(false);
+
+  // ✅ selected marker details
+  const [selected, setSelected] = useState<Coord | null>(null);
 
   const mapRef = useRef<google.maps.Map | null>(null);
   const markersRef = useRef<google.maps.Marker[]>([]);
   const clustererRef = useRef<MarkerClusterer | null>(null);
 
   const { data: coords } = useQuery<Coord[]>({
-    queryKey: ["order-locations"],
-    queryFn: fetchOrderLocations,
+    queryKey: ["order-locations", from, to],
+    queryFn: () => fetchOrderLocations({ from, to }),
   });
 
   const algorithm = useMemo(
@@ -33,10 +49,9 @@ export default function MapWithClusters() {
         radius,
         maxZoom: 17,
       }),
-    [radius]
+    [radius],
   );
 
-  // Create markers + (re)cluster when: maps script ready + map ready + coords ready + radius changed
   useEffect(() => {
     if (!mapsReady) return;
     const map = mapRef.current;
@@ -48,13 +63,21 @@ export default function MapWithClusters() {
     markersRef.current.forEach((m) => m.setMap(null));
     markersRef.current = [];
 
-    // build markers (now google exists for sure)
-    markersRef.current = coords.map(
-      (p) =>
-        new google.maps.Marker({
-          position: { lat: p.latitude, lng: p.longitude },
-        })
-    );
+    // build markers
+    markersRef.current = coords.map((p) => {
+      const marker = new google.maps.Marker({
+        position: { lat: p.latitude, lng: p.longitude },
+        title: p.address,
+      });
+
+      // ✅ click -> open details (InfoWindow + side panel)
+      marker.addListener("click", () => {
+        setSelected(p);
+        map.panTo({ lat: p.latitude, lng: p.longitude });
+      });
+
+      return marker;
+    });
 
     clustererRef.current = new MarkerClusterer({
       map,
@@ -75,6 +98,7 @@ export default function MapWithClusters() {
 
   return (
     <div style={{ position: "relative" }}>
+      {/* radius slider */}
       <div
         style={{
           position: "absolute",
@@ -102,16 +126,34 @@ export default function MapWithClusters() {
         />
       </div>
 
-      <LoadScript googleMapsApiKey={apiKey} onLoad={() => setMapsReady(true)}>
-        <GoogleMap
-          mapContainerStyle={mapContainerStyle}
-          center={center}
-          zoom={12}
-          onLoad={(map) => {
-            mapRef.current = map;
-          }}
-        />
-      </LoadScript>
+      <div style={mapContainerStyle} className="border rounded-2xl">
+        <LoadScript googleMapsApiKey={apiKey} onLoad={() => setMapsReady(true)}>
+          <GoogleMap
+            mapContainerStyle={mapContainerStyle}
+            center={center}
+            zoom={12}
+            onLoad={(map) => {
+              mapRef.current = map;
+            }}
+            onClick={() => setSelected(null)} // map bosilsa yopilsin
+          >
+            {/* ✅ InfoWindow on selected */}
+            {selected && (
+              <InfoWindow
+                position={{ lat: selected.latitude, lng: selected.longitude }}
+                onCloseClick={() => setSelected(null)}
+              >
+                <div style={{ maxWidth: 220 }}>
+                  <b>Buyurtma joylashuvi</b>
+                  <div style={{ fontSize: 12, marginTop: 6 }}>
+                    {selected.address}
+                  </div>
+                </div>
+              </InfoWindow>
+            )}
+          </GoogleMap>
+        </LoadScript>
+      </div>
     </div>
   );
 }
